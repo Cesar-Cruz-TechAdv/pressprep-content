@@ -1377,5 +1377,431 @@ window.SCENARIO_BANK = [
       fastestSafe: ["s1:0", "s2:all", "s3:0"],
       mostSecure: ["s1:0", "s2:all", "s3:0"]
     }
+  },
+
+  {
+    id: "staging-gate-after-sync",
+    title: "Staging left open after a sync",
+    s: "Security",
+    level: "Editor",
+    stage: 2,
+    d: 2,
+    priorities: { speed: 1, security: 3, stability: 1, rootCause: 2, communication: 2 },
+    intro: "You refreshed a password-protected staging site by copying the live site over it. Staging now holds a full copy of a member directory. The sync finished without errors.",
+    timeNotes: "All time estimates are judgment based on typical agency work; none come from host documentation.",
+    refs: ["https://wordpress.org/documentation/article/settings-reading-screen/"],
+    start: "s1",
+    steps: {
+      s1: {
+        type: "single",
+        prompt: "The sync reports success. What do you do before calling it done?",
+        options: [
+          {
+            text: "Request the home page, /wp-admin/ and /wp-json/ without credentials and confirm each returns 401",
+            m: { security: 2, stability: 1 },
+            min: [5, 10],
+            t: "A sync can replace the files and database that hold the protection setting. Only an anonymous request proves the gate is up; configuration alone doesn't.",
+            p: "Test it the way a stranger would. If you can get in without a password, so can anyone.",
+            next: "s2"
+          },
+          {
+            text: "Check that the hosting dashboard shows password protection as enabled, then move on",
+            m: { speed: 1, security: -2 },
+            min: 2,
+            t: "A dashboard shows stored configuration, not what the server actually enforces. They can disagree after an overwrite.",
+            p: "The control panel saying it's locked isn't the same as the door being locked.",
+            next: "o:exposed"
+          },
+          {
+            text: "Tick 'Discourage search engines' to be safe, then move on",
+            m: { speed: 1, security: -1 },
+            min: 2,
+            t: "That setting adds a noindex request and still allows normal visitors. It isn't access control.",
+            p: "It asks search engines to stay away but doesn't stop anyone else.",
+            next: "o:exposed"
+          }
+        ]
+      },
+      s2: {
+        type: "single",
+        prompt: "The anonymous requests come back 200: the gate is gone, though the dashboard still says it's on. What next?",
+        options: [
+          {
+            text: "Turn protection off and on again, then repeat the anonymous requests until they return 401",
+            m: { security: 2, rootCause: 1 },
+            min: [5, 15],
+            t: "When the stored setting and actual enforcement disagree, re-applying the setting brings them back in line. The anonymous re-test is the proof.",
+            p: "Reset the lock and check it again from outside.",
+            next: "s3"
+          },
+          {
+            text: "Trust the dashboard; the 200s are probably a cached response",
+            m: { security: -2 },
+            min: 1,
+            t: "Guessing it's the cache without checking leaves the member data public. A cached 200 for anonymous users is an exposure too.",
+            p: "Assuming it's fine while the test says otherwise leaves private data on show.",
+            next: "o:exposed"
+          },
+          {
+            text: "Delete the staging site now and rebuild it later",
+            m: { security: 1, stability: -1, speed: -1 },
+            min: [10, 20],
+            t: "This ends the exposure but throws away the test environment and any work in progress on it, and it doesn't explain why the gate dropped.",
+            p: "It stops the leak, but at the cost of the whole test site and without learning anything.",
+            next: "s3"
+          }
+        ]
+      },
+      s3: {
+        type: "multi",
+        prompt: "The gate is back. Which follow-ups do you do? Select all that apply.",
+        missPenalty: { rootCause: -1, communication: -1 },
+        options: [
+          {
+            text: "Tell the lead how long the copy was exposed and what data it held",
+            good: true,
+            critical: true,
+            m: { communication: 2 },
+            t: "An exposure of personal data needs a timeline and scope so the people responsible can decide what to do next.",
+            p: "The people in charge need to know what was visible and for how long."
+          },
+          {
+            text: "Add a standing rule: after every sync onto staging, re-test the gate anonymously",
+            good: true,
+            critical: true,
+            m: { rootCause: 2 },
+            t: "The cause is a process gap: the gate was never re-checked after an overwrite. A standing post-sync check closes it.",
+            p: "Make re-checking the lock a fixed step every time the copy is refreshed."
+          },
+          {
+            text: "Keep 'Discourage search engines' on for staging as a second signal, knowing it isn't access control",
+            good: true,
+            m: { security: 1 },
+            t: "A noindex setting reduces the chance of a stray copy being indexed, but it never replaces authentication.",
+            p: "A useful extra, as long as nobody mistakes it for a lock."
+          },
+          {
+            text: "Rotate the temporary password you shared in chat",
+            good: true,
+            m: { security: 1 },
+            t: "A credential that passed through chat should be treated as exposed and replaced.",
+            p: "A password sent over chat isn't secret any more, so change it."
+          },
+          {
+            text: "Delete the access logs so the exposure isn't on record",
+            good: false,
+            m: { security: -1, communication: -2 },
+            t: "Destroying logs removes the only evidence of who accessed the data and undermines trust.",
+            p: "Hiding the evidence makes things worse, not better."
+          }
+        ],
+        next: "o:closed"
+      }
+    },
+    outcomes: {
+      closed: {
+        title: "Gate restored, gap closed",
+        verdict: "good",
+        summary: "Staging is locked again, the exposure is reported, and every future sync includes an anonymous gate check.",
+        t: "Verified by anonymous requests, with a process fix that covers the cause.",
+        p: "The copy is private again and the team won't get caught out the same way."
+      },
+      exposed: {
+        title: "Member data left public",
+        verdict: "bad",
+        summary: "Staging stayed open with a full copy of member records, and nobody knew.",
+        t: "Configuration was trusted over measurement, so the gate's removal went unnoticed.",
+        p: "Private information stayed on show because nobody checked from the outside."
+      }
+    },
+    ideal: {
+      safest: ["s1:0", "s2:0", "s3:all"]
+    }
+  },
+
+  {
+    id: "php-upgrade-fatal-on-clone",
+    title: "Fatal error found on an upgrade clone",
+    s: "Debugging",
+    level: "Author",
+    stage: 2,
+    d: 2,
+    priorities: { speed: 2, security: 1, stability: 3, rootCause: 3, communication: 2 },
+    intro: "During a PHP upgrade programme, you clone a client site to staging and switch it to the new PHP version. A crawl shows two landing pages returning 500, with a count() TypeError in the footer template.",
+    timeNotes: "All time estimates are judgment; none come from official or host documentation.",
+    refs: [
+      "https://www.php.net/manual/en/function.count.php",
+      "https://www.php.net/manual/en/function.is-countable.php",
+      "https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/"
+    ],
+    start: "s1",
+    steps: {
+      s1: {
+        type: "single",
+        prompt: "What's your first move?",
+        options: [
+          {
+            text: "Check the live site's error log and PHP version for the same fatal",
+            m: { rootCause: 2, stability: 1 },
+            min: [5, 10],
+            t: "count() has thrown TypeError since PHP 8.0, so a live site on any 8.x release can already be failing. The live logs tell you whether this is new.",
+            p: "First find out whether the real site already has this problem.",
+            next: "s2"
+          },
+          {
+            text: "Mark the site 'blocked by upgrade' and move on to the next one",
+            m: { speed: 1, rootCause: -2 },
+            min: 2,
+            t: "This blames the upgrade without evidence and leaves a possible live outage unexamined.",
+            p: "It assumes the upgrade is at fault and skips the real check.",
+            next: "o:hidden-outage"
+          },
+          {
+            text: "Switch staging back to the old PHP version to see if the error clears",
+            m: { speed: -1, rootCause: -1 },
+            min: [5, 10],
+            t: "The error would persist on any PHP 8.x, so this costs time and proves little that the live log wouldn't show directly.",
+            p: "A slower way to learn what the live site's log already says.",
+            next: "s2"
+          }
+        ]
+      },
+      s2: {
+        type: "single",
+        prompt: "Live, on an older PHP 8.x, has been logging the same fatal hundreds of times a week. Both pages are down for visitors. What now?",
+        options: [
+          {
+            text: "Add an is_countable() guard on staging, lint it, then apply the same one-line edit to live with a backup and rollback note, and tell the client",
+            m: { speed: 1, stability: 1, communication: 2 },
+            min: [20, 40],
+            t: "A minimal guard stops the TypeError without changing behaviour for real arrays. Staging first, plus a backup and a lint check, keeps the live change safe and reversible.",
+            p: "Make the smallest safe fix, test it on the copy, apply it to the real site with a way back, and tell the client.",
+            next: "s3"
+          },
+          {
+            text: "Turn on WP_DEBUG with on-screen display on live to read the full error",
+            m: { security: -2, stability: -1 },
+            min: 5,
+            t: "The error is already in the log. Showing debug output on production leaks internal paths to visitors and isn't recommended.",
+            p: "That shows technical details to the public and tells you nothing new.",
+            next: "o:hidden-outage"
+          },
+          {
+            text: "Leave it for next week's upgrade batch",
+            m: { speed: -2, communication: -1 },
+            min: 0,
+            t: "Two revenue pages stay broken for a week for no technical reason.",
+            p: "Important pages stay broken while you wait.",
+            next: "o:late-fix"
+          }
+        ]
+      },
+      s3: {
+        type: "multi",
+        prompt: "Before closing the task, which checks do you run? Select all that apply.",
+        missPenalty: { rootCause: -1 },
+        options: [
+          {
+            text: "Purge the page cache, then fetch both pages with a cache-busting query string",
+            good: true,
+            critical: true,
+            m: { stability: 1 },
+            t: "A cached copy can hide whether PHP actually ran. A cache-busted fetch proves the fix live.",
+            p: "Make sure you're seeing a fresh page, not an old saved one."
+          },
+          {
+            text: "Fetch a few unaffected pages that use the same template, as a control",
+            good: true,
+            m: { stability: 1 },
+            t: "One template feeds many pages, so check that the edit didn't break the ones that worked.",
+            p: "Check the fix didn't break pages that were fine."
+          },
+          {
+            text: "Open a follow-up to find out why the data being counted is empty on just those two pages",
+            good: true,
+            critical: true,
+            m: { rootCause: 2 },
+            t: "The guard stops the crash, but the missing data is the real cause and may leave parts of those pages incomplete.",
+            p: "The fix stops the crash; you still need to find out why those pages are missing information."
+          },
+          {
+            text: "Treat 'zero deprecation notices' in the log as proof the site is clean",
+            good: false,
+            m: { rootCause: -1 },
+            t: "Deprecation notices only appear if the error-reporting level includes them. Zero can mean they were never logged.",
+            p: "An empty list can just mean nobody was writing that kind of note down."
+          }
+        ],
+        next: "o:fixed"
+      }
+    },
+    outcomes: {
+      fixed: {
+        title: "Outage fixed, cause tracked",
+        verdict: "good",
+        summary: "Both pages are back, the fix is verified live, and the underlying data problem has its own ticket.",
+        t: "Pre-existing fatal identified, guarded safely, verified uncached, with the root cause tracked.",
+        p: "The pages work again and the deeper problem is on the list."
+      },
+      "hidden-outage": {
+        title: "Live pages still down",
+        verdict: "bad",
+        summary: "The live site keeps failing while the upgrade gets the blame.",
+        t: "No live-log check, so a production fatal went unnoticed or was handled unsafely.",
+        p: "Visitors keep hitting broken pages and nobody knows why."
+      },
+      "late-fix": {
+        title: "Fixed a week late",
+        verdict: "mixed",
+        summary: "The fix lands eventually, but the client loses a week of traffic on two key pages.",
+        t: "Correct diagnosis, wrong urgency.",
+        p: "You found it but waited too long to act."
+      }
+    },
+    ideal: {
+      safest: ["s1:0", "s2:0", "s3:all"]
+    }
+  },
+
+  {
+    id: "fleet-robots-sitemap-cleanup",
+    title: "Cleaning up robots.txt across many sites",
+    s: "Change Management",
+    level: "Editor",
+    stage: 3,
+    d: 3,
+    priorities: { speed: 1, security: 1, stability: 3, rootCause: 2, communication: 1 },
+    intro: "Over twenty client sites list three Sitemap lines in robots.txt: core's /wp-sitemap.xml, an SEO plugin's /sitemap.xml and an HTML sitemap page. You have a small must-use plugin that keeps only one line, and a tool that can deploy it to every site at once.",
+    timeNotes: "All time estimates are judgment; none come from official or host documentation.",
+    refs: [
+      "https://make.wordpress.org/core/2020/07/22/new-xml-sitemaps-functionality-in-wordpress-5-5/",
+      "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching"
+    ],
+    start: "s1",
+    steps: {
+      s1: {
+        type: "single",
+        prompt: "How do you roll it out?",
+        options: [
+          {
+            text: "Survey every site's robots.txt first and group the sites by pattern before choosing targets",
+            m: { stability: 2, rootCause: 1, speed: -1 },
+            min: [30, 60],
+            t: "A read-only survey shows which sites have the core-plus-plugin collision and which list several sitemaps on purpose.",
+            p: "Look before you change anything, so you only touch the sites that actually have the problem.",
+            next: "s2"
+          },
+          {
+            text: "Deploy to every live site in one run; more than one Sitemap line is always a mistake",
+            m: { speed: 2, stability: -2 },
+            min: 10,
+            t: "Several Sitemap lines can be legitimate: paginated sets or a separate news sitemap. A blanket rule removes real sitemaps.",
+            p: "Some sites need more than one line, and this would delete theirs.",
+            next: "o:broke-sitemaps"
+          },
+          {
+            text: "Deploy to one site, check it, then deploy to all the rest",
+            m: { speed: 1, stability: -1 },
+            min: [15, 25],
+            t: "A single test site can't reveal the sites whose extra lines are intentional.",
+            p: "One test site doesn't tell you about the sites that are different.",
+            next: "o:broke-sitemaps"
+          }
+        ]
+      },
+      s2: {
+        type: "multi",
+        prompt: "The survey finds several patterns. Which sites should get the plugin? Select all that apply.",
+        missPenalty: { stability: -1 },
+        options: [
+          {
+            text: "Sites listing core's sitemap plus a plugin's sitemap covering the same content",
+            good: true,
+            critical: true,
+            m: { rootCause: 1 },
+            t: "This is the duplicate the plugin exists to fix: core's /wp-sitemap.xml alongside a plugin sitemap.",
+            p: "These are the sites with the actual duplicate."
+          },
+          {
+            text: "A site listing /sitemap-1.xml to /sitemap-5.xml as one paginated set",
+            good: false,
+            m: { stability: -2 },
+            t: "Keeping one line would hide four real sitemaps.",
+            p: "Those five lines are all needed."
+          },
+          {
+            text: "A site listing a main sitemap plus a separate news sitemap",
+            good: false,
+            m: { stability: -2 },
+            t: "The news sitemap is a distinct, intentional entry.",
+            p: "The second line is there on purpose."
+          },
+          {
+            text: "A site your team doesn't host",
+            good: false,
+            m: { stability: -1, communication: -1 },
+            t: "Out of scope: you shouldn't change infrastructure you don't manage.",
+            p: "That site isn't yours to change."
+          }
+        ],
+        next: "s3"
+      },
+      s3: {
+        type: "multi",
+        prompt: "After deploying, how do you verify? Select all that apply.",
+        missPenalty: { rootCause: -1 },
+        options: [
+          {
+            text: "Fetch robots.txt both compressed and uncompressed and count the Sitemap lines",
+            good: true,
+            critical: true,
+            m: { stability: 1 },
+            t: "Caches can hold separate copies per Accept-Encoding. Browsers and crawlers ask for compressed responses, so check that copy too.",
+            p: "Check the version real visitors get, not just the easiest one to test."
+          },
+          {
+            text: "Confirm the remaining Sitemap URL uses the site's canonical host (www or not)",
+            good: true,
+            m: { rootCause: 1 },
+            t: "A sitemap advertised on the wrong host variant points crawlers at redirects.",
+            p: "Make sure the address matches the site's real address."
+          },
+          {
+            text: "Confirm /sitemap.xml still returns 200",
+            good: true,
+            m: { stability: 1 },
+            t: "The plugin changes robots.txt only. The kept sitemap must still resolve.",
+            p: "Make sure the sitemap itself still works."
+          },
+          {
+            text: "Check each site once with a plain uncompressed request and call it done",
+            good: false,
+            m: { rootCause: -2 },
+            t: "An uncompressed copy can be fresh while the compressed copy stays stale, so a plain request can show a false pass.",
+            p: "The quick check can say it worked when visitors still see the old file."
+          }
+        ],
+        next: "o:clean"
+      }
+    },
+    outcomes: {
+      clean: {
+        title: "One sitemap where it belongs",
+        verdict: "good",
+        summary: "Only the duplicate sites changed, verified on the cache copies crawlers actually receive.",
+        t: "Survey-driven targeting plus per-encoding verification.",
+        p: "The right sites were fixed and the special cases were left alone."
+      },
+      "broke-sitemaps": {
+        title: "Real sitemaps removed",
+        verdict: "bad",
+        summary: "Sites with intentional extra sitemaps lost them from robots.txt.",
+        t: "A blanket rule applied without a survey removed legitimate entries.",
+        p: "The fix deleted sitemaps some sites actually needed."
+      }
+    },
+    ideal: {
+      safest: ["s1:0", "s2:all", "s3:all"]
+    }
   }
 ];

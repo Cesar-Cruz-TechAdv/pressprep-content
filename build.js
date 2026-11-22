@@ -40,12 +40,24 @@ const version = {
 };
 fs.writeFileSync(path.join(out, 'version.json'), JSON.stringify(version, null, 2));
 
+// Compact index of what the bank already covers, for the PressPrep export skill in other Claude projects:
+// one line per item, so new contributions can be checked for duplicates without loading the full files.
+const R = ['I', 'II', 'III'];
+const indexLines = [
+  `# PressPrep bank index · ${questions.length} questions, ${scenarios.length} scenarios · content hash ${version.hash}`,
+  '# QUESTIONS: id | section | role stage | question',
+  ...questions.map(q => `${q.id} | ${q.s} | ${q.level} ${R[q.stage - 1]} | ${q.q.replace(/\s+/g, ' ')}`),
+  '# SCENARIOS: id | section | role stage | title | situation',
+  ...scenarios.map(x => `${x.id} | ${x.s} | ${x.level} ${R[x.stage - 1]} | ${x.title} | ${x.intro.replace(/\s+/g, ' ')}`),
+];
+fs.writeFileSync(path.join(out, 'bank-index.txt'), indexLines.join('\n') + '\n');
+
 fs.writeFileSync(path.join(out, 'index.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>PressPrep content</title><meta name="viewport" content="width=device-width, initial-scale=1"></head>
 <body style="font-family: system-ui, sans-serif; max-width: 640px; margin: 40px auto; padding: 0 20px; line-height: 1.5">
 <h1>PressPrep content</h1>
 <p>Practice questions and interview scenarios used by the PressPrep app. ${questions.length} questions and ${scenarios.length} scenarios, content version <code>${hash}</code>.</p>
 <p>Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. PressPrep is an independent project, not affiliated with or endorsed by the WordPress Foundation, WordPress.org or Automattic.</p>
-<ul><li><a href="privacy.html">Privacy policy</a></li><li><a href="version.json">version.json</a></li><li><a href="questions.json">questions.json</a></li><li><a href="scenarios.json">scenarios.json</a></li></ul>
+<ul><li><a href="privacy.html">Privacy policy</a></li><li><a href="version.json">version.json</a></li><li><a href="questions.json">questions.json</a></li><li><a href="scenarios.json">scenarios.json</a></li><li><a href="bank-index.txt">bank-index.txt</a></li></ul>
 </body></html>`);
 if (fs.existsSync(path.join(__dirname, 'privacy.html'))) fs.copyFileSync(path.join(__dirname, 'privacy.html'), path.join(out, 'privacy.html'));
 fs.writeFileSync(path.join(out, '.nojekyll'), '');

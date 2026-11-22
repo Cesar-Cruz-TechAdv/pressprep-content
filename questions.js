@@ -6293,5 +6293,224 @@ window.QUESTION_BANK = [
     t: "Google's SRE guidance stresses follow-up actions; without them the same incident tends to recur.",
     p: "Decide who fixes what, by when, and check it gets done.",
     refs: ["https://sre.google/sre-book/postmortem-culture/"]
+  },
+  {
+    id: "q-0451",
+    s: "Debugging", d: 2, level: "Author", stage: 2,
+    q: "On a client site, one-segment page URLs such as /contact/ and /donate/ return 404 while blog posts load fine. The stored rewrite rules show a broad catch-all rule from a custom post type sitting above the rule for pages. Why does that break the pages?",
+    o: [
+      "WordPress uses the first rewrite rule whose pattern matches, so the earlier catch-all claims the URL and looks for a post that doesn't exist",
+      "WordPress compares all rules and picks the longest pattern, so the shorter page rule always loses",
+      "Pages are looked up by ID only, so any rewrite rule placed above them stops pages from loading",
+      "A catch-all rule makes the web server skip WordPress, so the 404 comes from the server"
+    ],
+    a: 0,
+    t: "WP::parse_request() loops over the rewrite rules in order and breaks on the first regex match. A catch-all placed ahead of the page rule turns /contact/ into a post-name query that finds nothing, so the request ends in a 404.",
+    p: "WordPress checks its URL patterns from top to bottom and stops at the first one that fits. A pattern that matches too much, sitting near the top, grabs page addresses and goes looking for the wrong kind of content.",
+    refs: [
+      "https://developer.wordpress.org/reference/classes/wp/parse_request/",
+      "https://developer.wordpress.org/reference/functions/register_post_type/"
+    ]
+  },
+  {
+    id: "q-0452",
+    s: "Performance", d: 2, level: "Author", stage: 1,
+    q: "A theme runs a function on every 404 that deletes and rebuilds the site's rewrite rules. What is the right fix?",
+    o: [
+      "Rebuild rewrite rules only when they actually change, such as on plugin or theme activation or after editing a slug",
+      "Keep it, but switch to a soft flush so .htaccess is not rewritten",
+      "Move the flush to the init hook so it runs on every request instead of only on 404s",
+      "Add a short sleep before the flush so simultaneous 404s don't collide"
+    ],
+    a: 0,
+    t: "flush_rewrite_rules() is documented as an expensive operation. The register_post_type() docs say to call it in activation and deactivation hooks (after_switch_theme for themes), never on every page load. A soft flush ($hard = false) still rebuilds the rules on every call.",
+    p: "Rebuilding the site's URL map is slow, heavy work. Do it once when something changes, not every time a visitor lands on a missing page.",
+    refs: [
+      "https://developer.wordpress.org/reference/functions/flush_rewrite_rules/",
+      "https://developer.wordpress.org/reference/functions/register_post_type/"
+    ]
+  },
+  {
+    id: "q-0453",
+    s: "WordPress Core", d: 1, level: "Contributor", stage: 1,
+    q: "You correct the rewrite slug of a custom post type, but its new URLs still 404. What step is missing?",
+    o: [
+      "Rebuild the rewrite rules once, for example by visiting Settings > Permalinks and saving",
+      "Clear your browser history",
+      "Delete all posts of that post type and recreate them",
+      "Raise the PHP memory limit"
+    ],
+    a: 0,
+    t: "Rewrite rules are stored in the rewrite_rules option, so a slug change only takes effect once the rules are rebuilt, either from Settings > Permalinks or with a single flush_rewrite_rules() call. Existing items of that post type move to the new URL, so plan redirects for old links.",
+    p: "WordPress keeps a saved copy of its URL patterns. After you change one, re-save the permalink settings so the copy is rebuilt, and redirect any old addresses that changed.",
+    refs: [
+      "https://developer.wordpress.org/reference/functions/register_post_type/",
+      "https://developer.wordpress.org/reference/functions/flush_rewrite_rules/"
+    ]
+  },
+  {
+    id: "q-0454",
+    s: "Debugging", d: 2, level: "Author", stage: 1,
+    q: "A footer template throws a fatal error: 'count(): Argument #1 ($value) must be of type Countable|array, false given'. Which change stops the crash without changing the result for real arrays?",
+    o: [
+      "Guard the call: is_countable( $x ) ? count( $x ) : 0",
+      "Turn off on-screen error display so visitors don't see the message",
+      "Downgrade PHP and leave the code as it is",
+      "Wrap the value in quotes so count() receives a string"
+    ],
+    a: 0,
+    t: "Since PHP 8.0, count() throws a TypeError for anything that is not an array or Countable. Before 8.0 it returned 1, or 0 for null. is_countable() (PHP 7.3+) checks the value first, so real arrays are still counted and false or null gives 0.",
+    p: "Newer PHP refuses to count something that isn't a list, and the page stops. Checking that it is a list first keeps the page working and treats 'nothing' as zero.",
+    refs: [
+      "https://www.php.net/manual/en/function.count.php",
+      "https://www.php.net/manual/en/function.is-countable.php"
+    ]
+  },
+  {
+    id: "q-0455",
+    s: "Change Management", d: 2, level: "Author", stage: 2,
+    q: "A fresh staging copy of a live site, just switched to a newer PHP version, throws a fatal TypeError on two pages. The live site runs an older PHP 8.x release. What should you check before blaming the upgrade?",
+    o: [
+      "Whether the live site's own error log already shows the same fatal",
+      "Whether the staging site's theme folder is writable",
+      "Whether the error goes away after clearing your browser cache",
+      "Whether staging has the same admin password as live"
+    ],
+    a: 0,
+    t: "Many PHP 8 type errors, such as count() on a non-countable value, date from PHP 8.0. A fatal on a fresh clone can therefore already exist on a live site running any 8.x release. Check the live site's logs and PHP version first. If the error is there too, it's a production incident, not an upgrade blocker.",
+    p: "A copy of a site can expose a problem the real site already has. Look at the live site's errors before deciding the upgrade caused it.",
+    refs: ["https://www.php.net/manual/en/function.count.php"]
+  },
+  {
+    id: "q-0456",
+    s: "Security", d: 3, level: "Author", stage: 2,
+    q: "You find an AJAX handler, open to logged-out visitors, that takes a user ID from the request and overwrites that user's profile fields. Which changes belong in the fix? Select all that apply.",
+    o: [
+      "Stop registering it on the wp_ajax_nopriv_ hook",
+      "Verify a nonce with check_ajax_referer()",
+      "Check that the current user is allowed to edit that particular user before writing",
+      "Sanitize each field before saving it",
+      "Rename the action to something hard to guess",
+      "Hide the edit button with CSS for logged-out visitors"
+    ],
+    a: [0, 1, 2, 3],
+    t: "Remove the nopriv registration so logged-out requests never reach the handler. Verify a nonce to block forged requests, and gate the write on current_user_can() for the target user, because nonces aren't authorization. Sanitize input before storing it. An obscure action name or a hidden button doesn't stop a direct POST to admin-ajax.php.",
+    p: "Close the door to strangers, confirm the request came from your own page, confirm the person may edit that profile, and clean what they send. Hiding the button or renaming things doesn't stop someone sending the request directly.",
+    refs: [
+      "https://developer.wordpress.org/reference/hooks/wp_ajax_nopriv_action/",
+      "https://developer.wordpress.org/apis/security/nonces/"
+    ]
+  },
+  {
+    id: "q-0457",
+    s: "Security", d: 2, level: "Contributor", stage: 2,
+    q: "Old theme code runs $wpdb->query( \"DELETE FROM wp_options WHERE option_name = '$name'\" ), with $name taken straight from POST. What is the safe fix?",
+    o: [
+      "Use delete_option() with a sanitized name, or build the query with $wpdb->prepare() and a %s placeholder",
+      "Run esc_html() on $name before the query",
+      "Switch the single quotes around $name to double quotes",
+      "Base64-encode $name before putting it in the query"
+    ],
+    a: 0,
+    t: "Putting request data directly into SQL allows SQL injection. wpdb::prepare() escapes values passed separately through placeholders (%s, %d, %f, %i), and the placeholders must stay unquoted. The options API avoids raw SQL altogether. esc_html() escapes for HTML output, not SQL.",
+    p: "Never paste visitor input straight into a database command. Use WordPress's built-in function, or its safe query builder, which keeps the input separate from the command.",
+    refs: ["https://developer.wordpress.org/reference/classes/wpdb/prepare/"]
+  },
+  {
+    id: "q-0458",
+    s: "Performance", d: 2, level: "Author", stage: 1,
+    q: "You edit a theme's style.css, but returning visitors still see the old styles. The theme enqueues the file with a hard-coded version '1.13' and a very long cache lifetime. What's the most durable fix?",
+    o: [
+      "Make the version change whenever the file changes, for example by using the file's modification time as the version",
+      "Set the version to false so WordPress picks one",
+      "Set the version to null to remove it",
+      "Ask visitors to clear their browser cache"
+    ],
+    a: 0,
+    t: "wp_enqueue_style() appends $ver to the URL. With false it uses the WordPress core version, which changes only on core updates. With null it adds no version. Deriving $ver from filemtime() gives a new URL on every edit, the versioned-URL cache-busting pattern MDN describes.",
+    p: "Browsers store a file under its address. Give the file a new address whenever it changes, and every browser fetches the fresh copy.",
+    refs: [
+      "https://developer.wordpress.org/reference/functions/wp_enqueue_style/",
+      "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching"
+    ]
+  },
+  {
+    id: "q-0459",
+    s: "Performance", d: 3, level: "Editor", stage: 1,
+    q: "After a deploy, a plain uncompressed request for a file shows the new version, but real browsers still get the old one from the CDN. What's the most likely cause?",
+    o: [
+      "The CDN stores separate copies for each Accept-Encoding value, and only the uncompressed copy was refreshed",
+      "Browsers can't read files that were also fetched from the command line",
+      "Command-line requests skip the CDN and always read the file from disk",
+      "The new file is larger, so the CDN refuses to cache it"
+    ],
+    a: 0,
+    t: "With content negotiation, caches key the response on the URL plus the request headers listed in Vary, and Accept-Encoding is one of them. An uncompressed test can hit a fresh identity copy while the gzip or br copies browsers request stay stale. Test with compressed requests, purge, or change the URL.",
+    p: "The CDN can hold a compressed and an uncompressed copy of the same file. A simple test may see the fresh copy while browsers, which ask for the compressed one, still get the old copy.",
+    refs: [
+      "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching",
+      "https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Vary"
+    ]
+  },
+  {
+    id: "q-0460",
+    s: "Debugging", d: 3, level: "Editor", stage: 2,
+    q: "A diagnostic hooked to template_redirect at priority 1 logs is_404() as true on every member-profile request, yet the profiles load fine for visitors. A plugin serves those URLs from template_redirect at priority 3. What went wrong?",
+    o: [
+      "The logger ran before the plugin turned the request into a 200, so it recorded a state from the middle of the request",
+      "Priority 1 runs last, so the logger saw the request after it had finished",
+      "is_404() always returns true inside template_redirect",
+      "Two callbacks can't share one hook, so the plugin's callback was skipped"
+    ],
+    a: 0,
+    t: "In add_action(), lower priority numbers run earlier (the default is 10). A check at priority 1 runs before the priority-3 callback that clears the 404 flag and sends the page, so the logged value isn't the final outcome. Read the result at the end of the request, using the response status that was actually sent.",
+    p: "The logger checked too early, before another part of the site fixed the page. Check the result after the page has actually been sent.",
+    refs: ["https://developer.wordpress.org/reference/functions/add_action/"]
+  },
+  {
+    id: "q-0461",
+    s: "Security", d: 2, level: "Author", stage: 2,
+    q: "An internal WordPress tool exposes its custom post types to anonymous visitors through the REST API. What does the official REST API FAQ recommend?",
+    o: [
+      "Return an authentication error from the rest_authentication_errors filter when the user isn't logged in",
+      "Disable the REST API completely",
+      "Block /wp-json/ in robots.txt",
+      "Rename the post types so their endpoints are hard to guess"
+    ],
+    a: 0,
+    t: "The FAQ shows a rest_authentication_errors callback that returns a WP_Error with status 401 when is_user_logged_in() is false. It warns that disabling the REST API breaks admin features that depend on it.",
+    p: "Require a login for the site's data feed rather than switching it off, because the admin screens rely on it too.",
+    refs: ["https://developer.wordpress.org/rest-api/frequently-asked-questions/"]
+  },
+  {
+    id: "q-0462",
+    s: "Custom Development", d: 2, level: "Contributor", stage: 2,
+    q: "You're putting a site-wide security fix in a must-use plugin instead of a regular plugin. Which statements about must-use plugins are true? Select all that apply.",
+    o: [
+      "They load automatically, with no activation step",
+      "They can't be deactivated from wp-admin",
+      "They load before regular plugins",
+      "PHP files in subfolders of mu-plugins are loaded automatically",
+      "They show up in the normal plugin update notifications"
+    ],
+    a: [0, 1, 2],
+    t: "Per the handbook, mu-plugins are enabled automatically, can't be disabled from wp-admin, and load in alphabetical order before normal plugins. WordPress only loads PHP files sitting directly in the mu-plugins folder, and mu-plugins don't appear in update notifications, so you have to track updates yourself.",
+    p: "Must-use plugins are always on, and nobody can switch them off from the dashboard, which suits safety fixes. Put them at the top level of their folder, and keep them up to date yourself.",
+    refs: ["https://developer.wordpress.org/advanced-administration/plugins/mu-plugins/"]
+  },
+  {
+    id: "q-0463",
+    s: "WordPress Core", d: 1, level: "Subscriber", stage: 2,
+    q: "Since WordPress 5.5, where is core's XML sitemap index, and how do search engines find it?",
+    o: [
+      "At /wp-sitemap.xml, referenced in the robots.txt that WordPress generates",
+      "At /sitemap.xml, emailed to search engines when you publish",
+      "Only inside the admin, not at a public URL",
+      "At /wp-admin/sitemap.php, behind a login"
+    ],
+    a: 0,
+    t: "WordPress 5.5 added a sitemap index at /wp-sitemap.xml and references it in the robots.txt that WordPress generates. If an SEO plugin provides its own sitemap, core's can be turned off with the wp_sitemaps_enabled filter returning false. Leaving both on is how robots.txt ends up listing several sitemaps.",
+    p: "WordPress publishes its own sitemap and points search engines to it from robots.txt. If an SEO plugin makes another sitemap, you usually want only one of them.",
+    refs: ["https://make.wordpress.org/core/2020/07/22/new-xml-sitemaps-functionality-in-wordpress-5-5/"]
   }
 ];
