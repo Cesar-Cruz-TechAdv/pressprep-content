@@ -45,7 +45,8 @@ fs.writeFileSync(path.join(out, 'index.html'), `<!doctype html><html lang="en"><
 <h1>PressPrep content</h1>
 <p>Practice questions and interview scenarios used by the PressPrep app. ${questions.length} questions and ${scenarios.length} scenarios, content version <code>${hash}</code>.</p>
 <p>Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. PressPrep is an independent project, not affiliated with or endorsed by the WordPress Foundation, WordPress.org or Automattic.</p>
-<ul><li><a href="version.json">version.json</a></li><li><a href="questions.json">questions.json</a></li><li><a href="scenarios.json">scenarios.json</a></li></ul>
+<ul><li><a href="privacy.html">Privacy policy</a></li><li><a href="version.json">version.json</a></li><li><a href="questions.json">questions.json</a></li><li><a href="scenarios.json">scenarios.json</a></li></ul>
 </body></html>`);
+if (fs.existsSync(path.join(__dirname, 'privacy.html'))) fs.copyFileSync(path.join(__dirname, 'privacy.html'), path.join(out, 'privacy.html'));
 fs.writeFileSync(path.join(out, '.nojekyll'), '');
 console.log(`Built _site/: ${questions.length} questions, ${scenarios.length} scenarios, hash ${hash}`);
