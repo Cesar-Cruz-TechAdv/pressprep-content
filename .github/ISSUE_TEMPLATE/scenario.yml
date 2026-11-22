@@ -1,0 +1,58 @@
+name: New interview scenario
+description: Suggest a "what would you do if…" scenario with choices and outcomes.
+title: "[Scenario] "
+labels: ["content", "scenario", "needs-review"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe a realistic situation and the paths someone could take. We'll turn it into steps, meters and outcomes.
+  - type: dropdown
+    id: level
+    attributes:
+      label: Suggested level
+      options:
+        - Subscriber (beginner)
+        - Contributor (intermediate)
+        - Author (advanced)
+        - Editor (expert)
+        - Administrator (master)
+    validations:
+      required: true
+  - type: textarea
+    id: situation
+    attributes:
+      label: The situation
+      description: What has happened, from the developer's point of view.
+    validations:
+      required: true
+  - type: textarea
+    id: paths
+    attributes:
+      label: Choices and what happens
+      description: For each choice, what it leads to and whether it's a good, risky or bad move.
+    validations:
+      required: true
+  - type: textarea
+    id: ideal
+    attributes:
+      label: The ideal path
+    validations:
+      required: true
+  - type: textarea
+    id: times
+    attributes:
+      label: Rough time estimates (optional)
+      description: How long each step usually takes, and where that estimate comes from if you have a source.
+  - type: textarea
+    id: refs
+    attributes:
+      label: Sources
+      description: Official documentation or incident write-ups that back it up. One per line.
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Contribution terms
+      options:
+        - label: This is my own work, and I agree it may be edited and published under CC BY-SA 4.0.
+          required: true

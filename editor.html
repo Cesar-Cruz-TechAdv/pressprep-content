@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PressPrep content editor</title>
+<style>
+  :root{--navy:#1C4E80;--sky:#2F78C2;--wash:#EAF2FB;--ink:#0F1B2A;--muted:#4A5A6E;--line:#DCE4EE;--bg:#F6F8FB;--card:#FFFFFF;--bad:#A93226;--badbg:#FCEFEE;--warn:#8A5A10;--warnbg:#FDF3E1;--ok:#196F3D;--okbg:#EAF6EF}
+  *{box-sizing:border-box}
+  body{margin:0;font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+  header.top{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line);padding:10px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  header.top h1{font-size:17px;margin:0;flex:1;min-width:200px}
+  button,.btn{font:inherit;border-radius:8px;padding:7px 13px;border:1px solid var(--navy);background:var(--card);color:var(--navy);cursor:pointer;font-weight:600;font-size:14px}
+  button.primary{background:var(--navy);color:#fff}
+  button.danger{border-color:var(--bad);color:var(--bad)}
+  button.small{padding:3px 9px;font-size:13px}
+  button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #9CC3EE;outline-offset:1px}
+  label.file{display:inline-block}
+  label.file input{display:none}
+  .tabs{display:flex;gap:4px;padding:0 20px;background:var(--card);border-bottom:1px solid var(--line)}
+  .tabs button{border:0;border-bottom:3px solid transparent;border-radius:0;padding:10px 14px;color:var(--muted)}
+  .tabs button[aria-selected=true]{color:var(--navy);border-bottom-color:var(--navy)}
+  .count{display:inline-block;min-width:20px;padding:0 6px;border-radius:999px;font-size:12px;margin-left:6px;background:var(--line);color:var(--ink)}
+  .count.bad{background:var(--badbg);color:var(--bad)}
+  .layout{display:grid;grid-template-columns:320px minmax(0,1fr);gap:16px;padding:16px 20px;align-items:start}
+  @media(max-width:900px){.layout{grid-template-columns:1fr}}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+  .list{display:flex;flex-direction:column;gap:4px;max-height:70vh;overflow:auto;margin-top:10px}
+  .item{text-align:left;border:1px solid transparent;border-radius:8px;background:none;color:var(--ink);font-weight:400;padding:7px 9px;display:flex;gap:8px;align-items:flex-start}
+  .item:hover{background:var(--bg)}
+  .item.active{border-color:var(--sky);background:var(--wash)}
+  .item .num{color:var(--muted);font-size:12px;min-width:26px}
+  .item .txt{flex:1;font-size:13px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  .dot{width:9px;height:9px;border-radius:50%;margin-top:5px;flex:none}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px}
+  .field{display:flex;flex-direction:column;gap:4px;flex:1;min-width:140px}
+  .field.narrow{flex:0 0 110px;min-width:110px}
+  .field > span{font-size:12px;font-weight:600;color:var(--muted)}
+  input[type=text],input[type=number],select,textarea{font:inherit;font-size:14px;border:1px solid #B7C6D8;border-radius:8px;padding:7px 9px;background:#fff;color:var(--ink);width:100%}
+  textarea{min-height:64px;resize:vertical}
+  h2{font-size:16px;margin:4px 0 12px}
+  h3{font-size:14px;margin:16px 0 8px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  .opt{display:flex;gap:8px;align-items:flex-start;margin-bottom:8px}
+  .opt input[type=text]{flex:1}
+  .hint{font-size:12px;color:var(--muted)}
+  .card{border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:12px;background:#fff}
+  .card .head select{width:auto}
+  .card .head label{font-size:13px;display:flex;gap:4px;align-items:center}
+  .card .head{display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+  .meters{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+  .meters label{display:flex;flex-direction:column;font-size:11px;color:var(--muted);gap:2px}
+  .issues{margin-top:12px}
+  .issue{font-size:13px;padding:6px 9px;border-radius:6px;margin-bottom:4px}
+  .issue.err{background:var(--badbg);color:var(--bad)}
+  .issue.warn{background:var(--warnbg);color:var(--warn)}
+  .allgood{background:var(--okbg);color:var(--ok);padding:8px 10px;border-radius:8px;font-size:13px}
+  .empty{color:var(--muted);text-align:center;padding:40px 10px}
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap}
+  .sr{position:absolute;left:-9999px}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>PressPrep content editor</h1>
+  <label class="file btn">Open questions.js<input type="file" accept=".js" id="openQ"></label>
+  <label class="file btn">Open scenarios.js<input type="file" accept=".js" id="openS"></label>
+  <button class="primary" id="dlQ">Download questions.js</button>
+  <button class="primary" id="dlS">Download scenarios.js</button>
+</header>
+<nav class="tabs" role="tablist">
+  <button role="tab" id="tabQ" aria-selected="true">Questions <span class="count" id="cntQ">0</span></button>
+  <button role="tab" id="tabS" aria-selected="false">Scenarios <span class="count" id="cntS">0</span></button>
+</nav>
+<main class="layout">
+  <aside class="panel">
+    <div class="toolbar"><button id="addBtn">+ New</button><button id="dupBtn">Duplicate</button><button class="danger" id="delBtn">Delete</button></div>
+    <div class="row" style="margin:10px 0 0">
+      <label class="field"><span>Search</span><input type="text" id="search" placeholder="Words in the question"></label>
+    </div>
+    <div class="row" style="margin:0">
+      <label class="field"><span>Section</span><select id="fSection"><option value="">All sections</option></select></label>
+    </div>
+    <div class="list" id="list"></div>
+    <div class="issues" id="issues" aria-live="polite"></div>
+  </aside>
+  <section class="panel" id="form"></section>
+</main>
+
+<script src="pressprep-data.js"></script>
+<script>
+const D = window.PressPrepData;
+const $ = id => document.getElementById(id);
+const S = { tab: 'q', questions: [], scenarios: [], qHeader: '', sHeader: '', qi: -1, si: -1, dirty: false };
+const LEVEL_COLOR = { Subscriber: '#4F6378', Contributor: '#2F78C2', Author: '#1E7068', Editor: '#1C4E80', Administrator: '#F2A93B' };
+const DEFAULT_Q_HEADER = '/* PressPrep question bank. Edited with editor.html; checked by validate.js. */\n';
+const DEFAULT_S_HEADER = '/* PressPrep scenario bank. Edited with editor.html; checked by validate.js. */\n';
+
+/* ---------- tiny DOM helper ---------- */
+function h(tag, attrs, ...kids) {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v === undefined || v === null || v === false) continue;
+    if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+    else if (k === 'value') el.value = v;
+    else if (k === 'checked') el.checked = !!v;
+    else el.setAttribute(k, v === true ? '' : v);
+  }
+  kids.flat().forEach(c => { if (c !== null && c !== undefined && c !== false) el.append(c.nodeType ? c : String(c)); });
+  return el;
+}
+const field = (label, input, cls) => h('label', { class: 'field ' + (cls || '') }, h('span', {}, label), input);
+function text(obj, key, opts) {
+  opts = opts || {};
+  const el = h(opts.area ? 'textarea' : 'input', { type: opts.area ? null : 'text', value: obj[key] ?? '', placeholder: opts.ph });
+  el.addEventListener('input', () => { obj[key] = el.value; changed(opts.rerenderList); });
+  return el;
+}
+function select(obj, key, options, opts) {
+  opts = opts || {};
+  const el = h('select', {}, options.map(o => { const [v, l] = Array.isArray(o) ? o : [o, o]; return h('option', { value: v }, l); }));
+  el.value = obj[key] === undefined ? '' : String(obj[key]);
+  el.addEventListener('change', () => {
+    const v = el.value;
+    if (v === '') delete obj[key]; else obj[key] = opts.num ? Number(v) : v;
+    changed(true); if (opts.rerender) render();
+  });
+  return el;
+}
+
+/* ---------- state changes ---------- */
+let vTimer = null;
+function changed(listToo) {
+  S.dirty = true;
+  try { localStorage.setItem('pressprep-editor-draft', JSON.stringify({ questions: S.questions, scenarios: S.scenarios, qHeader: S.qHeader, sHeader: S.sHeader })); } catch (e) {}
+  clearTimeout(vTimer);
+  vTimer = setTimeout(() => { if (listToo) renderList(); renderIssues(); }, 150);
+}
+window.addEventListener('beforeunload', e => { if (S.dirty) { e.preventDefault(); e.returnValue = ''; } });
+
+/* ---------- validation ---------- */
+function results() {
+  return { q: D.validateQuestions(S.questions), s: D.validateScenarios(S.scenarios) };
+}
+function issuesFor(r, prefix) {
+  return { errors: r.errors.filter(e => e.where.startsWith(prefix)), warnings: r.warnings.filter(e => e.where.startsWith(prefix)) };
+}
+function renderIssues() {
+  const r = results();
+  $('cntQ').textContent = S.questions.length; $('cntS').textContent = S.scenarios.length;
+  $('cntQ').className = 'count' + (r.q.errors.length ? ' bad' : '');
+  $('cntS').className = 'count' + (r.s.errors.length ? ' bad' : '');
+  const cur = S.tab === 'q' ? r.q : r.s;
+  const box = $('issues'); box.innerHTML = '';
+  const label = S.tab === 'q' ? 'questions' : 'scenarios';
+  if (!cur.errors.length && !cur.warnings.length) { box.append(h('div', { class: 'allgood' }, `All ${label} pass the checks.`)); return; }
+  box.append(h('h3', {}, `${cur.errors.length} errors · ${cur.warnings.length} warnings`));
+  cur.errors.slice(0, 40).forEach(e => box.append(h('div', { class: 'issue err' }, `${e.where}: ${e.msg}`)));
+  cur.warnings.slice(0, 20).forEach(e => box.append(h('div', { class: 'issue warn' }, `${e.where}: ${e.msg}`)));
+}
+
+/* ---------- list ---------- */
+function renderList() {
+  const list = $('list'); list.innerHTML = '';
+  const q = $('search').value.trim().toLowerCase(), sec = $('fSection').value;
+  const r = results();
+  if (S.tab === 'q') {
+    S.questions.forEach((it, i) => {
+      if (sec && it.s !== sec) return;
+      if (q && !(it.q || '').toLowerCase().includes(q)) return;
+      const bad = issuesFor(r.q, `Question ${i + 1}`).errors.length;
+      list.append(h('button', { class: 'item' + (i === S.qi ? ' active' : ''), onclick: () => { S.qi = i; render(); } },
+        h('span', { class: 'dot', style: `background:${bad ? '#A93226' : (Array.isArray(it.a) ? '#F2A93B' : '#2F78C2')}`, title: bad ? 'Has errors' : (Array.isArray(it.a) ? 'Multi-select' : 'Single answer') }),
+        h('span', { class: 'num' }, i + 1), h('span', { class: 'txt' }, it.q || '(empty question)')));
+    });
+  } else {
+    S.scenarios.forEach((it, i) => {
+      if (sec && it.s !== sec) return;
+      if (q && !((it.title || '') + ' ' + (it.intro || '')).toLowerCase().includes(q)) return;
+      const bad = issuesFor(r.s, `Scenario ${i + 1}`).errors.length;
+      list.append(h('button', { class: 'item' + (i === S.si ? ' active' : ''), onclick: () => { S.si = i; render(); } },
+        h('span', { class: 'dot', style: `background:${bad ? '#A93226' : (LEVEL_COLOR[it.level] || '#B7C6D8')}`, title: bad ? 'Has errors' : it.level }),
+        h('span', { class: 'num' }, i + 1), h('span', { class: 'txt' }, `${it.title || '(untitled)'} · ${it.level || '?'} ${it.stage || ''}`)));
+    });
+  }
+  if (!list.children.length) list.append(h('div', { class: 'empty' }, 'Nothing here yet. Open a file or add a new one.'));
+}
+
+/* ---------- question form ---------- */
+function blankQuestion() { return { s: 'WordPress Core', d: 2, q: '', o: ['', '', '', ''], a: 0, t: '', p: '' }; }
+function renderQuestionForm(box) {
+  const it = S.questions[S.qi];
+  if (!it) { box.append(h('div', { class: 'empty' }, 'Pick a question on the left, or add a new one.')); return; }
+  const multi = Array.isArray(it.a);
+  box.append(h('h2', {}, `Question ${S.qi + 1}`));
+  box.append(h('div', { class: 'row' },
+    field('Section', select(it, 's', D.SECTIONS)),
+    field('Difficulty', select(it, 'd', [['1', '1 · Foundational'], ['2', '2 · Intermediate'], ['3', '3 · Advanced']], { num: true }), 'narrow'),
+    field('Role level (optional)', select(it, 'level', [['', '—']].concat(D.ROLES.map(r => [r, r])))),
+    field('Stage (optional)', select(it, 'stage', [['', '—'], ['1', 'I'], ['2', 'II'], ['3', 'III']], { num: true }), 'narrow')));
+  box.append(h('div', { class: 'row' }, field('Question', text(it, 'q', { area: true, rerenderList: true }))));
+
+  const typeSel = h('select', {}, h('option', { value: 'single' }, 'Single answer'), h('option', { value: 'multi' }, 'Multi-select (select all that apply)'));
+  typeSel.value = multi ? 'multi' : 'single';
+  typeSel.addEventListener('change', () => {
+    if (typeSel.value === 'multi') it.a = [typeof it.a === 'number' ? it.a : 0];
+    else it.a = Array.isArray(it.a) && it.a.length ? it.a[0] : 0;
+    changed(true); render();
+  });
+  box.append(h('div', { class: 'row' }, field('Answer type', typeSel)));
+
+  box.append(h('h3', {}, 'Options · tick the correct ' + (multi ? 'ones' : 'one')));
+  it.o.forEach((opt, k) => {
+    const isCorrect = multi ? it.a.includes(k) : it.a === k;
+    const mark = h('input', { type: multi ? 'checkbox' : 'radio', name: 'correct', checked: isCorrect, 'aria-label': `Option ${k + 1} is correct` });
+    mark.addEventListener('change', () => {
+      if (multi) { it.a = mark.checked ? [...new Set([...it.a, k])].sort((x, y) => x - y) : it.a.filter(x => x !== k); }
+      else it.a = k;
+      changed(true);
+    });
+    const inp = h('input', { type: 'text', value: opt, 'aria-label': `Option ${k + 1}` });
+    inp.addEventListener('input', () => { it.o[k] = inp.value; changed(); });
+    const rm = h('button', { class: 'small danger', 'aria-label': `Remove option ${k + 1}`, onclick: () => {
+      if (it.o.length <= 2) return;
+      it.o.splice(k, 1);
+      if (multi) it.a = it.a.filter(x => x !== k).map(x => x > k ? x - 1 : x);
+      else if (it.a === k) it.a = 0; else if (it.a > k) it.a -= 1;
+      changed(true); render();
+    } }, '×');
+    box.append(h('div', { class: 'opt' }, mark, inp, rm));
+  });
+  if (it.o.length < 6) box.append(h('button', { class: 'small', onclick: () => { it.o.push(''); changed(); render(); } }, '+ Add option'));
+  box.append(h('p', { class: 'hint' }, 'Options are shuffled in the app, so avoid "all of the above".'));
+
+  box.append(h('h3', {}, 'Explanations'));
+  box.append(h('div', { class: 'row' }, field('Technical', text(it, 't', { area: true }))));
+  box.append(h('div', { class: 'row' }, field('Plain English', text(it, 'p', { area: true }))));
+  const refs = h('textarea', { placeholder: 'https://developer.wordpress.org/…  (one link per line)' });
+  refs.value = (it.refs || []).join('\n');
+  refs.addEventListener('input', () => { const v = refs.value.split('\n').map(x => x.trim()).filter(Boolean); if (v.length) it.refs = v; else delete it.refs; changed(); });
+  box.append(h('div', { class: 'row' }, field('Sources (optional)', refs)));
+}
+
+/* ---------- scenario form ---------- */
+const zeroM = () => ({ speed: 0, security: 0, stability: 0, rootCause: 0, communication: 0 });
+function blankScenario() {
+  return { id: 'new-scenario-' + (S.scenarios.length + 1), title: '', s: 'Debugging', level: 'Subscriber', stage: 1, d: 1,
+    priorities: { speed: 2, security: 2, stability: 2, rootCause: 2, communication: 1 }, intro: '', start: 's1',
+    steps: { s1: { type: 'single', prompt: '', options: [
+      { text: '', next: 'o:good', min: 10, m: zeroM(), t: '', p: '' },
+      { text: '', next: 'o:bad', min: 10, m: zeroM(), t: '', p: '' }] } },
+    outcomes: { good: { title: '', verdict: 'good', summary: '', t: '', p: '' }, bad: { title: '', verdict: 'bad', summary: '', t: '', p: '' } },
+    ideal: { fastestSafe: ['s1:0'] } };
+}
+function meterInputs(m) {
+  return h('div', { class: 'meters' }, D.METERS.map(k => {
+    const inp = h('input', { type: 'number', min: -2, max: 2, step: 1, value: m[k] ?? 0 });
+    inp.addEventListener('input', () => { const v = parseInt(inp.value, 10); if (Number.isNaN(v) || v === 0) delete m[k]; else m[k] = v; changed(); });
+    return h('label', {}, D.METER_LABELS[k], inp);
+  }));
+}
+function targets(sc) {
+  return Object.keys(sc.steps).map(id => [id, 'Step ' + id]).concat(Object.keys(sc.outcomes).map(id => ['o:' + id, 'Outcome: ' + id]));
+}
+function renameKey(obj, oldK, newK) {
+  const out = {}; Object.keys(obj).forEach(k => { out[k === oldK ? newK : k] = obj[k]; }); return out;
+}
+function renameStep(sc, oldId, newId) {
+  if (!newId || newId === oldId || sc.steps[newId]) return false;
+  sc.steps = renameKey(sc.steps, oldId, newId);
+  if (sc.start === oldId) sc.start = newId;
+  Object.values(sc.steps).forEach(st => { if (st.next === oldId) st.next = newId; (st.options || []).forEach(o => { if (o.next === oldId) o.next = newId; }); });
+  if (sc.ideal) Object.keys(sc.ideal).forEach(n => { sc.ideal[n] = sc.ideal[n].map(e => e.split(':')[0] === oldId ? newId + ':' + e.split(':')[1] : e); });
+  return true;
+}
+function renameOutcome(sc, oldId, newId) {
+  if (!newId || newId === oldId || sc.outcomes[newId]) return false;
+  sc.outcomes = renameKey(sc.outcomes, oldId, newId);
+  Object.values(sc.steps).forEach(st => { if (st.next === 'o:' + oldId) st.next = 'o:' + newId; (st.options || []).forEach(o => { if (o.next === 'o:' + oldId) o.next = 'o:' + newId; }); });
+  return true;
+}
+function idInput(current, onRename) {
+  const inp = h('input', { type: 'text', value: current, style: 'width:120px', 'aria-label': 'ID' });
+  inp.addEventListener('change', () => { const v = inp.value.trim().replace(/[^A-Za-z0-9_-]/g, ''); if (!onRename(v)) inp.value = current; else { changed(true); render(); } });
+  return inp;
+}
+function renderScenarioForm(box) {
+  const sc = S.scenarios[S.si];
+  if (!sc) { box.append(h('div', { class: 'empty' }, 'Pick a scenario on the left, or add a new one.')); return; }
+  box.append(h('h2', {}, `Scenario ${S.si + 1}`));
+  box.append(h('div', { class: 'row' }, field('Title', text(sc, 'title', { rerenderList: true })), field('ID (lower-case-with-hyphens)', text(sc, 'id'))));
+  box.append(h('div', { class: 'row' },
+    field('Section', select(sc, 's', D.SECTIONS)),
+    field('Role level', select(sc, 'level', D.ROLES)),
+    field('Stage', select(sc, 'stage', [['1', 'I'], ['2', 'II'], ['3', 'III']], { num: true }), 'narrow'),
+    field('Difficulty', select(sc, 'd', [['1', '1'], ['2', '2'], ['3', '3']], { num: true }), 'narrow')));
+  box.append(h('div', { class: 'row' }, field('The situation (intro)', text(sc, 'intro', { area: true }))));
+  box.append(h('div', { class: 'row' }, field('Where the times come from (timeNotes)', text(sc, 'timeNotes', { area: true }))));
+  { const ta = h('textarea', { rows: 2 }); ta.value = (sc.refs || []).join('\n'); ta.addEventListener('input', () => { const v = ta.value.split(/\s+/).filter(Boolean); if (v.length) sc.refs = v; else delete sc.refs; changed(); }); box.append(h('div', { class: 'row' }, field('Sources (one https link per line)', ta))); }
+  box.append(h('h3', {}, 'What matters most here (weight 1–3)'));
+  box.append(h('div', { class: 'meters' }, D.METERS.map(k => h('label', {}, D.METER_LABELS[k], select(sc.priorities, k, [['1', '1'], ['2', '2'], ['3', '3']], { num: true })))));
+  box.append(h('div', { class: 'row', style: 'margin-top:12px' }, field('First step', select(sc, 'start', Object.keys(sc.steps)), 'narrow')));
+
+  box.append(h('h3', {}, 'Steps'));
+  Object.entries(sc.steps).forEach(([sid, st]) => {
+    const card = h('div', { class: 'card step' });
+    const typeSel = h('select', {}, h('option', { value: 'single' }, 'Single choice (branches)'), h('option', { value: 'multi' }, 'Multi-select checks'));
+    typeSel.value = st.type;
+    typeSel.addEventListener('change', () => {
+      st.type = typeSel.value;
+      if (st.type === 'multi') { st.next = st.options[0] && st.options[0].next || Object.keys(sc.outcomes).map(o => 'o:' + o)[0]; st.missPenalty = st.missPenalty || { rootCause: -1 }; st.options.forEach(o => { delete o.next; delete o.min; o.good = o.good ?? true; }); }
+      else { st.options.forEach(o => { o.next = st.next; o.min = o.min ?? 10; delete o.good; delete o.critical; }); delete st.next; delete st.missPenalty; }
+      changed(true); render();
+    });
+    card.append(h('div', { class: 'head' }, h('strong', {}, 'Step'), idInput(sid, v => renameStep(sc, sid, v)), typeSel,
+      h('button', { class: 'small danger', onclick: () => { if (Object.keys(sc.steps).length < 2) return; delete sc.steps[sid]; if (sc.start === sid) sc.start = Object.keys(sc.steps)[0]; changed(true); render(); } }, 'Remove step')));
+    card.append(h('div', { class: 'row' }, field('Prompt', text(st, 'prompt'))));
+    if (st.type === 'multi') {
+      card.append(h('div', { class: 'row' }, field('After this step, go to', select(st, 'next', targets(sc)))));
+      st.missPenalty = st.missPenalty || {};
+      card.append(h('p', { class: 'hint' }, 'Penalty for each critical option the player misses:'), meterInputs(st.missPenalty));
+    }
+    st.options.forEach((o, k) => {
+      const oc = h('div', { class: 'card', style: 'background:#F9FBFD' });
+      const head = h('div', { class: 'head' }, h('strong', {}, `Option ${k + 1}`));
+      if (st.type === 'multi') {
+        const good = h('input', { type: 'checkbox', checked: o.good }); good.addEventListener('change', () => { o.good = good.checked; if (!o.good) delete o.critical; changed(); render(); });
+        const crit = h('input', { type: 'checkbox', checked: o.critical, disabled: !o.good }); crit.addEventListener('change', () => { if (crit.checked) o.critical = true; else delete o.critical; changed(); });
+        head.append(h('label', {}, good, ' Good choice'), h('label', {}, crit, ' Critical (missing it costs points)'));
+      }
+      head.append(h('button', { class: 'small danger', onclick: () => { if (st.options.length <= 2) return; st.options.splice(k, 1); changed(true); render(); } }, 'Remove'));
+      oc.append(head, h('div', { class: 'row' }, field('Option text', text(o, 'text'))));
+      if (st.type === 'single') {
+        const cur = Array.isArray(o.min) ? o.min : (o.min === undefined ? [] : [o.min, o.min]);
+        const loI = h('input', { type: 'number', min: 0, value: cur[0] ?? '' }), hiI = h('input', { type: 'number', min: 0, value: cur[1] ?? '' });
+        const setMin = () => { if (loI.value === '' && hiI.value === '') delete o.min; else { const lo = Number(loI.value || hiI.value), hi = Number(hiI.value || loI.value); o.min = lo === hi ? lo : [lo, hi]; } changed(); };
+        loI.addEventListener('input', setMin); hiI.addEventListener('input', setMin);
+        oc.append(h('div', { class: 'row' }, field('Leads to', select(o, 'next', targets(sc))), field('Minutes from', loI, 'narrow'), field('to', hiI, 'narrow')));
+      }
+      o.m = o.m || {};
+      oc.append(h('p', { class: 'hint' }, 'Meter changes (−2 to +2):'), meterInputs(o.m));
+      oc.append(h('div', { class: 'row', style: 'margin-top:10px' }, field('Technical feedback', text(o, 't', { area: true })), field('Plain-English feedback', text(o, 'p', { area: true }))));
+      card.append(oc);
+    });
+    card.append(h('button', { class: 'small', onclick: () => { st.options.push(st.type === 'single' ? { text: '', next: Object.keys(sc.outcomes).map(x => 'o:' + x)[0], min: 10, m: zeroM(), t: '', p: '' } : { text: '', good: true, m: zeroM(), t: '', p: '' }); changed(); render(); } }, '+ Add option'));
+    box.append(card);
+  });
+  box.append(h('button', { onclick: () => { let n = Object.keys(sc.steps).length + 1; while (sc.steps['s' + n]) n++; sc.steps['s' + n] = { type: 'single', prompt: '', options: [{ text: '', next: Object.keys(sc.outcomes).map(x => 'o:' + x)[0], min: 10, m: zeroM(), t: '', p: '' }, { text: '', next: Object.keys(sc.outcomes).map(x => 'o:' + x)[0], min: 10, m: zeroM(), t: '', p: '' }] }; changed(true); render(); } }, '+ Add step'));
+
+  box.append(h('h3', {}, 'Outcomes'));
+  Object.entries(sc.outcomes).forEach(([oid, oc]) => {
+    const card = h('div', { class: 'card' });
+    card.append(h('div', { class: 'head' }, h('strong', {}, 'Outcome'), idInput(oid, v => renameOutcome(sc, oid, v)),
+      select(oc, 'verdict', D.VERDICTS),
+      h('button', { class: 'small danger', onclick: () => { if (Object.keys(sc.outcomes).length < 2) return; delete sc.outcomes[oid]; changed(true); render(); } }, 'Remove outcome')));
+    card.append(h('div', { class: 'row' }, field('Title', text(oc, 'title')), field('Summary', text(oc, 'summary'))));
+    card.append(h('div', { class: 'row' }, field('Technical', text(oc, 't', { area: true })), field('Plain English', text(oc, 'p', { area: true }))));
+    box.append(card);
+  });
+  box.append(h('button', { onclick: () => { let n = Object.keys(sc.outcomes).length + 1; while (sc.outcomes['outcome-' + n]) n++; sc.outcomes['outcome-' + n] = { title: '', verdict: 'mixed', summary: '', t: '', p: '' }; changed(true); render(); } }, '+ Add outcome'));
+
+  box.append(h('h3', {}, 'Ideal paths'));
+  const ideal = h('textarea', { style: 'min-height:80px;font-family:ui-monospace,Menlo,Consolas,monospace' });
+  ideal.value = Object.entries(sc.ideal || {}).map(([n, p]) => `${n}: ${p.join(', ')}`).join('\n');
+  ideal.addEventListener('input', () => {
+    const out = {};
+    ideal.value.split('\n').forEach(line => { const m = line.match(/^\s*([A-Za-z]\w*)\s*:\s*(.+)$/); if (m) out[m[1]] = m[2].split(',').map(x => x.trim()).filter(Boolean); });
+    sc.ideal = out; changed();
+  });
+  box.append(field('One path per line, for example  fastestSafe: s1:0, s2:all, s3:1  (option numbers start at 0; use :all for multi-select steps)', ideal));
+}
+
+/* ---------- render ---------- */
+function render() {
+  $('tabQ').setAttribute('aria-selected', S.tab === 'q'); $('tabS').setAttribute('aria-selected', S.tab === 's');
+  const box = $('form'); box.innerHTML = '';
+  if (S.tab === 'q') renderQuestionForm(box); else renderScenarioForm(box);
+  renderList(); renderIssues();
+}
+
+/* ---------- files ---------- */
+function readFile(input, global, onLoad) {
+  input.addEventListener('change', () => {
+    const f = input.files[0]; if (!f) return;
+    const rd = new FileReader();
+    rd.onload = () => {
+      try {
+        const list = D.parseBankFile(rd.result, global);
+        if (!Array.isArray(list)) throw new Error(`no window.${global} list found in this file`);
+        onLoad(list, D.headerOf(rd.result, global)); render();
+      } catch (e) { $('issues').innerHTML = ''; $('issues').append(h('div', { class: 'issue err' }, `Couldn't read ${f.name}: ${e.message}`)); }
+      input.value = '';
+    };
+    rd.readAsText(f);
+  });
+}
+readFile($('openQ'), 'QUESTION_BANK', (list, header) => { S.questions = list; S.qHeader = header; S.qi = list.length ? 0 : -1; S.tab = 'q'; });
+readFile($('openS'), 'SCENARIO_BANK', (list, header) => { S.scenarios = list; S.sHeader = header; S.si = list.length ? 0 : -1; S.tab = 's'; });
+function download(name, content) {
+  const a = h('a', { href: URL.createObjectURL(new Blob([content], { type: 'text/javascript' })), download: name });
+  document.body.append(a); a.click(); a.remove(); S.dirty = false;
+}
+$('dlQ').addEventListener('click', () => download('questions.js', D.toQuestionsFile(S.questions, S.qHeader || DEFAULT_Q_HEADER)));
+$('dlS').addEventListener('click', () => download('scenarios.js', D.toScenariosFile(S.scenarios, S.sHeader || DEFAULT_S_HEADER)));
+
+/* ---------- toolbar ---------- */
+$('tabQ').addEventListener('click', () => { S.tab = 'q'; render(); });
+$('tabS').addEventListener('click', () => { S.tab = 's'; render(); });
+$('addBtn').addEventListener('click', () => {
+  if (S.tab === 'q') { S.questions.push(blankQuestion()); S.qi = S.questions.length - 1; }
+  else { S.scenarios.push(blankScenario()); S.si = S.scenarios.length - 1; }
+  changed(true); render();
+});
+$('dupBtn').addEventListener('click', () => {
+  if (S.tab === 'q' && S.questions[S.qi]) { const c = JSON.parse(JSON.stringify(S.questions[S.qi])); c.q += ' (copy)'; S.questions.splice(S.qi + 1, 0, c); S.qi++; }
+  if (S.tab === 's' && S.scenarios[S.si]) { const c = JSON.parse(JSON.stringify(S.scenarios[S.si])); c.id += '-copy'; c.title += ' (copy)'; S.scenarios.splice(S.si + 1, 0, c); S.si++; }
+  changed(true); render();
+});
+$('delBtn').addEventListener('click', () => {
+  const arr = S.tab === 'q' ? S.questions : S.scenarios, i = S.tab === 'q' ? S.qi : S.si;
+  if (!arr[i] || !confirm('Delete this ' + (S.tab === 'q' ? 'question' : 'scenario') + '?')) return;
+  arr.splice(i, 1);
+  if (S.tab === 'q') S.qi = Math.min(i, arr.length - 1); else S.si = Math.min(i, arr.length - 1);
+  changed(true); render();
+});
+$('search').addEventListener('input', renderList);
+$('fSection').append(...D.SECTIONS.map(s => h('option', { value: s }, s)));
+$('fSection').addEventListener('change', renderList);
+
+/* ---------- start: offer the saved draft ---------- */
+try {
+  const draft = JSON.parse(localStorage.getItem('pressprep-editor-draft') || 'null');
+  if (draft && (draft.questions.length || draft.scenarios.length)) {
+    Object.assign(S, { questions: draft.questions, scenarios: draft.scenarios, qHeader: draft.qHeader || '', sHeader: draft.sHeader || '', qi: draft.questions.length ? 0 : -1, si: draft.scenarios.length ? 0 : -1 });
+    S.restored = true;
+  }
+} catch (e) {}
+render();
+if (S.restored) {
+  const note = h('div', { class: 'issue warn', style: 'margin:12px 20px 0' }, 'Restored your unsaved work from last time. Open a file to start fresh, or ',
+    h('button', { class: 'small', onclick: () => { try { localStorage.removeItem('pressprep-editor-draft'); } catch (e) {} location.reload(); } }, 'clear the draft'));
+  document.querySelector('.tabs').after(note);
+}
+</script>
+</body>
+</html>

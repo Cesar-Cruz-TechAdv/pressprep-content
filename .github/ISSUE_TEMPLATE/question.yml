@@ -1,0 +1,84 @@
+name: New technical question
+description: Suggest a multiple-choice question for the question bank.
+title: "[Question] "
+labels: ["content", "question", "needs-review"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for contributing! Write it in your own words: no real exam questions or paid course material.
+        Every question is reviewed against official documentation before it's added.
+  - type: dropdown
+    id: section
+    attributes:
+      label: Exam section
+      options:
+        - WordPress Core
+        - Custom Development
+        - Security
+        - Performance
+        - Scalability
+        - Debugging
+        - Change Management
+        - Disaster Recovery
+    validations:
+      required: true
+  - type: dropdown
+    id: level
+    attributes:
+      label: Suggested level
+      options:
+        - Subscriber (beginner)
+        - Contributor (intermediate)
+        - Author (advanced)
+        - Editor (expert)
+        - Administrator (master)
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+    validations:
+      required: true
+  - type: textarea
+    id: options
+    attributes:
+      label: Answer options
+      description: One per line, 2 to 6 options.
+    validations:
+      required: true
+  - type: input
+    id: correct
+    attributes:
+      label: Correct option(s)
+      description: The line number(s), for example "2" or "1, 3" for select-all-that-apply.
+    validations:
+      required: true
+  - type: textarea
+    id: technical
+    attributes:
+      label: Technical explanation
+    validations:
+      required: true
+  - type: textarea
+    id: plain
+    attributes:
+      label: Plain-English explanation
+      description: How you'd explain it to someone who isn't a developer.
+    validations:
+      required: true
+  - type: textarea
+    id: refs
+    attributes:
+      label: Sources
+      description: Links to official documentation (developer.wordpress.org, php.net, the tool's own docs). One per line.
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Contribution terms
+      options:
+        - label: This is my own work, not copied from an exam, course or book, and I agree it may be edited and published under CC BY-SA 4.0.
+          required: true

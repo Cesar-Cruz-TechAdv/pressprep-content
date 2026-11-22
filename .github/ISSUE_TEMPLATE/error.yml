@@ -1,0 +1,31 @@
+name: Report an error in a question
+description: Something is wrong, unclear or outdated in an existing question or scenario.
+title: "[Error] "
+labels: ["content", "error-report"]
+body:
+  - type: input
+    id: qid
+    attributes:
+      label: Question or scenario ID
+      description: Shown on the Report a problem sheet in the app, or paste the question text.
+    validations:
+      required: true
+  - type: dropdown
+    id: reason
+    attributes:
+      label: What's wrong?
+      options:
+        - The marked answer is wrong
+        - The question is unclear
+        - It's outdated for current WordPress
+        - A link or source is broken
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: What's wrong, and a source that shows the correct answer if you have one.
+    validations:
+      required: true
