@@ -6512,5 +6512,100 @@ window.QUESTION_BANK = [
     t: "WordPress 5.5 added a sitemap index at /wp-sitemap.xml and references it in the robots.txt that WordPress generates. If an SEO plugin provides its own sitemap, core's can be turned off with the wp_sitemaps_enabled filter returning false. Leaving both on is how robots.txt ends up listing several sitemaps.",
     p: "WordPress publishes its own sitemap and points search engines to it from robots.txt. If an SEO plugin makes another sitemap, you usually want only one of them.",
     refs: ["https://make.wordpress.org/core/2020/07/22/new-xml-sitemaps-functionality-in-wordpress-5-5/"]
+  },
+  {
+    id: "q-0464",
+    s: "WordPress Core", d: 1, level: "Contributor", stage: 1,
+    q: "A shared parent theme is used across several client sites, each with its own child theme. A developer adds a small helper function straight into the parent theme's functions.php for one client. What does the Theme Handbook warn will happen?",
+    o: [
+      "The function will disappear the next time the parent theme is updated",
+      "The child theme's functions.php will stop loading",
+      "WordPress will deactivate the parent theme on the next update check",
+      "The function will only run in the admin area"
+    ],
+    a: 0,
+    t: "The handbook calls adding functions directly to a parent's functions.php poor practice because a theme update replaces those files. A child theme's functions.php loads in addition to the parent's, immediately before it, so the same code placed in the child survives the update.",
+    p: "Updating the parent theme replaces its files, so anything written into them is wiped out. Put the change in the child theme and it stays.",
+    refs: ["https://developer.wordpress.org/themes/advanced-topics/child-themes/"]
+  },
+  {
+    id: "q-0465",
+    s: "Custom Development", d: 2, level: "Contributor", stage: 2,
+    q: "A parent theme ships template-parts/team/bio.php and calls it with get_template_part(). One client needs different markup there, so a developer adds a file at the same relative path inside that client's child theme. What happens on that site?",
+    o: [
+      "The child theme's file is used instead of the parent's",
+      "Both files are included, parent first",
+      "The parent's file is used; only files in the theme root can be overridden",
+      "Nothing loads until the path is registered with locate_template()"
+    ],
+    a: 0,
+    t: "get_template_part() resolves its candidate filenames through locate_template(), which is documented as searching the stylesheet directory before the template directory. The child theme is the stylesheet directory, so a file at the same relative path shadows the parent's without forking it.",
+    p: "WordPress checks the child theme first, so a file with the same name and folder path in the child quietly replaces the parent's version for that one site.",
+    refs: [
+      "https://developer.wordpress.org/reference/functions/get_template_part/",
+      "https://developer.wordpress.org/reference/functions/locate_template/"
+    ]
+  },
+  {
+    id: "q-0466",
+    s: "Change Management", d: 2, level: "Author", stage: 2,
+    q: "An editing policy tells content staff to make small visual tweaks in Customizer then Additional CSS rather than editing theme files, on the grounds that it leaves no untracked change in the codebase. Where does that CSS actually live?",
+    o: [
+      "In the database, as a custom_css post stored per theme",
+      "Appended to style.css in the active theme",
+      "In a generated file under wp-content/uploads",
+      "In wp-config.php"
+    ],
+    a: 0,
+    t: "Additional CSS is stored as a custom_css post fetched per theme stylesheet, so it is database content rather than a tracked theme file and survives theme updates. Because it is keyed to the stylesheet, it does not follow the site to a different theme.",
+    p: "That CSS is saved in the site's database and attached to the theme in use, not written into any theme file. It survives updates, but it does not come along if the site moves to a different theme.",
+    refs: ["https://developer.wordpress.org/reference/functions/wp_get_custom_css_post/"]
+  },
+  {
+    id: "q-0467",
+    s: "Debugging", d: 2, level: "Author", stage: 1,
+    q: "A shared theme file contains the line $build = release_stamp; where release_stamp is not a defined constant. The site is moved from PHP 7.4 to PHP 8. What happens when that line runs?",
+    o: [
+      "It throws an Error, so the request fatals",
+      "It raises a warning and $build becomes the string \"release_stamp\"",
+      "It raises a notice and $build becomes null",
+      "It is a parse error, so the file never loads"
+    ],
+    a: 0,
+    t: "PHP 8.0 converted access to undefined unqualified constants from a warning into an Error exception; previously the bare word was interpreted as a string, which is the PHP 7 behaviour described by the second option. It is a runtime error, not a parse error, so the file loads and fails when the line executes.",
+    p: "Older PHP quietly treated the bare word as text. PHP 8 treats it as a mistake and stops the page.",
+    refs: ["https://www.php.net/manual/en/migration80.incompatible.php"]
+  },
+  {
+    id: "q-0468",
+    s: "Scalability", d: 3, level: "Editor", stage: 2,
+    q: "A login rate limiter keeps its per-account and per-IP counters in transients. The site runs a persistent object cache. What does the Transients API documentation warn about?",
+    o: [
+      "A transient can vanish before its expiration, so code must cope with it being absent",
+      "Transients cannot be used at all when an object cache is present",
+      "Transients are always kept in wp_options regardless of the object cache",
+      "A transient is guaranteed to live exactly until its expiration and no longer"
+    ],
+    a: 0,
+    t: "The Transients API states that transients should never be assumed to be in the database and may expire before $expiration because of external object caches or database upgrades, and that code needs a fallback to regenerate the data. For a rate limiter that absence fails open, so a hard guarantee needs storage that is not evictable.",
+    p: "This kind of temporary storage can be cleared out early, and when the counter disappears the limit stops applying. For something that has to hold, use storage that cannot be dropped.",
+    refs: ["https://developer.wordpress.org/apis/transients/"]
+  },
+  {
+    id: "q-0469",
+    s: "Security", d: 3, level: "Editor", stage: 3,
+    q: "Logs show a script sweeping a site's lost-password form with a list of guessed usernames. Valid accounts produced a redirect to a confirmation screen; invalid ones produced a 200 with an error page. What is the underlying weakness, and what is the documented remediation?",
+    o: [
+      "The form's responses differ by account validity, which enumerates users; return a consistent generic response for every outcome",
+      "The password reset keys are too short; lengthen them",
+      "The form lacks a CAPTCHA, which is the only control that prevents enumeration",
+      "The usernames were weak; forcing longer usernames closes the hole"
+    ],
+    a: 0,
+    t: "This is account enumeration (WSTG-IDNT-04): the attacker separates real accounts from guesses by comparing responses, including status codes and redirects, not by cracking anything. The remediation OWASP gives is consistent, generic responses whatever the outcome; rate limiting and reducing which usernames are publicly discoverable are complementary, not substitutes.",
+    p: "The form told the attacker which names were real by answering differently. Make the answer identical either way so the form stops confirming anything.",
+    refs: [
+      "https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/03-Identity_Management_Testing/04-Testing_for_Account_Enumeration_and_Guessable_User_Account"
+    ]
   }
 ];

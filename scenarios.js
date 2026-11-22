@@ -1803,5 +1803,157 @@ window.SCENARIO_BANK = [
     ideal: {
       safest: ["s1:0", "s2:all", "s3:all"]
     }
+  },
+
+  {
+    id: "password-reset-sweep",
+    title: "Password resets nobody asked for",
+    s: "Security",
+    level: "Editor",
+    stage: 2,
+    d: 3,
+    priorities: { speed: 2, security: 3, stability: 2, rootCause: 3, communication: 2 },
+    intro: "A client site you manage sends a burst of password reset emails in under a minute. Several real staff accounts are affected; the client's office manager is already asking whether they have been hacked. Nothing on the site appears broken.",
+    timeNotes: "Minute estimates are judgment calls based on typical agency incident handling, not figures from any vendor documentation. The technical behaviours in the feedback are documented: the must-use plugin loading rules, the default roles, and the enumeration remediation.",
+    refs: [
+      "https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/03-Identity_Management_Testing/04-Testing_for_Account_Enumeration_and_Guessable_User_Account",
+      "https://developer.wordpress.org/advanced-administration/plugins/mu-plugins/",
+      "https://wordpress.org/documentation/article/roles-and-capabilities/"
+    ],
+    start: "s1",
+    steps: {
+      s1: {
+        type: "single",
+        prompt: "First move?",
+        options: [
+          {
+            text: "Pull the web server access logs filtered to that time window and work out what was actually requested, from where",
+            m: { speed: 1, rootCause: 2, communication: 1 },
+            min: [15, 45],
+            t: "The request pattern tells you whether this was one confused user, a credential-stuffing run or an enumeration sweep, and which accounts returned a different response. Every later decision depends on that distinction.",
+            p: "Look at the site's visitor records for that minute first. What you do next depends entirely on what actually happened.",
+            next: "s2"
+          },
+          {
+            text: "Force a password reset on every user and log everyone out immediately",
+            m: { security: 1, stability: -1, rootCause: -1, communication: -1 },
+            min: [30, 60],
+            t: "This locks out the whole client team mid-working-day on an unverified assumption and removes none of the attacker's actual advantage if the issue is enumeration rather than a compromise. It also burns the trust you need for the real hardening conversation.",
+            p: "Big, disruptive, and aimed at a problem you have not confirmed yet. It interrupts the whole team without fixing the cause.",
+            next: "s2"
+          },
+          {
+            text: "Assume the host's firewall already stopped it and tell the office manager there is nothing to worry about",
+            m: { security: -2, rootCause: -2, communication: -1 },
+            min: 5,
+            t: "You have asserted a control you have not verified and closed the incident without evidence. If the reset links reached real inboxes, the client's team needed to be told not to click them.",
+            p: "You told the client it was fine without checking. If those emails reached real people, they needed a warning today.",
+            next: "o:left-open"
+          },
+          {
+            text: "Email every user telling them to change their password straight away",
+            m: { communication: 1, speed: -1, rootCause: -1 },
+            min: [20, 40],
+            t: "Warning people is reasonable, but sent before you know what happened it reads as a breach notice and invites exactly the panicked clicking you want to avoid. Telling the affected users not to click the unexpected links is the more precise message.",
+            p: "Warning people is fair, but sending it before you know the facts sounds like a breach and can make things worse.",
+            next: "s2"
+          }
+        ]
+      },
+      s2: {
+        type: "multi",
+        prompt: "The logs show one source sweeping a list of guessed usernames at the lost-password form, with real accounts answering differently from invalid ones. Which measures do you put in place? Select all that apply.",
+        missPenalty: { rootCause: -1 },
+        options: [
+          {
+            text: "Make the lost-password response identical whether or not the account exists",
+            good: true,
+            critical: true,
+            m: { security: 2, rootCause: 2 },
+            t: "This closes the enumeration oracle itself, which is the remediation OWASP gives for WSTG-IDNT-04: consistent generic responses regardless of account validity. Accept the cost that a legitimate user who asks twice sees the same confirmation and gets no second email.",
+            p: "Make the form give the same answer either way, so it stops confirming which names are real."
+          },
+          {
+            text: "Cut the number of Administrator accounts and move content staff to the Editor role",
+            good: true,
+            critical: true,
+            m: { security: 2, stability: 1 },
+            t: "Editor can publish and manage everyone's posts and pages without install_plugins or edit_themes, so it covers what content staff actually do. Nine administrators, several at outside vendors, is the blast radius regardless of how this particular bot did.",
+            p: "Fewer people with full control means less damage if any one account is taken over, and content staff lose nothing they need."
+          },
+          {
+            text: "Enable two-factor authentication on the accounts that stay privileged",
+            good: true,
+            m: { security: 2, speed: -1 },
+            t: "Enumeration plus a stolen or reused password is the realistic path to compromise here; a second factor breaks that chain even when the username is known. Do the privileged accounts first rather than waiting for a fleet-wide rollout.",
+            p: "A second login step means knowing the username and password is no longer enough."
+          },
+          {
+            text: "Move the login page to a secret URL so the bot cannot find it",
+            good: false,
+            m: { speed: -1, rootCause: -1 },
+            t: "The address is discoverable and the oracle survives the move, so this hides the symptom while leaving the differing responses intact. It also tends to break legitimate integrations that post to the standard endpoint.",
+            p: "Hiding the door does not stop the form telling an attacker which names are real, and it often breaks other things."
+          }
+        ],
+        next: "s3"
+      },
+      s3: {
+        type: "single",
+        prompt: "Where does the hardening code live?",
+        options: [
+          {
+            text: "A single PHP file placed directly in wp-content/mu-plugins",
+            m: { security: 2, stability: 1, rootCause: 1 },
+            min: [20, 40],
+            t: "Must-use plugins load automatically and cannot be deactivated from wp-admin, so the control survives a compromised administrator account. Keep the file at the top level of that directory, since subdirectories are not scanned without a loader file.",
+            p: "Put it in the must-use plugins folder, as a file directly in that folder. It runs automatically and nobody can switch it off from the dashboard.",
+            next: "o:closed"
+          },
+          {
+            text: "Included from the child theme's functions.php with require_once",
+            m: { security: 1, stability: 0 },
+            min: [20, 40],
+            t: "This works and survives parent theme updates, but it ties a security control to the active theme and to one site. A theme switch or a redesign silently removes the protection.",
+            p: "It works for now, but the protection disappears the day the site changes theme.",
+            next: "o:partial"
+          },
+          {
+            text: "Added to the shared parent theme's functions.php on the server so every client site gets it at once",
+            m: { security: 1, stability: -2, rootCause: -1 },
+            min: [15, 30],
+            t: "Patching a shared parent theme in place on a server is how copies diverge in the first place: the change exists nowhere else and is invisible to whoever touches the site next. Enforce the boundary with DISALLOW_FILE_EDIT and ship shared changes through the repository.",
+            p: "Editing the shared theme directly on a server is exactly how different sites end up with different code and nobody knowing which is right.",
+            next: "o:partial"
+          }
+        ]
+      }
+    },
+    outcomes: {
+      closed: {
+        title: "Oracle closed, blast radius smaller",
+        verdict: "good",
+        summary: "You established what happened from evidence, removed the behaviour that leaked valid usernames, and cut the number of accounts worth attacking.",
+        t: "The enumeration path is closed at the source, the privileged account count is down, and the control is in a must-use plugin that a compromised administrator cannot disable. Note for the write-up that per-IP limits are weaker than per-account ones, since a forwarded-for header is client-supplied.",
+        p: "You found out what really happened, stopped the form giving away who is real, and reduced how many accounts matter. The protection is somewhere nobody can switch it off."
+      },
+      partial: {
+        title: "Fixed, but it will not stay fixed",
+        verdict: "ok",
+        summary: "The immediate hole is closed, but the control is attached to something that will change.",
+        t: "A theme-bound or server-edited control is one redesign or one deploy away from vanishing, and nothing records that it was ever there. Move it to a must-use plugin and write the decision down.",
+        p: "The problem is handled today, but the fix is parked somewhere that will get replaced, and then it is gone without anyone noticing."
+      },
+      "left-open": {
+        title: "Still open, and now on record as fine",
+        verdict: "bad",
+        summary: "You closed the incident without evidence and told the client there was nothing wrong.",
+        t: "The enumeration behaviour is intact, the account list is still discoverable, and the people who received unexpected reset emails were never told not to click them. The next sweep will be cheaper for the attacker than this one.",
+        p: "Nothing was fixed and the client was told not to worry. The people who got those emails never found out they should ignore them."
+      }
+    },
+    ideal: {
+      safest: ["s1:0", "s2:all", "s3:0"]
+    }
   }
 ];
