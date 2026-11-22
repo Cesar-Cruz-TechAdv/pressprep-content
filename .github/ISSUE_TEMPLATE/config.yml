@@ -1,5 +1,5 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Not a developer? Use the in-app form
-    url: https://tally.so/
-    about: The PressPrep app's Contribute screen opens a simple form. No GitHub account needed.
+  - name: Not a developer? Use the simple form
+    url: https://tally.so/r/Nq762b
+    about: The same form the app opens. No GitHub account needed.
