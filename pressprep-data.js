@@ -60,7 +60,8 @@
       if (q.level !== undefined && !ROLES.includes(q.level)) r.err(where, `level must be one of: ${ROLES.join(', ')}`);
       if (q.stage !== undefined && !isInt(q.stage, 1, 3)) r.err(where, 'stage must be 1, 2 or 3');
       if (q.refs !== undefined && (!Array.isArray(q.refs) || q.refs.some(u => !/^https:\/\//.test(u)))) r.err(where, 'refs must be a list of https:// links');
-      if (q.id !== undefined) { if (seenIds.has(q.id)) r.err(where, `id "${q.id}" is used twice`); seenIds.add(q.id); }
+      if (!isStr(q.id) || !/^q-\d{4,}$/.test(q.id)) r.err(where, 'id must look like "q-0123" (the editor assigns it; never reuse or change one)');
+      else { if (seenIds.has(q.id)) r.err(where, `id "${q.id}" is used twice`); seenIds.add(q.id); }
       if (isStr(q.q)) {
         const key = q.q.trim().toLowerCase();
         if (seenText.has(key)) r.err(where, `same question text as question ${seenText.get(key) + 1}`);

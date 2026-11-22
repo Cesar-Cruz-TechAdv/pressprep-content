@@ -186,7 +186,8 @@ function renderList() {
 }
 
 /* ---------- question form ---------- */
-function blankQuestion() { return { s: 'WordPress Core', d: 2, q: '', o: ['', '', '', ''], a: 0, t: '', p: '' }; }
+function nextQuestionId() { const n = S.questions.reduce((m, q) => Math.max(m, parseInt(String(q.id || '').slice(2), 10) || 0), 0) + 1; return 'q-' + String(n).padStart(4, '0'); }
+function blankQuestion() { return { id: nextQuestionId(), s: 'WordPress Core', d: 2, q: '', o: ['', '', '', ''], a: 0, t: '', p: '' }; }
 function renderQuestionForm(box) {
   const it = S.questions[S.qi];
   if (!it) { box.append(h('div', { class: 'empty' }, 'Pick a question on the left, or add a new one.')); return; }

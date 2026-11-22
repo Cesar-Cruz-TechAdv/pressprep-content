@@ -30,6 +30,10 @@ node validate.js
 - `node validate.js --format` also rewrites both files in the standard layout, which keeps pull request diffs small.
 - `node validate.js --strict` fails on warnings too.
 
+## Question IDs
+
+Every question has a stable `id` such as `q-0123`. The editor gives new questions the next free number. Never change, reuse or renumber an ID, even when you rewrite a question: the app uses it to remember what each player has seen and got wrong, and error reports from the app quote it. To retire a question, delete it; its ID stays unused.
+
 ## Review checklist (for the reviewer)
 
 - [ ] The correct answer is right, checked against official documentation (developer.wordpress.org, php.net, the host's or tool's own docs).

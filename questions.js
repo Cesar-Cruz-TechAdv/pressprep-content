@@ -7,6 +7,8 @@
  * HOW TO ADD A QUESTION: copy a block below, paste it inside the array,
  * and keep the comma between blocks.
  *
+ *   id: stable ID like "q-0451". The editor assigns the next free number. Never change or reuse
+ *       an ID: the app uses it to remember progress and mistakes, and error reports quote it.
  *   s : section. Must be one of:
  *       WordPress Core, Custom Development, Security, Performance, Change Management, Debugging, Scalability, Disaster Recovery
  *   d : difficulty. 1 = Foundational, 2 = Intermediate, 3 = Advanced
@@ -40,6 +42,7 @@
  */
 window.QUESTION_BANK = [
   {
+    id: "q-0001",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "Which default role can publish and manage their own posts, but not other people's?",
     o: ["Subscriber", "Contributor", "Editor", "Author"],
@@ -49,6 +52,7 @@ window.QUESTION_BANK = [
     refs: ["https://wordpress.org/documentation/article/roles-and-capabilities/"]
   },
   {
+    id: "q-0002",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "A guest writer should be able to write and edit their own posts, but not publish them. Which role fits?",
     o: ["Contributor", "Subscriber", "Administrator", "Author"],
@@ -58,6 +62,7 @@ window.QUESTION_BANK = [
     refs: ["https://wordpress.org/documentation/article/roles-and-capabilities/"]
   },
   {
+    id: "q-0003",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "What's the main difference between posts and pages?",
     o: [
@@ -72,6 +77,7 @@ window.QUESTION_BANK = [
     refs: ["https://wordpress.org/documentation/article/administration-screens/"]
   },
   {
+    id: "q-0004",
     s: "Custom Development", d: 1, level: "Subscriber", stage: 1,
     q: "You want to customise a theme you didn't write, without losing your changes when it updates. What should you use?",
     o: [
@@ -86,6 +92,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/themes/advanced-topics/child-themes/"]
   },
   {
+    id: "q-0005",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "Which file holds a site's database connection settings, such as the database name and password?",
     o: ["wp-config.php", "functions.php", "index.php", ".htaccess"],
@@ -95,6 +102,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/apis/wp-config-php/"]
   },
   {
+    id: "q-0006",
     s: "Disaster Recovery", d: 1, level: "Subscriber", stage: 1,
     q: "What should you do before updating WordPress core, themes or plugins on a live site?",
     o: [
@@ -109,6 +117,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/upgrade/upgrading/"]
   },
   {
+    id: "q-0007",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "Where do you choose a site's permalink structure, such as /%postname%/?",
     o: ["Settings → General", "Settings → Permalinks", "Tools → Site Health", "Appearance → Customize"],
@@ -118,6 +127,7 @@ window.QUESTION_BANK = [
     refs: ["https://wordpress.org/documentation/article/customize-permalinks/"]
   },
   {
+    id: "q-0008",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "What does a synced pattern do (called a reusable block before WordPress 6.3)?",
     o: [
@@ -134,6 +144,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0009",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "What does the \"Discourage search engines from indexing this site\" setting do?",
     o: [
@@ -148,6 +159,7 @@ window.QUESTION_BANK = [
     refs: ["https://wordpress.org/documentation/article/settings-reading-screen/"]
   },
   {
+    id: "q-0010",
     s: "Debugging", d: 1, level: "Subscriber", stage: 1,
     q: "Where can you see a summary of critical issues and recommended improvements for a WordPress site?",
     o: ["Settings → Writing", "Tools → Site Health", "Appearance → Widgets", "Users → Profile"],
@@ -157,6 +169,7 @@ window.QUESTION_BANK = [
     refs: ["https://wordpress.org/documentation/article/site-health-screen/"]
   },
   {
+    id: "q-0011",
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "In a theme, which file is the usual place to add features like menu support or to load scripts and styles?",
     o: ["readme.txt", "functions.php", "header.php", "style.css"],
@@ -166,6 +179,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/themes/classic-themes/basics/theme-functions/"]
   },
   {
+    id: "q-0012",
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "What's the correct way for a theme to load a stylesheet on the front end?",
     o: [
@@ -183,6 +197,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0013",
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "Every WordPress theme needs a style.css file. What is its most important job?",
     o: [
@@ -197,6 +212,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/themes/core-concepts/main-stylesheet/"]
   },
   {
+    id: "q-0014",
     s: "Debugging", d: 1, level: "Subscriber", stage: 2,
     q: "What does setting WP_DEBUG to true in wp-config.php do?",
     o: [
@@ -211,6 +227,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/"]
   },
   {
+    id: "q-0015",
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "Which function registers a new shortcode such as [my_button]?",
     o: ["register_shortcode()", "do_shortcode()", "add_shortcode()", "shortcode_atts()"],
@@ -220,6 +237,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/add_shortcode/"]
   },
   {
+    id: "q-0016",
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "Which function creates a custom post type such as \"book\"?",
     o: ["add_post_type()", "create_post_type()", "register_post_type()", "wp_insert_post()"],
@@ -229,6 +247,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/register_post_type/"]
   },
   {
+    id: "q-0017",
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "What's the minimum a PHP file needs for WordPress to recognise it as a plugin?",
     o: [
@@ -243,6 +262,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/plugins/plugin-basics/header-requirements/"]
   },
   {
+    id: "q-0018",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 2,
     q: "Which pair of functions drives the classic WordPress Loop?",
     o: [
@@ -260,6 +280,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0019",
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "In a block theme, which file defines global settings and styles such as colour palettes and font sizes?",
     o: ["editor.css", "theme.json", "blocks.xml", "functions.php"],
@@ -269,6 +290,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/themes/global-settings-and-styles/style-variations/"]
   },
   {
+    id: "q-0020",
     s: "Custom Development", d: 1, level: "Subscriber", stage: 3,
     q: "What does get_template_part( 'parts/card' ) do?",
     o: [
@@ -283,6 +305,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/get_template_part/"]
   },
   {
+    id: "q-0021",
     s: "Custom Development", d: 2, level: "Subscriber", stage: 3,
     q: "In a child theme, which function returns the URL of the child theme's own folder?",
     o: ["get_template_directory_uri()", "get_theme_root()", "get_stylesheet_directory_uri()", "site_url()"],
@@ -292,6 +315,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/get_stylesheet_directory_uri/"]
   },
   {
+    id: "q-0022",
     s: "Change Management", d: 1, level: "Subscriber", stage: 3,
     q: "Which WP-CLI command updates every installed plugin?",
     o: ["wp plugin upgrade *", "wp update plugins", "wp plugin update --all", "wp core update --plugins"],
@@ -301,6 +325,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/cli/commands/plugin/update/"]
   },
   {
+    id: "q-0023",
     s: "Disaster Recovery", d: 1, level: "Subscriber", stage: 3,
     q: "A complete WordPress backup needs which two parts?",
     o: [
@@ -315,6 +340,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/security/backup/files/"]
   },
   {
+    id: "q-0024",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 3,
     q: "An editor accidentally overwrote a paragraph and saved. What's the quickest built-in way to get it back?",
     o: [
@@ -329,6 +355,7 @@ window.QUESTION_BANK = [
     refs: ["https://wordpress.org/documentation/article/revisions/"]
   },
   {
+    id: "q-0025",
     s: "Security", d: 2, level: "Subscriber", stage: 3,
     q: "What are the typical recommended permissions for WordPress files and directories on a Linux server?",
     o: [
@@ -343,6 +370,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/security/hardening/"]
   },
   {
+    id: "q-0026",
     s: "Security", d: 2, level: "Subscriber", stage: 3,
     q: "What does is_admin() tell you?",
     o: [
@@ -357,6 +385,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/is_admin/"]
   },
   {
+    id: "q-0027",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 3,
     q: "What's the role given to a new user by default, unless you change the setting?",
     o: ["Contributor", "Subscriber", "Editor", "Author"],
@@ -366,6 +395,7 @@ window.QUESTION_BANK = [
     refs: ["https://learn.wordpress.org/tutorial/developing-with-user-roles-and-capabilities/"]
   },
   {
+    id: "q-0028",
     s: "Security", d: 1, level: "Contributor", stage: 1,
     q: "When should data be escaped?",
     o: [
@@ -380,6 +410,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/apis/security/escaping/"]
   },
   {
+    id: "q-0029",
     s: "Security", d: 1, level: "Contributor", stage: 1,
     q: "How should code check whether the current user may edit posts?",
     o: [
@@ -394,6 +425,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/current_user_can/"]
   },
   {
+    id: "q-0030",
     s: "Custom Development", d: 2, level: "Contributor", stage: 2,
     q: "You register a custom taxonomy and want it to behave like categories (parent and child terms). Which argument do you set?",
     o: ["'public' => true", "'rewrite' => false", "'show_in_rest' => true", "'hierarchical' => true"],
@@ -403,6 +435,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/register_taxonomy/"]
   },
   {
+    id: "q-0031",
     s: "Performance", d: 2, level: "Contributor", stage: 3,
     q: "Which is true about get_posts() compared with new WP_Query() with the same arguments?",
     o: [
@@ -417,6 +450,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/get_posts/"]
   },
   {
+    id: "q-0032",
     s: "WordPress Core", d: 2, level: "Contributor", stage: 3,
     q: "After looping through a custom WP_Query in a template, what should you call?",
     o: [
@@ -431,6 +465,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_reset_postdata/"]
   },
   {
+    id: "q-0033",
     s: "Performance", d: 2, level: "Author", stage: 1,
     q: "Which WP_Query argument stops WordPress from counting the total number of matching rows, which is useful when you don't need pagination?",
     o: [
@@ -445,6 +480,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/classes/wp_query/"]
   },
   {
+    id: "q-0034",
     s: "Security", d: 1, level: "Contributor", stage: 1,
     q: "You're printing a user-supplied URL inside an href attribute. Which function should you use?",
     o: ["sanitize_text_field()", "esc_attr()", "esc_url()", "esc_html()"],
@@ -457,6 +493,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0035",
     s: "Security", d: 2, level: "Author", stage: 1,
     q: "Since WordPress 5.5, what happens if you call register_rest_route() without a permission_callback?",
     o: [
@@ -474,6 +511,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0036",
     s: "Security", d: 1, level: "Contributor", stage: 1,
     q: "What's the correct way to run a custom SQL query that includes user input?",
     o: [
@@ -488,6 +526,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/classes/wpdb/prepare/"]
   },
   {
+    id: "q-0037",
     s: "Performance", d: 2, level: "Author", stage: 1,
     q: "On a site with a persistent object cache (Memcached or Redis), where should you store an expensive computed result so it's reused across requests?",
     o: [
@@ -505,6 +544,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0038",
     s: "Performance", d: 1, level: "Contributor", stage: 1,
     q: "Why is 'posts_per_page' => -1 discouraged on high-traffic sites?",
     o: [
@@ -519,6 +559,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/classes/wp_query/"]
   },
   {
+    id: "q-0039",
     s: "Security", d: 2, level: "Author", stage: 1,
     q: "Which statement about WordPress nonces is correct?",
     o: [
@@ -533,6 +574,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/apis/security/nonces/"]
   },
   {
+    id: "q-0040",
     s: "WordPress Core", d: 1, level: "Contributor", stage: 1,
     q: "Two callbacks are attached to the same action, one at priority 5 and one at priority 20. Which runs first?",
     o: ["Priority 5", "Both run at the same time", "Whichever was added first", "Priority 20"],
@@ -545,6 +587,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0041",
     s: "WordPress Core", d: 2, level: "Author", stage: 1,
     q: "In block.json (WP 6.1+), which property points to a PHP file used to render a dynamic block on the server?",
     o: ["\"renderCallback\"", "\"viewScript\"", "\"editorScript\"", "\"render\""],
@@ -554,6 +597,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/block-editor/reference-guides/block-api/block-metadata/"]
   },
   {
+    id: "q-0042",
     s: "Custom Development", d: 2, level: "Author", stage: 1,
     q: "In WordPress 6.3+, how do you enqueue a script with the defer loading strategy?",
     o: [
@@ -568,6 +612,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_enqueue_script/"]
   },
   {
+    id: "q-0043",
     s: "Performance", d: 2, level: "Author", stage: 1,
     q: "You need to filter thousands of posts by a frequently queried attribute (for example, \"Practice Area\"). Which approach scales best?",
     o: [
@@ -582,6 +627,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/register_taxonomy/"]
   },
   {
+    id: "q-0044",
     s: "WordPress Core", d: 1, level: "Contributor", stage: 1,
     q: "By default, what triggers WP-Cron events?",
     o: [
@@ -596,6 +642,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/plugins/cron/"]
   },
   {
+    id: "q-0045",
     s: "Performance", d: 2, level: "Author", stage: 1,
     q: "Why can a large number of autoloaded options hurt performance?",
     o: [
@@ -613,6 +660,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0046",
     s: "Security", d: 3, level: "Editor", stage: 1,
     q: "Which function translates meta capabilities like edit_post into the primitive capabilities a user actually needs?",
     o: ["map_meta_cap()", "get_role()", "user_can()", "add_cap()"],
@@ -622,6 +670,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/map_meta_cap/"]
   },
   {
+    id: "q-0047",
     s: "Custom Development", d: 1, level: "Contributor", stage: 1,
     q: "Which function translates, escapes for HTML and echoes a string?",
     o: ["esc_html__()", "esc_html_e()", "esc_attr__()", "_e()"],
@@ -631,6 +680,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/esc_html_e/"]
   },
   {
+    id: "q-0048",
     s: "Custom Development", d: 1, level: "Contributor", stage: 2,
     q: "When should a plugin call flush_rewrite_rules()?",
     o: [
@@ -645,6 +695,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/flush_rewrite_rules/"]
   },
   {
+    id: "q-0049",
     s: "WordPress Core", d: 3, level: "Editor", stage: 1,
     q: "Which statement about switch_to_blog() in multisite is true?",
     o: [
@@ -662,6 +713,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0050",
     s: "Performance", d: 1, level: "Contributor", stage: 2,
     q: "What's the best practice for making a remote HTTP request during a front-end page load?",
     o: [
@@ -679,6 +731,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0051",
     s: "Security", d: 2, level: "Author", stage: 1,
     q: "A settings field takes plain text that must keep line breaks but contain no HTML. Which function should you use to sanitize it before saving?",
     o: ["sanitize_text_field()", "wp_kses_post()", "esc_textarea()", "sanitize_textarea_field()"],
@@ -688,6 +741,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/sanitize_textarea_field/"]
   },
   {
+    id: "q-0052",
     s: "WordPress Core", d: 2, level: "Author", stage: 1,
     q: "For a custom post meta field to be readable and editable in the block editor (for example, with useEntityProp), what must register_post_meta() include?",
     o: ["'single' => false", "'show_in_rest' => true", "'public' => true", "'autoload' => true"],
@@ -697,6 +751,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/register_post_meta/"]
   },
   {
+    id: "q-0053",
     s: "WordPress Core", d: 1, level: "Contributor", stage: 2,
     q: "What is the key functional difference between an action callback and a filter callback?",
     o: [
@@ -711,6 +766,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/plugins/hooks/"]
   },
   {
+    id: "q-0054",
     s: "WordPress Core", d: 2, level: "Author", stage: 1,
     q: "An external script (not a browser) needs to create posts through the core REST API. No extra plugins are installed. Which built-in authentication method fits?",
     o: [
@@ -725,6 +781,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/rest-api/using-the-rest-api/authentication/"]
   },
   {
+    id: "q-0055",
     s: "WordPress Core", d: 3, level: "Editor", stage: 1,
     q: "Your theme's JavaScript calls a custom REST endpoint for a logged-in user, but WordPress treats the request as logged out. What's the most likely cause?",
     o: [
@@ -739,6 +796,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/rest-api/using-the-rest-api/authentication/"]
   },
   {
+    id: "q-0056",
     s: "WordPress Core", d: 2, level: "Author", stage: 1,
     q: "On a single site with no persistent object cache, where does set_transient() store its data?",
     o: [
@@ -753,6 +811,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/apis/transients/"]
   },
   {
+    id: "q-0057",
     s: "WordPress Core", d: 2, level: "Author", stage: 1,
     q: "You set a transient with a 12-hour expiration. What should your code assume when it calls get_transient()?",
     o: [
@@ -770,6 +829,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0058",
     s: "WordPress Core", d: 2, level: "Author", stage: 1,
     q: "How do you avoid scheduling duplicate recurring WP-Cron events?",
     o: [
@@ -787,6 +847,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0059",
     s: "WordPress Core", d: 1, level: "Contributor", stage: 2,
     q: "With the Settings API, where should you sanitize a setting's value before it's saved?",
     o: [
@@ -801,6 +862,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/register_setting/"]
   },
   {
+    id: "q-0060",
     s: "WordPress Core", d: 2, level: "Author", stage: 2,
     q: "In a classic theme, a single post of the custom post type 'book' with the slug 'my-book' is requested. Which template file does WordPress look for first?",
     o: ["book.php", "single-book.php", "single-book-my-book.php", "singular.php"],
@@ -810,6 +872,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/themes/classic-themes/basics/template-hierarchy/"]
   },
   {
+    id: "q-0061",
     s: "WordPress Core", d: 2, level: "Author", stage: 2,
     q: "What's the recommended way to change how many posts the main blog archive shows?",
     o: [
@@ -824,6 +887,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/hooks/pre_get_posts/"]
   },
   {
+    id: "q-0062",
     s: "WordPress Core", d: 2, level: "Author", stage: 2,
     q: "How does WordPress store an uploaded image in the database?",
     o: [
@@ -838,6 +902,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_get_attachment_metadata/"]
   },
   {
+    id: "q-0063",
     s: "WordPress Core", d: 3, level: "Editor", stage: 1,
     q: "Which describes how the Interactivity API adds front-end behavior to blocks?",
     o: [
@@ -852,6 +917,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/block-editor/reference-guides/interactivity-api/"]
   },
   {
+    id: "q-0064",
     s: "WordPress Core", d: 2, level: "Author", stage: 2,
     q: "When should a plugin call add_role() to create a custom role?",
     o: [
@@ -866,6 +932,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/add_role/"]
   },
   {
+    id: "q-0065",
     s: "Security", d: 3, level: "Editor", stage: 1,
     q: "You need to pass a PHP array (including user-generated strings) to a front-end script. Which approach is safest?",
     o: [
@@ -883,6 +950,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0066",
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "What should a wp_ajax_ handler that deletes data do first?",
     o: [
@@ -900,6 +968,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0067",
     s: "Security", d: 1, level: "Contributor", stage: 2,
     q: "Which hook registers an admin-ajax.php handler for logged-out visitors?",
     o: ["wp_ajax_nopriv_{action}", "admin_post_{action}", "wp_ajax_{action}", "rest_api_init"],
@@ -909,6 +978,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/hooks/wp_ajax_nopriv_action/"]
   },
   {
+    id: "q-0068",
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "You want to disable the plugin and theme file editors in wp-admin but still let admins install and update plugins. Which constant do you set?",
     o: [
@@ -923,6 +993,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/wordpress/wp-config/"]
   },
   {
+    id: "q-0069",
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "Why is xmlrpc.php often blocked or restricted when it isn't needed?",
     o: [
@@ -937,6 +1008,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/security/brute-force/"]
   },
   {
+    id: "q-0070",
     s: "Security", d: 3, level: "Editor", stage: 1,
     q: "Which core HTTP function rejects URLs that point to local or private addresses, which helps prevent SSRF?",
     o: ["wp_remote_get()", "file_get_contents()", "wp_safe_remote_get()", "download_url() with no arguments"],
@@ -946,6 +1018,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_safe_remote_get/"]
   },
   {
+    id: "q-0071",
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "A plugin fetches any URL a user submits so it can generate a link preview. What's the main security risk?",
     o: [
@@ -963,6 +1036,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0072",
     s: "Security", d: 3, level: "Editor", stage: 2,
     q: "What's the correct way to build a LIKE search from user input with $wpdb?",
     o: [
@@ -980,6 +1054,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0073",
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "Your archive page accepts an orderby value from the URL and passes it to WP_Query. What's the best defense?",
     o: [
@@ -994,6 +1069,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/apis/security/data-validation/"]
   },
   {
+    id: "q-0074",
     s: "Security", d: 3, level: "Editor", stage: 2,
     q: "You want a custom post type 'book' to have its own capabilities (edit_books, edit_others_books, and so on) with per-post checks that work. What do you pass to register_post_type()?",
     o: [
@@ -1011,6 +1087,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0075",
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "Which tool, run in CI, would flag output that isn't escaped (for example, echo $var;) in a plugin?",
     o: ["Xdebug", "wp-cli doctor", "PHPUnit", "PHPCS with the WordPress Coding Standards ruleset"],
@@ -1020,6 +1097,7 @@ window.QUESTION_BANK = [
     refs: ["https://github.com/WordPress/WordPress-Coding-Standards"]
   },
   {
+    id: "q-0076",
     s: "Security", d: 1, level: "Contributor", stage: 2,
     q: "When building an audit log of authentication events, which of these should NEVER be written to the log?",
     o: [
@@ -1034,6 +1112,7 @@ window.QUESTION_BANK = [
     refs: ["https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html"]
   },
   {
+    id: "q-0077",
     s: "Performance", d: 3, level: "Editor", stage: 2,
     q: "You need the 5 latest posts excluding the current one. On a large site, what's the most performant approach?",
     o: [
@@ -1048,6 +1127,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/classes/wp_query/"]
   },
   {
+    id: "q-0078",
     s: "Performance", d: 2, level: "Author", stage: 2,
     q: "Why is a meta query with LIKE '%term%' slow on large tables?",
     o: [
@@ -1062,6 +1142,7 @@ window.QUESTION_BANK = [
     refs: ["https://dev.mysql.com/doc/refman/8.0/en/index-btree-hash.html"]
   },
   {
+    id: "q-0079",
     s: "Performance", d: 3, level: "Editor", stage: 2,
     q: "EXPLAIN on a slow query shows type: ALL and Extra: Using filesort. What does that mean?",
     o: [
@@ -1076,6 +1157,7 @@ window.QUESTION_BANK = [
     refs: ["https://dev.mysql.com/doc/refman/8.0/en/explain-output.html"]
   },
   {
+    id: "q-0080",
     s: "Performance", d: 2, level: "Author", stage: 2,
     q: "By default, without any drop-in, how does the WordPress object cache (wp_cache_*) behave?",
     o: [
@@ -1090,6 +1172,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/classes/wp_object_cache/"]
   },
   {
+    id: "q-0081",
     s: "Performance", d: 3, level: "Editor", stage: 2,
     q: "Which of these core functions is a known 'uncached' function that queries the database on every call?",
     o: ["get_the_title()", "attachment_url_to_postid()", "get_post_meta()", "get_option()"],
@@ -1099,6 +1182,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/attachment_url_to_postid/"]
   },
   {
+    id: "q-0082",
     s: "Performance", d: 3, level: "Editor", stage: 2,
     q: "What is the shutdown action typically used for in performance work?",
     o: [
@@ -1113,6 +1197,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/hooks/shutdown/"]
   },
   {
+    id: "q-0083",
     s: "Performance", d: 2, level: "Author", stage: 2,
     q: "A post is updated on a site behind a full-page cache or CDN. What's the best invalidation strategy?",
     o: [
@@ -1127,6 +1212,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/performance/cache/"]
   },
   {
+    id: "q-0084",
     s: "Scalability", d: 2, level: "Author", stage: 3,
     q: "What does Cache-Control: max-age=60, stale-while-revalidate=300 tell a CDN?",
     o: [
@@ -1144,6 +1230,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0085",
     s: "Scalability", d: 2, level: "Author", stage: 3,
     q: "When is offloading queries to Elasticsearch or OpenSearch most justified?",
     o: [
@@ -1158,6 +1245,7 @@ window.QUESTION_BANK = [
     refs: ["https://docs.wpvip.com/enterprise-search/"]
   },
   {
+    id: "q-0086",
     s: "Scalability", d: 2, level: "Author", stage: 3,
     q: "Before scaling horizontally by adding more web servers behind a load balancer, what must be solved?",
     o: [
@@ -1172,6 +1260,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/performance/cache/"]
   },
   {
+    id: "q-0087",
     s: "Scalability", d: 2, level: "Author", stage: 3,
     q: "A sidebar widget runs 3 heavy queries on every page view, and its output only changes when posts are published. What's the best caching layer for it?",
     o: [
@@ -1189,6 +1278,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0088",
     s: "Scalability", d: 2, level: "Author", stage: 3,
     q: "A plugin records every page visit as a new post meta row. Traffic is millions of views a month. What's the better design?",
     o: [
@@ -1203,6 +1293,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/plugins/creating-tables-with-plugins/"]
   },
   {
+    id: "q-0089",
     s: "Debugging", d: 2, level: "Author", stage: 3,
     q: "You need to capture PHP errors on a live production site. Which configuration is safest?",
     o: [
@@ -1217,6 +1308,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/"]
   },
   {
+    id: "q-0090",
     s: "Debugging", d: 1, level: "Contributor", stage: 3,
     q: "Which WP-CLI command lists scheduled cron events and when they're next due?",
     o: ["wp cron event list", "wp schedule show", "wp option get cron --list", "wp cron list"],
@@ -1226,6 +1318,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/cli/commands/cron/event/list/"]
   },
   {
+    id: "q-0091",
     s: "Debugging", d: 1, level: "Contributor", stage: 3,
     q: "A page is slow. How do you find out which plugin is responsible for the slow database queries and outbound HTTP calls?",
     o: [
@@ -1240,6 +1333,7 @@ window.QUESTION_BANK = [
     refs: ["https://wordpress.org/plugins/query-monitor/"]
   },
   {
+    id: "q-0092",
     s: "Debugging", d: 2, level: "Author", stage: 3,
     q: "Users report ERR_TOO_MANY_REDIRECTS. Which command shows each hop and its Location header?",
     o: ["ping example.com", "curl -sIL https://example.com/page", "wp rewrite flush", "dig example.com"],
@@ -1249,6 +1343,7 @@ window.QUESTION_BANK = [
     refs: ["https://curl.se/docs/manpage.html"]
   },
   {
+    id: "q-0093",
     s: "Debugging", d: 1, level: "Contributor", stage: 3,
     q: "You've migrated a site to a new server and want to test it on the real domain before changing DNS. What do you do?",
     o: [
@@ -1263,6 +1358,7 @@ window.QUESTION_BANK = [
     refs: ["https://en.wikipedia.org/wiki/Hosts_(file)"]
   },
   {
+    id: "q-0094",
     s: "Change Management", d: 2, level: "Author", stage: 3,
     q: "A test boots WordPress with a test database, publishes a post, and checks that your plugin saved the expected post meta. What kind of test is it?",
     o: ["A unit test", "A load test", "An integration test", "A user acceptance test"],
@@ -1272,6 +1368,7 @@ window.QUESTION_BANK = [
     refs: ["https://make.wordpress.org/core/handbook/testing/automated-testing/phpunit/"]
   },
   {
+    id: "q-0095",
     s: "Change Management", d: 1, level: "Contributor", stage: 3,
     q: "Your plugin is at 2.3.1. You remove a public function that other plugins call. Under semantic versioning, what should the next version be?",
     o: ["2.4.0", "3.0.0", "2.3.1-b", "2.3.2"],
@@ -1281,6 +1378,7 @@ window.QUESTION_BANK = [
     refs: ["https://semver.org/"]
   },
   {
+    id: "q-0096",
     s: "Change Management", d: 2, level: "Author", stage: 3,
     q: "Which deployment approach gives zero-downtime, atomic releases?",
     o: [
@@ -1295,6 +1393,7 @@ window.QUESTION_BANK = [
     refs: ["https://deployer.org/blog/atomic-symlinks"]
   },
   {
+    id: "q-0097",
     s: "Change Management", d: 2, level: "Author", stage: 3,
     q: "Which core function lets plugin code behave differently on production, staging and local environments?",
     o: [
@@ -1309,6 +1408,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_get_environment_type/"]
   },
   {
+    id: "q-0098",
     s: "Disaster Recovery", d: 2, level: "Author", stage: 3,
     q: "After restoring a production database to staging, you need to replace the domain everywhere. What's the safe approach?",
     o: [
@@ -1323,6 +1423,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/cli/commands/search-replace/"]
   },
   {
+    id: "q-0099",
     s: "Disaster Recovery", d: 2, level: "Author", stage: 3,
     q: "A bad commit was deployed from the shared main branch. What's the cleanest Git rollback that keeps history?",
     o: [
@@ -1337,6 +1438,7 @@ window.QUESTION_BANK = [
     refs: ["https://git-scm.com/docs/git-revert"]
   },
   {
+    id: "q-0100",
     s: "Debugging", d: 2, level: "Author", stage: 3,
     q: "The logs show 'Allowed memory size of 268435456 bytes exhausted' on an archive page. What's the best first step?",
     o: [
@@ -1354,6 +1456,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0101",
     s: "Security", d: 3, level: "Editor", stage: 3,
     q: "Which of these functions VERIFY a nonce (rather than create one)?",
     o: [
@@ -1372,6 +1475,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0102",
     s: "Security", d: 3, level: "Editor", stage: 3,
     q: "Which pairings of output context and escaping function are correct?",
     o: [
@@ -1388,6 +1492,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/apis/security/escaping/"]
   },
   {
+    id: "q-0103",
     s: "Security", d: 3, level: "Editor", stage: 3,
     q: "A feature fetches a user-supplied URL on the server. Which measures help mitigate SSRF?",
     o: [
@@ -1407,6 +1512,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0104",
     s: "Performance", d: 3, level: "Editor", stage: 3,
     q: "You need full post objects to print 10 titles. There's no pagination, and you never touch meta or terms. Which WP_Query arguments reduce overhead?",
     o: [
@@ -1423,6 +1529,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/classes/wp_query/"]
   },
   {
+    id: "q-0105",
     s: "Performance", d: 3, level: "Editor", stage: 3,
     q: "Which of these are recognized query performance anti-patterns on large WordPress sites?",
     o: [
@@ -1439,6 +1546,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/classes/wp_query/"]
   },
   {
+    id: "q-0106",
     s: "WordPress Core", d: 3, level: "Editor", stage: 3,
     q: "On a multisite network, which statements about transients are true?",
     o: [
@@ -1457,6 +1565,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0107",
     s: "WordPress Core", d: 3, level: "Administrator", stage: 1,
     q: "Which statements about static and dynamic blocks are true?",
     o: [
@@ -1475,6 +1584,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0108",
     s: "Custom Development", d: 3, level: "Administrator", stage: 1,
     q: "Which clean-up tasks belong in a plugin's uninstall routine (uninstall.php or register_uninstall_hook) rather than in deactivation?",
     o: [
@@ -1490,6 +1600,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/plugins/plugin-basics/uninstall-methods/"]
   },
   {
+    id: "q-0109",
     s: "Custom Development", d: 3, level: "Administrator", stage: 1,
     q: "Which approaches correctly keep WP-CLI command code from running during web requests?",
     o: [
@@ -1505,6 +1616,7 @@ window.QUESTION_BANK = [
     refs: ["https://make.wordpress.org/cli/handbook/guides/commands-cookbook/"]
   },
   {
+    id: "q-0110",
     s: "Custom Development", d: 3, level: "Administrator", stage: 1,
     q: "Which internationalization practices are correct?",
     o: [
@@ -1523,6 +1635,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0111",
     s: "Scalability", d: 3, level: "Administrator", stage: 1,
     q: "Which are needed for a stateless WordPress web tier behind a load balancer?",
     o: [
@@ -1542,6 +1655,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0112",
     s: "Scalability", d: 3, level: "Administrator", stage: 2,
     q: "Which Cache-Control statements are correct?",
     o: [
@@ -1558,6 +1672,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control"]
   },
   {
+    id: "q-0113",
     s: "Debugging", d: 3, level: "Administrator", stage: 2,
     q: "In WordPress 6.6+, which autoload values in wp_options mean the option IS loaded on every request?",
     o: ["'auto'", "'on'", "'yes'", "'auto-on'", "'auto-off'", "'off'"],
@@ -1567,6 +1682,7 @@ window.QUESTION_BANK = [
     refs: ["https://make.wordpress.org/core/2024/06/18/options-api-disabling-autoload-for-large-options/"]
   },
   {
+    id: "q-0114",
     s: "Debugging", d: 3, level: "Administrator", stage: 2,
     q: "Your theme's JavaScript gets 401/403 errors from a custom REST route for a logged-in user. Which checks help pin down the cause?",
     o: [
@@ -1586,6 +1702,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0115",
     s: "Debugging", d: 3, level: "Administrator", stage: 2,
     q: "Which debugging techniques are reasonable to use on a live production site?",
     o: [
@@ -1602,6 +1719,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/"]
   },
   {
+    id: "q-0116",
     s: "Change Management", d: 3, level: "Administrator", stage: 2,
     q: "Which of these belong in a WordPress project's Git repository?",
     o: [
@@ -1618,6 +1736,7 @@ window.QUESTION_BANK = [
     refs: ["https://git-scm.com/docs/gitignore", "https://getcomposer.org/doc/01-basic-usage.md"]
   },
   {
+    id: "q-0117",
     s: "Change Management", d: 3, level: "Administrator", stage: 3,
     q: "A plugin is at 4.2.7. Which version bumps follow semantic versioning?",
     o: [
@@ -1633,6 +1752,7 @@ window.QUESTION_BANK = [
     refs: ["https://semver.org/"]
   },
   {
+    id: "q-0118",
     s: "Disaster Recovery", d: 3, level: "Administrator", stage: 3,
     q: "You've restored a clean database backup after a hack. Which steps are needed before going live again?",
     o: [
@@ -1652,6 +1772,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0119",
     s: "Disaster Recovery", d: 3, level: "Administrator", stage: 3,
     q: "One important post's content was overwritten yesterday. Which recovery approaches are safe?",
     o: [
@@ -1670,6 +1791,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0120",
     s: "Disaster Recovery", d: 3, level: "Administrator", stage: 3,
     q: "Which checks help validate a site's integrity after a restore?",
     o: [
@@ -1688,6 +1810,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0121",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "Which default role can edit and publish posts written by other users, and moderate comments?",
     o: ["Contributor", "Author", "Subscriber", "Editor"],
@@ -1697,6 +1820,7 @@ window.QUESTION_BANK = [
     refs: ["https://wordpress.org/documentation/article/roles-and-capabilities/"]
   },
   {
+    id: "q-0122",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "On a single (non-multisite) WordPress site, which default role can install plugins?",
     o: ["Editor", "Any logged-in user", "Administrator", "Author"],
@@ -1706,6 +1830,7 @@ window.QUESTION_BANK = [
     refs: ["https://wordpress.org/documentation/article/roles-and-capabilities/"]
   },
   {
+    id: "q-0123",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "When does the Super Admin role exist?",
     o: [
@@ -1720,6 +1845,7 @@ window.QUESTION_BANK = [
     refs: ["https://wordpress.org/documentation/article/roles-and-capabilities/"]
   },
   {
+    id: "q-0124",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "A Contributor finishes a post and clicks \"Submit for Review\". What status does the post get?",
     o: ["Private", "Draft", "Published", "Pending"],
@@ -1732,6 +1858,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0125",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "What's the main structural difference between categories and tags?",
     o: [
@@ -1746,6 +1873,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/register_taxonomy/"]
   },
   {
+    id: "q-0126",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "What does marking a post as \"sticky\" do?",
     o: [
@@ -1763,6 +1891,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0127",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "By default, where does WordPress store uploaded media files?",
     o: [
@@ -1777,6 +1906,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_upload_dir/"]
   },
   {
+    id: "q-0128",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "Which folders hold WordPress core files that get replaced on every core update, so you should never edit them?",
     o: [
@@ -1791,6 +1921,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/upgrade/upgrading/"]
   },
   {
+    id: "q-0129",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "Since WordPress 5.0, what's the default editor for posts and pages?",
     o: ["The Customizer", "The Classic Editor", "A plain HTML textarea", "The block editor"],
@@ -1800,6 +1931,7 @@ window.QUESTION_BANK = [
     refs: ["https://wordpress.org/documentation/wordpress-version/version-5-0/"]
   },
   {
+    id: "q-0130",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "In a block theme, what's a template part?",
     o: [
@@ -1816,6 +1948,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0131",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "Which feature lets you edit a whole block theme's templates, template parts and styles from wp-admin?",
     o: ["Settings → Reading", "The Site Editor", "The Theme File Editor", "The Widgets screen"],
@@ -1825,6 +1958,7 @@ window.QUESTION_BANK = [
     refs: ["https://wordpress.org/documentation/wordpress-version/version-6-3/"]
   },
   {
+    id: "q-0132",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "Where does WordPress get the profile pictures it shows next to comments by default?",
     o: [
@@ -1839,6 +1973,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/get_avatar/"]
   },
   {
+    id: "q-0133",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "Which settings screen holds the site title, tagline and the default role for new users?",
     o: ["Tools → Site Health", "Settings → Discussion", "Settings → General", "Settings → Writing"],
@@ -1848,6 +1983,7 @@ window.QUESTION_BANK = [
     refs: ["https://wordpress.org/documentation/article/administration-screens/"]
   },
   {
+    id: "q-0134",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "Where do you set whether comments must be manually approved before they appear?",
     o: ["Appearance → Customize", "Settings → Discussion", "Settings → Reading", "Users → Profile"],
@@ -1857,6 +1993,7 @@ window.QUESTION_BANK = [
     refs: ["https://wordpress.org/documentation/article/administration-screens/"]
   },
   {
+    id: "q-0135",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "What's a post's slug?",
     o: [
@@ -1871,6 +2008,7 @@ window.QUESTION_BANK = [
     refs: ["https://wordpress.org/documentation/article/customize-permalinks/"]
   },
   {
+    id: "q-0136",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "What does a \"Plain\" permalink look like?",
     o: [
@@ -1885,6 +2023,7 @@ window.QUESTION_BANK = [
     refs: ["https://wordpress.org/documentation/article/customize-permalinks/"]
   },
   {
+    id: "q-0137",
     s: "Change Management", d: 1, level: "Subscriber", stage: 1,
     q: "Out of the box, which WordPress core updates install automatically?",
     o: [
@@ -1899,6 +2038,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/wordpress/wp-config/"]
   },
   {
+    id: "q-0138",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "By default, how long do trashed posts and comments stay in the Trash before WordPress deletes them permanently?",
     o: ["90 days", "7 days", "Forever", "30 days"],
@@ -1908,6 +2048,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/wordpress/wp-config/"]
   },
   {
+    id: "q-0139",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "Who can see a post set to \"Private\" visibility?",
     o: [
@@ -1922,6 +2063,7 @@ window.QUESTION_BANK = [
     refs: ["https://wordpress.org/documentation/article/roles-and-capabilities/"]
   },
   {
+    id: "q-0140",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "Which wp-admin screen lists available updates for WordPress core, plugins and themes?",
     o: ["Tools → Import", "Dashboard → Updates", "Settings → General", "Plugins → Add New"],
@@ -1931,6 +2073,7 @@ window.QUESTION_BANK = [
     refs: ["https://learn.wordpress.org/tutorial/managing-updates"]
   },
   {
+    id: "q-0141",
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "You want to change the text of every post before it's displayed. Which kind of hook do you use?",
     o: ["A shortcode", "A cron event", "A filter, such as the_content", "An action, such as wp_footer"],
@@ -1943,6 +2086,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0142",
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "On which hook should register_post_type() normally be called?",
     o: ["admin_footer", "shutdown", "init", "wp_head"],
@@ -1952,6 +2096,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/register_post_type/"]
   },
   {
+    id: "q-0143",
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "What does get_header() do in a classic theme template?",
     o: [
@@ -1966,6 +2111,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/get_header/"]
   },
   {
+    id: "q-0144",
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "What's the difference between the_title() and get_the_title()?",
     o: [
@@ -1983,6 +2129,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0145",
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "In a child theme, which loads first: the child's functions.php or the parent's?",
     o: ["The parent's", "Only the parent's runs", "The child's", "Only the child's runs"],
@@ -1992,6 +2139,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/themes/advanced-topics/child-themes/"]
   },
   {
+    id: "q-0146",
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "In the template hierarchy, which file is the final fallback that every classic theme must have?",
     o: ["page.php", "front-page.php", "index.php", "single.php"],
@@ -2001,6 +2149,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/themes/classic-themes/basics/template-hierarchy/"]
   },
   {
+    id: "q-0147",
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "A visitor opens a regular page with the slug \"about\". Which file does WordPress try before page.php?",
     o: ["single-about.php", "page-about.php", "about.php", "archive-about.php"],
@@ -2010,6 +2159,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/themes/classic-themes/basics/template-hierarchy/"]
   },
   {
+    id: "q-0148",
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "Which function registers menu locations that users can assign menus to?",
     o: ["wp_nav_menu()", "register_sidebar()", "register_nav_menus()", "add_menu_page()"],
@@ -2022,6 +2172,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0149",
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "What do you call to enable featured images in a classic theme?",
     o: [
@@ -2039,6 +2190,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0150",
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "Why must a classic theme call wp_head() before the closing </head> tag?",
     o: [
@@ -2053,6 +2205,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_head/"]
   },
   {
+    id: "q-0151",
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "Where should a classic theme call wp_footer()?",
     o: [
@@ -2067,6 +2220,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_footer/"]
   },
   {
+    id: "q-0152",
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "What does body_class() add to the <body> tag?",
     o: [
@@ -2081,6 +2235,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/body_class/"]
   },
   {
+    id: "q-0153",
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "Which function runs code once when a plugin is activated?",
     o: ["add_action( 'init' )", "register_activation_hook()", "register_uninstall_hook()", "plugins_loaded()"],
@@ -2090,6 +2245,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/register_activation_hook/"]
   },
   {
+    id: "q-0154",
     s: "Security", d: 1, level: "Subscriber", stage: 2,
     q: "What does this line at the top of a plugin file do: if ( ! defined( 'ABSPATH' ) ) exit;",
     o: [
@@ -2104,6 +2260,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/plugins/plugin-basics/best-practices/"]
   },
   {
+    id: "q-0155",
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "Why should a plugin prefix its function names, such as myplugin_save()?",
     o: [
@@ -2118,6 +2275,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/plugins/plugin-basics/best-practices/"]
   },
   {
+    id: "q-0156",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 2,
     q: "What does home_url() return?",
     o: [
@@ -2135,6 +2293,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0157",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 2,
     q: "Which function reads a saved setting from the wp_options table?",
     o: ["get_theme_file_uri()", "get_option()", "get_user_meta()", "get_post_meta()"],
@@ -2144,6 +2303,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/get_option/"]
   },
   {
+    id: "q-0158",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 2,
     q: "What happens if you call update_option() for an option that doesn't exist yet?",
     o: ["It throws an error", "It does nothing", "It creates the option", "It creates a post"],
@@ -2153,6 +2313,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/update_option/"]
   },
   {
+    id: "q-0159",
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "Which function creates a new post from PHP code?",
     o: ["create_post()", "add_post()", "wp_insert_post()", "register_post_type()"],
@@ -2162,6 +2323,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_insert_post/"]
   },
   {
+    id: "q-0160",
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "What's the recommended way to register a custom block's settings, scripts and styles?",
     o: [
@@ -2179,6 +2341,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0161",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 2,
     q: "What are post meta fields used for?",
     o: [
@@ -2196,6 +2359,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0162",
     s: "Debugging", d: 1, level: "Subscriber", stage: 3,
     q: "On a live site, what should WP_DEBUG_DISPLAY be while you're logging errors?",
     o: [
@@ -2210,6 +2374,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/"]
   },
   {
+    id: "q-0163",
     s: "Debugging", d: 1, level: "Subscriber", stage: 3,
     q: "With WP_DEBUG_LOG set to true, where are errors written by default?",
     o: ["The wp_options table", "The browser console", "wp-content/debug.log", "wp-admin/error.log"],
@@ -2219,6 +2384,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/"]
   },
   {
+    id: "q-0164",
     s: "Debugging", d: 1, level: "Subscriber", stage: 3,
     q: "What does setting SCRIPT_DEBUG to true do?",
     o: [
@@ -2233,6 +2399,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/"]
   },
   {
+    id: "q-0165",
     s: "Change Management", d: 1, level: "Subscriber", stage: 3,
     q: "Which WP-CLI command prints the installed WordPress version?",
     o: ["wp core version", "wp info", "wp version show", "wp core check"],
@@ -2242,6 +2409,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/cli/commands/core/version/"]
   },
   {
+    id: "q-0166",
     s: "Change Management", d: 1, level: "Subscriber", stage: 3,
     q: "Which WP-CLI command creates a new user?",
     o: ["wp user add", "wp user create <login> <email>", "wp create user", "wp new user"],
@@ -2251,6 +2419,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/cli/commands/user/create/"]
   },
   {
+    id: "q-0167",
     s: "Debugging", d: 1, level: "Subscriber", stage: 3,
     q: "You suspect a plugin conflict but can't risk breaking the site for visitors. Which tool lets you disable plugins only for your own session?",
     o: [
@@ -2265,6 +2434,7 @@ window.QUESTION_BANK = [
     refs: ["https://wordpress.org/plugins/health-check/"]
   },
   {
+    id: "q-0168",
     s: "Debugging", d: 1, level: "Subscriber", stage: 3,
     q: "You see \"Error establishing a database connection\". What do you check first?",
     o: [
@@ -2279,6 +2449,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/wordpress/common-errors/"]
   },
   {
+    id: "q-0169",
     s: "Debugging", d: 1, level: "Subscriber", stage: 3,
     q: "A site shows a blank white page with no error. What's a sensible first step?",
     o: [
@@ -2296,6 +2467,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0170",
     s: "Debugging", d: 1, level: "Subscriber", stage: 3,
     q: "PHP reports memory exhausted on a busy admin page. Which wp-config.php constant raises WordPress's memory limit (up to what the host allows)?",
     o: ["WP_MEMORY_LIMIT", "WP_POST_REVISIONS", "WP_DEBUG", "WP_CACHE"],
@@ -2305,6 +2477,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/wordpress/wp-config/"]
   },
   {
+    id: "q-0171",
     s: "Security", d: 1, level: "Subscriber", stage: 3,
     q: "Which is a basic hardening step for user accounts?",
     o: [
@@ -2319,6 +2492,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/security/hardening/"]
   },
   {
+    id: "q-0172",
     s: "Security", d: 1, level: "Subscriber", stage: 3,
     q: "Which function cleans a single-line text input before saving it?",
     o: ["wp_kses_post()", "esc_html()", "sanitize_text_field()", "esc_url()"],
@@ -2328,6 +2502,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/sanitize_text_field/"]
   },
   {
+    id: "q-0173",
     s: "Security", d: 1, level: "Subscriber", stage: 3,
     q: "You're printing a post title inside a <p> tag. Which function escapes it?",
     o: ["esc_url()", "esc_html()", "sanitize_key()", "esc_attr()"],
@@ -2337,6 +2512,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/esc_html/"]
   },
   {
+    id: "q-0174",
     s: "Security", d: 1, level: "Subscriber", stage: 3,
     q: "What happens when you change the authentication keys and salts in wp-config.php?",
     o: [
@@ -2354,6 +2530,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0175",
     s: "Security", d: 1, level: "Subscriber", stage: 3,
     q: "Why should you delete plugins and themes you no longer use?",
     o: [
@@ -2368,6 +2545,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/security/hardening/"]
   },
   {
+    id: "q-0176",
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 3,
     q: "Which wp-config.php constants override the site address settings?",
     o: ["WP_DEBUG and WP_CACHE", "ABSPATH and WPINC", "DB_HOST and DB_NAME", "WP_HOME and WP_SITEURL"],
@@ -2377,6 +2555,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/wordpress/wp-config/"]
   },
   {
+    id: "q-0177",
     s: "Security", d: 2, level: "Subscriber", stage: 3,
     q: "According to the hardening guide, where can wp-config.php be moved to keep it out of the public web root?",
     o: [
@@ -2391,6 +2570,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/security/hardening/"]
   },
   {
+    id: "q-0178",
     s: "Security", d: 1, level: "Subscriber", stage: 3,
     q: "Where does a user create an Application Password for API access?",
     o: [
@@ -2405,6 +2585,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/rest-api/using-the-rest-api/authentication/"]
   },
   {
+    id: "q-0179",
     s: "Change Management", d: 1, level: "Subscriber", stage: 3,
     q: "Why test plugin and theme updates on a staging copy first?",
     o: [
@@ -2419,6 +2600,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/debug/test-driving/"]
   },
   {
+    id: "q-0180",
     s: "Disaster Recovery", d: 1, level: "Subscriber", stage: 3,
     q: "Which WP-CLI command exports the database to an SQL file?",
     o: ["wp db dump-all", "wp backup create", "wp db export", "wp export --db"],
@@ -2428,6 +2610,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/cli/commands/db/export/"]
   },
   {
+    id: "q-0181",
     s: "Disaster Recovery", d: 1, level: "Subscriber", stage: 3,
     q: "According to the WordPress backup guide, what's the typical order for taking a backup?",
     o: [
@@ -2442,6 +2625,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/security/backup/"]
   },
   {
+    id: "q-0182",
     s: "Debugging", d: 1, level: "Subscriber", stage: 3,
     q: "Which WP-CLI command deactivates every plugin at once, which helps when wp-admin is unreachable?",
     o: ["wp plugin deactivate --all", "wp plugin stop", "wp plugins off", "wp core disable-plugins"],
@@ -2451,6 +2635,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/cli/commands/plugin/deactivate/"]
   },
   {
+    id: "q-0183",
     s: "Debugging", d: 1, level: "Subscriber", stage: 3,
     q: "Which WP-CLI command checks core files against the official checksums?",
     o: ["wp core verify-checksums", "wp core scan", "wp check files", "wp security verify"],
@@ -2460,6 +2645,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/cli/commands/core/verify-checksums/"]
   },
   {
+    id: "q-0184",
     s: "Custom Development", d: 1, level: "Contributor", stage: 1,
     q: "A callback was added with add_action( 'init', 'my_fn', 20 ). What must remove_action() pass to remove it?",
     o: [
@@ -2474,6 +2660,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/remove_action/"]
   },
   {
+    id: "q-0185",
     s: "Custom Development", d: 1, level: "Contributor", stage: 1,
     q: "Which function creates your own action hook that other code can attach to?",
     o: ["do_action()", "has_action()", "add_action()", "apply_filters()"],
@@ -2483,6 +2670,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/do_action/"]
   },
   {
+    id: "q-0186",
     s: "Custom Development", d: 1, level: "Contributor", stage: 1,
     q: "Which function lets other code change a value your plugin is about to use?",
     o: [
@@ -2497,6 +2685,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/apply_filters/"]
   },
   {
+    id: "q-0187",
     s: "Custom Development", d: 1, level: "Contributor", stage: 1,
     q: "Your filter callback needs the hook's second and third arguments, but only gets the first. What's missing?",
     o: [
@@ -2511,6 +2700,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/add_filter/"]
   },
   {
+    id: "q-0188",
     s: "Security", d: 1, level: "Contributor", stage: 1,
     q: "You're printing a value inside a title=\"\" attribute. Which function escapes it?",
     o: ["esc_html()", "esc_js()", "esc_attr()", "esc_url()"],
@@ -2523,6 +2713,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0189",
     s: "Security", d: 1, level: "Contributor", stage: 1,
     q: "Which function keeps only the HTML allowed in post content and strips the rest, such as <script>?",
     o: ["strip_tags()", "wp_kses_post()", "esc_html()", "sanitize_title()"],
@@ -2532,6 +2723,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_kses_post/"]
   },
   {
+    id: "q-0190",
     s: "Security", d: 1, level: "Contributor", stage: 1,
     q: "You receive a post ID from a form. Which function makes sure it's a non-negative whole number?",
     o: ["sanitize_text_field()", "absint()", "esc_attr()", "intval() never works"],
@@ -2541,6 +2733,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/absint/"]
   },
   {
+    id: "q-0191",
     s: "Security", d: 1, level: "Contributor", stage: 1,
     q: "Which function cleans an email address before saving it?",
     o: ["is_email()", "sanitize_user()", "sanitize_email()", "esc_url()"],
@@ -2553,6 +2746,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0192",
     s: "Security", d: 1, level: "Contributor", stage: 1,
     q: "Which function turns a string into a safe lowercase key with only letters, numbers, dashes and underscores?",
     o: ["absint()", "sanitize_title()", "sanitize_key()", "esc_attr()"],
@@ -2562,6 +2756,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/sanitize_key/"]
   },
   {
+    id: "q-0193",
     s: "Security", d: 1, level: "Contributor", stage: 1,
     q: "Which function adds a nonce field to a form you build in wp-admin?",
     o: ["check_admin_referer()", "wp_nonce_field()", "wp_create_nonce() only", "wp_verify_nonce()"],
@@ -2574,6 +2769,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0194",
     s: "Security", d: 2, level: "Contributor", stage: 1,
     q: "By default, how long can a WordPress nonce stay valid?",
     o: ["5 minutes", "Up to 24 hours", "Exactly one use, then it expires", "Forever"],
@@ -2583,6 +2779,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/apis/security/nonces/"]
   },
   {
+    id: "q-0195",
     s: "Security", d: 1, level: "Contributor", stage: 1,
     q: "A plugin settings page should only be usable by site administrators. Which check is the usual choice?",
     o: [
@@ -2597,6 +2794,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/current_user_can/"]
   },
   {
+    id: "q-0196",
     s: "Security", d: 1, level: "Contributor", stage: 1,
     q: "After processing a form you redirect to a URL that came from the request. Which function limits redirects to allowed hosts?",
     o: ["wp_safe_redirect()", "header( 'Location' )", "home_url()", "wp_redirect()"],
@@ -2606,6 +2804,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_safe_redirect/"]
   },
   {
+    id: "q-0197",
     s: "WordPress Core", d: 1, level: "Contributor", stage: 1,
     q: "Which function tells you whether the visitor is logged in?",
     o: [
@@ -2620,6 +2819,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/is_user_logged_in/"]
   },
   {
+    id: "q-0198",
     s: "Custom Development", d: 1, level: "Contributor", stage: 1,
     q: "What's the difference between __() and _e()?",
     o: [
@@ -2637,6 +2837,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0199",
     s: "Custom Development", d: 1, level: "Contributor", stage: 1,
     q: "What should a plugin's text domain be?",
     o: [
@@ -2653,6 +2854,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0200",
     s: "Custom Development", d: 1, level: "Contributor", stage: 1,
     q: "Which function translates a string and escapes it for HTML, returning the result?",
     o: ["esc_html_e()", "esc_attr_e()", "__()", "esc_html__()"],
@@ -2662,6 +2864,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/esc_html__/"]
   },
   {
+    id: "q-0201",
     s: "Custom Development", d: 1, level: "Contributor", stage: 1,
     q: "You need \"1 item\" or \"5 items\" depending on a number. Which function handles plurals?",
     o: ["__()", "_n()", "sprintf() alone", "_x()"],
@@ -2671,6 +2874,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/_n/"]
   },
   {
+    id: "q-0202",
     s: "Custom Development", d: 1, level: "Contributor", stage: 1,
     q: "What does wp_register_script() do on its own?",
     o: [
@@ -2685,6 +2889,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_register_script/"]
   },
   {
+    id: "q-0203",
     s: "Custom Development", d: 1, level: "Contributor", stage: 1,
     q: "Your script needs jQuery loaded first. How do you declare that?",
     o: [
@@ -2699,6 +2904,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_enqueue_script/"]
   },
   {
+    id: "q-0204",
     s: "Custom Development", d: 1, level: "Contributor", stage: 1,
     q: "Which hook do you use to enqueue CSS and JavaScript for wp-admin screens?",
     o: ["login_head", "admin_init", "admin_enqueue_scripts", "wp_enqueue_scripts"],
@@ -2708,6 +2914,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/hooks/admin_enqueue_scripts/"]
   },
   {
+    id: "q-0205",
     s: "WordPress Core", d: 1, level: "Contributor", stage: 1,
     q: "Which hook fires once every active plugin has been loaded?",
     o: ["wp_loaded", "plugins_loaded", "muplugins_loaded", "init"],
@@ -2717,6 +2924,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/hooks/plugins_loaded/"]
   },
   {
+    id: "q-0206",
     s: "WordPress Core", d: 1, level: "Contributor", stage: 2,
     q: "What does get_post_meta( $id, 'price', true ) return?",
     o: [
@@ -2731,6 +2939,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/get_post_meta/"]
   },
   {
+    id: "q-0207",
     s: "WordPress Core", d: 1, level: "Contributor", stage: 2,
     q: "What happens if you call update_post_meta() for a key the post doesn't have yet?",
     o: ["It creates a new post", "It fails silently", "It throws an error", "It adds the meta"],
@@ -2740,6 +2949,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/update_post_meta/"]
   },
   {
+    id: "q-0208",
     s: "WordPress Core", d: 1, level: "Contributor", stage: 2,
     q: "Which function removes a custom field from a post?",
     o: ["remove_post_meta()", "wp_delete_post()", "delete_post_meta()", "unset_post_meta()"],
@@ -2749,6 +2959,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/delete_post_meta/"]
   },
   {
+    id: "q-0209",
     s: "WordPress Core", d: 1, level: "Contributor", stage: 2,
     q: "Where should you store a per-user setting, such as a preferred layout?",
     o: ["A site option", "A cookie only", "User meta, with update_user_meta()", "Post meta on the home page"],
@@ -2761,6 +2972,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0210",
     s: "WordPress Core", d: 1, level: "Contributor", stage: 2,
     q: "Which WP_Query argument limits results to a custom post type such as \"book\"?",
     o: ["'name' => 'book'", "'category_name' => 'book'", "'post_type' => 'book'", "'type' => 'book'"],
@@ -2770,6 +2982,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/classes/wp_query/"]
   },
   {
+    id: "q-0211",
     s: "WordPress Core", d: 1, level: "Contributor", stage: 2,
     q: "Which WP_Query argument filters posts by custom field values?",
     o: ["field_query", "tax_query", "meta_query", "date_query"],
@@ -2779,6 +2992,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/classes/wp_query/"]
   },
   {
+    id: "q-0212",
     s: "WordPress Core", d: 1, level: "Contributor", stage: 2,
     q: "Which WP_Query argument filters posts by terms in a custom taxonomy?",
     o: ["term_query", "meta_query", "tax_query", "category__in only"],
@@ -2788,6 +3002,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/classes/wp_query/"]
   },
   {
+    id: "q-0213",
     s: "WordPress Core", d: 2, level: "Contributor", stage: 2,
     q: "You want to sort products by a numeric \"price\" meta field. What do you pass?",
     o: [
@@ -2802,6 +3017,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/classes/wp_query/"]
   },
   {
+    id: "q-0214",
     s: "WordPress Core", d: 1, level: "Contributor", stage: 2,
     q: "Which function returns the full URL of a post?",
     o: ["home_url( $id )", "get_post_field( 'guid' )", "get_permalink()", "the_permalink()"],
@@ -2811,6 +3027,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/get_permalink/"]
   },
   {
+    id: "q-0215",
     s: "WordPress Core", d: 1, level: "Contributor", stage: 2,
     q: "Which function returns the terms of a taxonomy attached to a post?",
     o: ["get_terms()", "get_the_terms()", "get_categories()", "get_term_link()"],
@@ -2820,6 +3037,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/get_the_terms/"]
   },
   {
+    id: "q-0216",
     s: "WordPress Core", d: 1, level: "Contributor", stage: 2,
     q: "Which function assigns terms to a post from code?",
     o: ["register_taxonomy()", "wp_set_object_terms()", "add_term()", "wp_insert_term()"],
@@ -2829,6 +3047,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_set_object_terms/"]
   },
   {
+    id: "q-0217",
     s: "Custom Development", d: 1, level: "Contributor", stage: 2,
     q: "Your custom post type opens in the classic editor instead of the block editor. Which register_post_type() argument fixes it?",
     o: ["'hierarchical' => true", "'show_in_rest' => true", "'has_archive' => true", "'public' => true"],
@@ -2838,6 +3057,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/register_post_type/"]
   },
   {
+    id: "q-0218",
     s: "Custom Development", d: 1, level: "Contributor", stage: 2,
     q: "Which register_post_type() argument gives the post type its own archive page, such as /books/?",
     o: ["'public' => false", "'show_ui' => true", "'menu_position' => 5", "'has_archive' => true"],
@@ -2847,6 +3067,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/register_post_type/"]
   },
   {
+    id: "q-0219",
     s: "Custom Development", d: 1, level: "Contributor", stage: 2,
     q: "Which register_post_type() argument controls editor features such as title, editor, thumbnail and excerpt?",
     o: ["supports", "capabilities", "taxonomies", "labels"],
@@ -2856,6 +3077,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/register_post_type/"]
   },
   {
+    id: "q-0220",
     s: "Custom Development", d: 1, level: "Contributor", stage: 2,
     q: "How do you change the URL base of a custom post type from /book/ to /library/?",
     o: [
@@ -2870,6 +3092,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/register_post_type/"]
   },
   {
+    id: "q-0221",
     s: "Performance", d: 1, level: "Contributor", stage: 2,
     q: "set_transient( 'stats', $data, HOUR_IN_SECONDS ) stores data for how long at most?",
     o: ["Forever", "One hour", "One minute", "One day"],
@@ -2879,6 +3102,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/apis/transients/"]
   },
   {
+    id: "q-0222",
     s: "Performance", d: 1, level: "Contributor", stage: 2,
     q: "The source data behind a cached transient has changed. What do you call?",
     o: ["wp_cache_flush()", "delete_transient()", "flush_rewrite_rules()", "Nothing; it updates itself"],
@@ -2888,6 +3112,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/delete_transient/"]
   },
   {
+    id: "q-0223",
     s: "Custom Development", d: 1, level: "Contributor", stage: 2,
     q: "A shortcode's output appears at the top of the post instead of where the shortcode is. Why?",
     o: [
@@ -2902,6 +3127,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/add_shortcode/"]
   },
   {
+    id: "q-0224",
     s: "Custom Development", d: 1, level: "Contributor", stage: 2,
     q: "What does shortcode_atts() do?",
     o: [
@@ -2916,6 +3142,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/shortcode_atts/"]
   },
   {
+    id: "q-0225",
     s: "Custom Development", d: 1, level: "Contributor", stage: 2,
     q: "What's a good namespace for your plugin's custom REST routes?",
     o: ["No namespace", "'api'", "'wp/v2'", "A vendor-and-version namespace such as 'myplugin/v1'"],
@@ -2925,6 +3152,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/rest-api/extending-the-rest-api/adding-custom-endpoints/"]
   },
   {
+    id: "q-0226",
     s: "Custom Development", d: 1, level: "Contributor", stage: 2,
     q: "Which function wraps data so a REST callback returns a proper response object?",
     o: ["wp_die()", "json_encode() and echo", "rest_ensure_response()", "wp_send_json()"],
@@ -2934,6 +3162,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/rest_ensure_response/"]
   },
   {
+    id: "q-0227",
     s: "WordPress Core", d: 1, level: "Contributor", stage: 2,
     q: "What's the core REST API path for listing posts?",
     o: ["/wp-json/wp/v2/posts", "/wp-admin/posts.json", "/api/posts", "/wp-json/posts/list"],
@@ -2943,6 +3172,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/rest-api/reference/posts/"]
   },
   {
+    id: "q-0228",
     s: "Custom Development", d: 1, level: "Contributor", stage: 2,
     q: "Which hook do you use to register custom REST routes?",
     o: ["admin_init", "init", "wp_loaded", "rest_api_init"],
@@ -2955,6 +3185,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0229",
     s: "Debugging", d: 1, level: "Contributor", stage: 3,
     q: "Which PHP function writes a custom message to the error log?",
     o: ["print_r()", "var_dump()", "echo", "error_log()"],
@@ -2967,6 +3198,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0230",
     s: "Debugging", d: 1, level: "Contributor", stage: 3,
     q: "What does defining SAVEQUERIES as true do?",
     o: [
@@ -2981,6 +3213,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/"]
   },
   {
+    id: "q-0231",
     s: "Change Management", d: 1, level: "Contributor", stage: 3,
     q: "Which values does wp_get_environment_type() return?",
     o: ["true or false", "dev or live", "debug or release", "local, development, staging or production"],
@@ -2990,6 +3223,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_get_environment_type/"]
   },
   {
+    id: "q-0232",
     s: "Debugging", d: 1, level: "Contributor", stage: 3,
     q: "Which WP-CLI command shows the value of an option such as siteurl?",
     o: ["wp config get siteurl", "wp option get siteurl", "wp get option siteurl", "wp site url"],
@@ -2999,6 +3233,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/cli/commands/option/get/"]
   },
   {
+    id: "q-0233",
     s: "Performance", d: 1, level: "Contributor", stage: 3,
     q: "Which WP-CLI command clears the object cache?",
     o: ["wp cache flush", "wp cache clear-all", "wp object-cache purge", "wp flush"],
@@ -3008,6 +3243,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/cli/commands/cache/flush/"]
   },
   {
+    id: "q-0234",
     s: "Performance", d: 1, level: "Contributor", stage: 3,
     q: "Which WP-CLI command deletes every transient?",
     o: [
@@ -3022,6 +3258,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/cli/commands/transient/delete/"]
   },
   {
+    id: "q-0235",
     s: "Debugging", d: 1, level: "Contributor", stage: 3,
     q: "Which WP-CLI command regenerates rewrite rules?",
     o: ["wp rewrite flush", "wp permalink reset", "wp cache flush", "wp rewrite clear"],
@@ -3031,6 +3268,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/cli/commands/rewrite/flush/"]
   },
   {
+    id: "q-0236",
     s: "Debugging", d: 1, level: "Contributor", stage: 3,
     q: "Which WP-CLI command lists pages?",
     o: ["wp list pages", "wp page list", "wp post pages", "wp post list --post_type=page"],
@@ -3040,6 +3278,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/cli/commands/post/list/"]
   },
   {
+    id: "q-0237",
     s: "Custom Development", d: 1, level: "Contributor", stage: 3,
     q: "Which WP-CLI command creates a starter plugin with files and tests?",
     o: ["wp plugin create", "wp new plugin", "wp scaffold plugin", "wp init plugin"],
@@ -3049,6 +3288,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/cli/commands/scaffold/plugin/"]
   },
   {
+    id: "q-0238",
     s: "Change Management", d: 1, level: "Contributor", stage: 3,
     q: "Which Git command creates a new branch and switches to it?",
     o: ["git merge feature-x", "git switch -c feature-x", "git push feature-x", "git branch -d feature-x"],
@@ -3058,6 +3298,7 @@ window.QUESTION_BANK = [
     refs: ["https://git-scm.com/docs/git-switch"]
   },
   {
+    id: "q-0239",
     s: "Change Management", d: 1, level: "Contributor", stage: 3,
     q: "You have uncommitted changes and need to switch tasks quickly. Which command shelves them?",
     o: ["git stash", "git clean -fd", "git reset --hard", "git revert"],
@@ -3067,6 +3308,7 @@ window.QUESTION_BANK = [
     refs: ["https://git-scm.com/docs/git-stash"]
   },
   {
+    id: "q-0240",
     s: "Change Management", d: 1, level: "Contributor", stage: 3,
     q: "With a composer.lock file present, what does composer install do?",
     o: [
@@ -3081,6 +3323,7 @@ window.QUESTION_BANK = [
     refs: ["https://getcomposer.org/doc/01-basic-usage.md"]
   },
   {
+    id: "q-0241",
     s: "Change Management", d: 1, level: "Contributor", stage: 3,
     q: "Which plugin header stops activation on servers running an older PHP version?",
     o: ["Version", "Tested up to", "Stable tag", "Requires PHP"],
@@ -3090,6 +3333,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/plugins/plugin-basics/header-requirements/"]
   },
   {
+    id: "q-0242",
     s: "Change Management", d: 1, level: "Contributor", stage: 3,
     q: "Which plugin header sets the minimum WordPress version the plugin needs?",
     o: ["Requires at least", "Network", "Tested up to", "Requires PHP"],
@@ -3099,6 +3343,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/plugins/plugin-basics/header-requirements/"]
   },
   {
+    id: "q-0243",
     s: "Change Management", d: 1, level: "Contributor", stage: 3,
     q: "In a WordPress.org plugin readme.txt, what does \"Stable tag\" point to?",
     o: [
@@ -3113,6 +3358,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/plugins/wordpress-org/how-your-readme-txt-works/"]
   },
   {
+    id: "q-0244",
     s: "Custom Development", d: 1, level: "Contributor", stage: 3,
     q: "When does a plugin's uninstall.php run?",
     o: [
@@ -3127,6 +3373,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/plugins/plugin-basics/uninstall-methods/"]
   },
   {
+    id: "q-0245",
     s: "Custom Development", d: 1, level: "Contributor", stage: 3,
     q: "Which function runs code when a plugin is deactivated?",
     o: [
@@ -3141,6 +3388,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/register_deactivation_hook/"]
   },
   {
+    id: "q-0246",
     s: "Custom Development", d: 2, level: "Contributor", stage: 3,
     q: "Which function creates or updates a plugin's custom database table from a CREATE TABLE statement?",
     o: ["dbDelta()", "maybe_create_table() is required", "add_option()", "$wpdb->query() only"],
@@ -3153,6 +3401,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0247",
     s: "Custom Development", d: 1, level: "Contributor", stage: 3,
     q: "Why should a custom table name use $wpdb->prefix?",
     o: [
@@ -3167,6 +3416,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/plugins/creating-tables-with-plugins/"]
   },
   {
+    id: "q-0248",
     s: "Performance", d: 1, level: "Contributor", stage: 3,
     q: "Which function registers an extra image size that WordPress generates on upload?",
     o: ["set_post_thumbnail_size() only", "add_image_size()", "image_resize()", "wp_get_attachment_image()"],
@@ -3176,6 +3426,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/add_image_size/"]
   },
   {
+    id: "q-0249",
     s: "Performance", d: 1, level: "Contributor", stage: 3,
     q: "Since WordPress 5.5, what does core add to most images by default?",
     o: ["WebP conversion", "A watermark", "An inline base64 copy", "loading=\"lazy\""],
@@ -3185,6 +3436,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_lazy_loading_enabled/"]
   },
   {
+    id: "q-0250",
     s: "Performance", d: 1, level: "Contributor", stage: 3,
     q: "What does wp_cache_get() return when the key isn't in the cache?",
     o: ["false", "It throws an exception", "null", "An empty string"],
@@ -3194,6 +3446,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_cache_get/"]
   },
   {
+    id: "q-0251",
     s: "Performance", d: 2, level: "Contributor", stage: 3,
     q: "Which WP-CLI command lists only the options that autoload?",
     o: ["wp db autoload", "wp option list --autoload=on", "wp option list --heavy", "wp option autoload"],
@@ -3203,6 +3456,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/cli/commands/option/list/"]
   },
   {
+    id: "q-0252",
     s: "Debugging", d: 1, level: "Contributor", stage: 3,
     q: "Which function stops execution and shows a WordPress-styled message, for example after a failed permission check?",
     o: ["wp_die()", "wp_error()", "die_message()", "exit_page()"],
@@ -3212,6 +3466,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_die/"]
   },
   {
+    id: "q-0253",
     s: "Security", d: 2, level: "Author", stage: 1,
     q: "In register_post_meta(), what does auth_callback control?",
     o: [
@@ -3229,6 +3484,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0254",
     s: "Custom Development", d: 2, level: "Author", stage: 1,
     q: "In block.json, what does the \"attributes\" property define?",
     o: [
@@ -3246,6 +3502,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0255",
     s: "Custom Development", d: 2, level: "Author", stage: 1,
     q: "In a block's edit component, what is useBlockProps() for?",
     o: [
@@ -3260,6 +3517,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/"]
   },
   {
+    id: "q-0256",
     s: "Custom Development", d: 2, level: "Author", stage: 1,
     q: "Which package gives you build, start and lint commands for blocks without writing your own webpack config?",
     o: ["@wordpress/scripts", "@wordpress/hooks", "@wordpress/data", "@wordpress/env"],
@@ -3269,6 +3527,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/block-editor/reference-guides/packages/packages-scripts/"]
   },
   {
+    id: "q-0257",
     s: "Custom Development", d: 2, level: "Author", stage: 1,
     q: "Which PHP filter lets you change the HTML of any block as it's rendered on the front end?",
     o: ["block_type_metadata", "render_block", "pre_render_block_editor", "the_content only"],
@@ -3278,6 +3537,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/hooks/render_block/"]
   },
   {
+    id: "q-0258",
     s: "Custom Development", d: 2, level: "Author", stage: 1,
     q: "You want your custom block to get the editor's colour and spacing controls automatically. What do you use?",
     o: [
@@ -3292,6 +3552,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/block-editor/reference-guides/block-api/block-supports/"]
   },
   {
+    id: "q-0259",
     s: "Custom Development", d: 2, level: "Author", stage: 1,
     q: "Which PHP function registers a block pattern from code?",
     o: [
@@ -3306,6 +3567,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/register_block_pattern/"]
   },
   {
+    id: "q-0260",
     s: "Custom Development", d: 2, level: "Author", stage: 1,
     q: "What does register_block_style() add to a block?",
     o: [
@@ -3320,6 +3582,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/register_block_style/"]
   },
   {
+    id: "q-0261",
     s: "Custom Development", d: 2, level: "Author", stage: 1,
     q: "Strings in your block's JavaScript aren't being translated. What's missing?",
     o: [
@@ -3334,6 +3597,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_set_script_translations/"]
   },
   {
+    id: "q-0262",
     s: "Custom Development", d: 2, level: "Author", stage: 1,
     q: "Which filter lets a plugin swap the template file WordPress is about to load?",
     o: ["template_redirect", "the_template", "get_template_part", "template_include"],
@@ -3343,6 +3607,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/hooks/template_include/"]
   },
   {
+    id: "q-0263",
     s: "WordPress Core", d: 2, level: "Author", stage: 1,
     q: "Which function returns the slug of the custom template assigned to a page?",
     o: ["get_page_template()", "get_template()", "is_page_template() only", "get_page_template_slug()"],
@@ -3352,6 +3617,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/get_page_template_slug/"]
   },
   {
+    id: "q-0264",
     s: "Performance", d: 2, level: "Author", stage: 1,
     q: "You only need post IDs from a query. Which argument avoids loading full post objects?",
     o: [
@@ -3366,6 +3632,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/classes/wp_query/"]
   },
   {
+    id: "q-0265",
     s: "WordPress Core", d: 2, level: "Author", stage: 1,
     q: "You pass post__in with IDs in a specific order. How do you keep that order?",
     o: ["It always keeps it", "'orderby' => 'post__in'", "'order' => 'ASC'", "'orderby' => 'ID'"],
@@ -3375,6 +3642,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/classes/wp_query/"]
   },
   {
+    id: "q-0266",
     s: "Custom Development", d: 2, level: "Author", stage: 1,
     q: "You call wp_insert_post( $args, true ). What do you check before using the result?",
     o: [
@@ -3392,6 +3660,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0267",
     s: "Custom Development", d: 2, level: "Author", stage: 1,
     q: "What does the $capability argument of add_submenu_page() do?",
     o: [
@@ -3406,6 +3675,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/add_submenu_page/"]
   },
   {
+    id: "q-0268",
     s: "Custom Development", d: 2, level: "Author", stage: 1,
     q: "With the Settings API, how do fields added with add_settings_field() appear on your page?",
     o: [
@@ -3423,6 +3693,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0269",
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "What does wp_verify_nonce() return for a valid nonce?",
     o: [
@@ -3437,6 +3708,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_verify_nonce/"]
   },
   {
+    id: "q-0270",
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "A REST route is meant to be public. What should its permission_callback be?",
     o: ["is_user_logged_in", "__return_true, stated explicitly", "null", "Left out"],
@@ -3446,6 +3718,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/rest-api/extending-the-rest-api/adding-custom-endpoints/"]
   },
   {
+    id: "q-0271",
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "In register_rest_route() args, what are validate_callback and sanitize_callback for?",
     o: [
@@ -3460,6 +3733,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/rest-api/extending-the-rest-api/adding-custom-endpoints/"]
   },
   {
+    id: "q-0272",
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "You need to save a URL to the database (not print it). Which function cleans it?",
     o: ["esc_url_raw() (or sanitize_url())", "esc_url()", "esc_attr()", "urlencode()"],
@@ -3469,6 +3743,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/esc_url_raw/"]
   },
   {
+    id: "q-0273",
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "You want to allow only <a href> and <strong> in a field. Which function fits?",
     o: [
@@ -3483,6 +3758,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_kses/"]
   },
   {
+    id: "q-0274",
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "On a single site, which default roles have the unfiltered_html capability?",
     o: ["All logged-in users", "Administrators and Editors", "Nobody", "Authors and Contributors"],
@@ -3492,6 +3768,7 @@ window.QUESTION_BANK = [
     refs: ["https://wordpress.org/documentation/article/roles-and-capabilities/"]
   },
   {
+    id: "q-0275",
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "How should a plugin check a password a user typed against a stored hash?",
     o: ["Store and compare plain text", "Compare md5() values", "Use == on the hash", "wp_check_password()"],
@@ -3504,6 +3781,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0276",
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "Why use $wpdb->insert() instead of building an INSERT string yourself?",
     o: [
@@ -3518,6 +3796,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/classes/wpdb/insert/"]
   },
   {
+    id: "q-0277",
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "Which function checks an uploaded file's real type and extension before you accept it?",
     o: ["pathinfo()", "is_uploaded_file() only", "sanitize_file_name() only", "wp_check_filetype_and_ext()"],
@@ -3527,6 +3806,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_check_filetype_and_ext/"]
   },
   {
+    id: "q-0278",
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "Which measures help against brute-force login attacks?",
     o: [
@@ -3541,6 +3821,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/security/brute-force/"]
   },
   {
+    id: "q-0279",
     s: "Performance", d: 2, level: "Author", stage: 2,
     q: "A \"latest posts\" query keeps showing a sticky post first. Which argument stops that?",
     o: [
@@ -3555,6 +3836,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/classes/wp_query/"]
   },
   {
+    id: "q-0280",
     s: "Performance", d: 2, level: "Author", stage: 2,
     q: "What's the difference between wp_cache_add() and wp_cache_set()?",
     o: [
@@ -3572,6 +3854,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0281",
     s: "Performance", d: 2, level: "Author", stage: 2,
     q: "A cached value depends on a post. What do you do when that post is saved?",
     o: [
@@ -3589,6 +3872,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0282",
     s: "Performance", d: 2, level: "Author", stage: 2,
     q: "With a persistent object cache active, where are transients stored?",
     o: [
@@ -3603,6 +3887,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/apis/transients/"]
   },
   {
+    id: "q-0283",
     s: "Performance", d: 2, level: "Author", stage: 2,
     q: "A loop calls get_post_meta() for 50 posts and runs 50 queries. What reduces that to one?",
     o: [
@@ -3617,6 +3902,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/update_meta_cache/"]
   },
   {
+    id: "q-0284",
     s: "Performance", d: 2, level: "Author", stage: 2,
     q: "After wp_remote_get(), which function gives you the HTTP status code?",
     o: [
@@ -3631,6 +3917,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_remote_retrieve_response_code/"]
   },
   {
+    id: "q-0285",
     s: "Performance", d: 2, level: "Author", stage: 2,
     q: "On a low-traffic site, scheduled tasks run late or not at all. What's the robust fix?",
     o: [
@@ -3645,6 +3932,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/plugins/cron/hooking-wp-cron-into-the-system-task-scheduler/"]
   },
   {
+    id: "q-0286",
     s: "Debugging", d: 2, level: "Author", stage: 3,
     q: "Which Query Monitor panel helps you see which callbacks are attached to each hook on a page?",
     o: ["Environment", "Languages", "Hooks & Actions", "Transients"],
@@ -3654,6 +3942,7 @@ window.QUESTION_BANK = [
     refs: ["https://wordpress.org/plugins/query-monitor/"]
   },
   {
+    id: "q-0287",
     s: "Debugging", d: 2, level: "Author", stage: 3,
     q: "Your plugin gets called incorrectly by other code. Which function triggers a developer notice without breaking the site?",
     o: ["_doing_it_wrong()", "trigger_error() with E_USER_ERROR", "wp_die()", "exit()"],
@@ -3663,6 +3952,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/_doing_it_wrong/"]
   },
   {
+    id: "q-0288",
     s: "Change Management", d: 2, level: "Author", stage: 3,
     q: "You're replacing a public plugin function with a new one. How do you warn developers still using the old one?",
     o: [
@@ -3677,6 +3967,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/_deprecated_function/"]
   },
   {
+    id: "q-0289",
     s: "Debugging", d: 2, level: "Author", stage: 3,
     q: "Which WP-CLI command runs a line of PHP in the WordPress context?",
     o: ["wp eval 'echo get_option( \"home\" );'", "wp run", "wp php", "wp exec-php"],
@@ -3686,6 +3977,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/cli/commands/eval/"]
   },
   {
+    id: "q-0290",
     s: "Debugging", d: 2, level: "Author", stage: 3,
     q: "Which WP-CLI command opens an interactive PHP session with WordPress loaded?",
     o: ["wp repl", "wp console", "wp shell", "wp debug"],
@@ -3695,6 +3987,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/cli/commands/shell/"]
   },
   {
+    id: "q-0291",
     s: "Debugging", d: 2, level: "Author", stage: 3,
     q: "Which tool lets you pause PHP on a breakpoint and inspect variables in your IDE?",
     o: ["WP_DEBUG_LOG", "Query Monitor", "Xdebug step debugging", "PHPCS"],
@@ -3704,6 +3997,7 @@ window.QUESTION_BANK = [
     refs: ["https://xdebug.org/docs/step_debug"]
   },
   {
+    id: "q-0292",
     s: "Change Management", d: 2, level: "Author", stage: 3,
     q: "In WordPress's PHPUnit test suite, what do test factories such as self::factory()->post->create() do?",
     o: [
@@ -3718,6 +4012,7 @@ window.QUESTION_BANK = [
     refs: ["https://make.wordpress.org/core/handbook/testing/automated-testing/phpunit/"]
   },
   {
+    id: "q-0293",
     s: "Change Management", d: 2, level: "Author", stage: 3,
     q: "Which official package spins up a local WordPress environment with Docker from a .wp-env.json file?",
     o: ["@wordpress/env (wp-env)", "Composer", "WP-CLI scaffold", "@wordpress/scripts"],
@@ -3727,6 +4022,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/"]
   },
   {
+    id: "q-0294",
     s: "Disaster Recovery", d: 2, level: "Author", stage: 3,
     q: "Why shouldn't you copy a staging database over production on a live shop?",
     o: [
@@ -3741,6 +4037,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/upgrade/migrating/"]
   },
   {
+    id: "q-0295",
     s: "Change Management", d: 2, level: "Author", stage: 3,
     q: "How do you mark the exact commit you released as version 1.2.0?",
     o: [
@@ -3755,6 +4052,7 @@ window.QUESTION_BANK = [
     refs: ["https://git-scm.com/docs/git-tag"]
   },
   {
+    id: "q-0296",
     s: "Change Management", d: 2, level: "Author", stage: 3,
     q: "What's the main purpose of opening a pull request before merging into main?",
     o: [
@@ -3771,6 +4069,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0297",
     s: "Change Management", d: 2, level: "Author", stage: 3,
     q: "What should CI run on every pull request for a WordPress plugin?",
     o: [
@@ -3785,6 +4084,7 @@ window.QUESTION_BANK = [
     refs: ["https://docs.github.com/en/actions", "https://github.com/WordPress/WordPress-Coding-Standards"]
   },
   {
+    id: "q-0298",
     s: "Scalability", d: 2, level: "Author", stage: 3,
     q: "How does a CDN help a WordPress site under load?",
     o: [
@@ -3799,6 +4099,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/performance/cache/"]
   },
   {
+    id: "q-0299",
     s: "Scalability", d: 2, level: "Author", stage: 3,
     q: "Why do full-page caches usually skip logged-in users?",
     o: [
@@ -3813,6 +4114,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/performance/cache/"]
   },
   {
+    id: "q-0300",
     s: "Disaster Recovery", d: 2, level: "Author", stage: 3,
     q: "What's a recovery point objective (RPO)?",
     o: [
@@ -3827,6 +4129,7 @@ window.QUESTION_BANK = [
     refs: ["https://csrc.nist.gov/glossary/term/recovery_point_objective"]
   },
   {
+    id: "q-0301",
     s: "Disaster Recovery", d: 2, level: "Author", stage: 3,
     q: "Why should you test-restore backups regularly?",
     o: [
@@ -3841,6 +4144,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/upgrade/upgrading/"]
   },
   {
+    id: "q-0302",
     s: "Disaster Recovery", d: 2, level: "Author", stage: 3,
     q: "What does the 3-2-1 backup rule recommend?",
     o: [
@@ -3855,6 +4159,7 @@ window.QUESTION_BANK = [
     refs: ["https://www.backblaze.com/blog/the-3-2-1-backup-strategy/"]
   },
   {
+    id: "q-0303",
     s: "Security", d: 3, level: "Editor", stage: 1,
     q: "A plugin shows a post meta value in a custom admin list column with echo $value. An Author saves <script> in that field. What's the fix?",
     o: [
@@ -3869,6 +4174,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/apis/security/escaping/"]
   },
   {
+    id: "q-0304",
     s: "Security", d: 3, level: "Editor", stage: 1,
     q: "A \"Delete\" link in wp-admin performs the delete on a plain GET request. What makes it CSRF-safe?",
     o: [
@@ -3886,6 +4192,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0305",
     s: "Security", d: 3, level: "Editor", stage: 1,
     q: "A REST route edits a given post ID. What should permission_callback check?",
     o: [
@@ -3903,6 +4210,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0306",
     s: "Security", d: 3, level: "Editor", stage: 1,
     q: "Which filter lets a plugin grant or remove capabilities dynamically, for example only during a time window?",
     o: ["editable_roles", "map_meta_cap only", "role_has_cap", "user_has_cap"],
@@ -3912,6 +4220,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/hooks/user_has_cap/"]
   },
   {
+    id: "q-0307",
     s: "Security", d: 3, level: "Editor", stage: 1,
     q: "Which filter changes how a meta capability (such as edit_post) is translated into primitive capabilities?",
     o: ["user_has_cap", "register_post_type_args", "current_user_can", "map_meta_cap (the filter)"],
@@ -3921,6 +4230,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/hooks/map_meta_cap/"]
   },
   {
+    id: "q-0308",
     s: "Security", d: 3, level: "Editor", stage: 1,
     q: "Why is calling unserialize() on data from a cookie or request dangerous?",
     o: [
@@ -3935,6 +4245,7 @@ window.QUESTION_BANK = [
     refs: ["https://www.php.net/manual/en/function.unserialize.php"]
   },
   {
+    id: "q-0309",
     s: "Security", d: 3, level: "Editor", stage: 1,
     q: "Your plugin must redirect to a partner domain with wp_safe_redirect(). How do you allow it?",
     o: [
@@ -3952,6 +4263,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0310",
     s: "Security", d: 3, level: "Editor", stage: 1,
     q: "Which hook lets you add security headers such as Content-Security-Policy to WordPress responses?",
     o: ["admin_head", "init only", "wp_headers (filter) or send_headers (action)", "wp_head"],
@@ -3964,6 +4276,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0311",
     s: "Security", d: 3, level: "Editor", stage: 1,
     q: "An integration's Application Password leaks. What's the right response?",
     o: [
@@ -3978,6 +4291,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/rest-api/using-the-rest-api/authentication/"]
   },
   {
+    id: "q-0312",
     s: "Security", d: 3, level: "Editor", stage: 1,
     q: "Why compare secret tokens with hash_equals() rather than ===?",
     o: [
@@ -3992,6 +4306,7 @@ window.QUESTION_BANK = [
     refs: ["https://www.php.net/manual/en/function.hash-equals.php"]
   },
   {
+    id: "q-0313",
     s: "Security", d: 3, level: "Editor", stage: 1,
     q: "Which is suitable for generating a random API secret in a plugin?",
     o: ["wp_generate_password( 32, true, true ) or random_bytes()", "rand()", "md5( time() )", "uniqid()"],
@@ -4004,6 +4319,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0314",
     s: "Security", d: 3, level: "Editor", stage: 1,
     q: "A custom profile form saves a \"role\" field from $_POST. What must happen first?",
     o: [
@@ -4021,6 +4337,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0315",
     s: "WordPress Core", d: 3, level: "Editor", stage: 1,
     q: "On multisite, where should a network-wide setting live?",
     o: [
@@ -4038,6 +4355,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0316",
     s: "WordPress Core", d: 3, level: "Editor", stage: 1,
     q: "How do you check whether a plugin is network-activated on multisite?",
     o: [
@@ -4052,6 +4370,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/is_plugin_active_for_network/"]
   },
   {
+    id: "q-0317",
     s: "Scalability", d: 3, level: "Editor", stage: 1,
     q: "A network has 5,000 sites. A task loops get_sites() and calls switch_to_blog() for each on a page load. What's the problem?",
     o: [
@@ -4069,6 +4388,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0318",
     s: "Custom Development", d: 3, level: "Editor", stage: 1,
     q: "You want /events/2026/ to load an events archive filtered by year. What do you need?",
     o: [
@@ -4086,6 +4406,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0319",
     s: "Custom Development", d: 3, level: "Editor", stage: 1,
     q: "get_query_var( 'event_year' ) is always empty even though your rewrite rule sets it. What's missing?",
     o: [
@@ -4103,6 +4424,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0320",
     s: "Custom Development", d: 3, level: "Editor", stage: 1,
     q: "Which function adds a computed field to an existing core REST response, such as posts?",
     o: ["register_meta() only", "register_rest_route()", "rest_prepare_post() only", "register_rest_field()"],
@@ -4112,6 +4434,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/register_rest_field/"]
   },
   {
+    id: "q-0321",
     s: "Performance", d: 3, level: "Editor", stage: 1,
     q: "A headless front end only needs id, title and link from /wp/v2/posts. How do you shrink the response?",
     o: [
@@ -4126,6 +4449,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/rest-api/using-the-rest-api/global-parameters/"]
   },
   {
+    id: "q-0322",
     s: "Performance", d: 3, level: "Editor", stage: 1,
     q: "What does ?_embed do on a REST request?",
     o: [
@@ -4140,6 +4464,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/rest-api/using-the-rest-api/global-parameters/"]
   },
   {
+    id: "q-0323",
     s: "WordPress Core", d: 3, level: "Editor", stage: 1,
     q: "Which API powers autosave locks and \"someone else is editing\" notices, and can be hooked from PHP with heartbeat_received?",
     o: ["The REST API batch endpoint", "The Heartbeat API", "admin-ajax only", "WP-Cron"],
@@ -4149,6 +4474,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/plugins/javascript/heartbeat-api/"]
   },
   {
+    id: "q-0324",
     s: "WordPress Core", d: 3, level: "Editor", stage: 1,
     q: "You must change post data (for example force a field) before it's written to the database. Which hook fits?",
     o: ["wp_insert_post_data (filter)", "publish_post only", "the_post", "save_post (action)"],
@@ -4158,6 +4484,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/hooks/wp_insert_post_data/"]
   },
   {
+    id: "q-0325",
     s: "WordPress Core", d: 3, level: "Editor", stage: 1,
     q: "Your save_post handler runs twice and sends duplicate emails. What should it check?",
     o: [
@@ -4176,6 +4503,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0326",
     s: "Custom Development", d: 3, level: "Editor", stage: 1,
     q: "Which statements about the save_post hook are true?",
     o: [
@@ -4190,6 +4518,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/hooks/save_post/"]
   },
   {
+    id: "q-0327",
     s: "Performance", d: 3, level: "Editor", stage: 2,
     q: "How does WordPress use a persistent object cache such as Redis?",
     o: [
@@ -4204,6 +4533,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_using_ext_object_cache/"]
   },
   {
+    id: "q-0328",
     s: "Scalability", d: 3, level: "Editor", stage: 2,
     q: "A popular cached item expires and hundreds of requests rebuild it at once, overloading the database. What's this, and a fix?",
     o: [
@@ -4218,6 +4548,7 @@ window.QUESTION_BANK = [
     refs: ["https://www.rfc-editor.org/rfc/rfc5861"]
   },
   {
+    id: "q-0329",
     s: "Performance", d: 3, level: "Editor", stage: 2,
     q: "Why is filtering on meta_value often slow even though meta_key is indexed?",
     o: [
@@ -4232,6 +4563,7 @@ window.QUESTION_BANK = [
     refs: ["https://dev.mysql.com/doc/refman/8.0/en/column-indexes.html"]
   },
   {
+    id: "q-0330",
     s: "Scalability", d: 3, level: "Editor", stage: 2,
     q: "You need to update 200,000 posts. Where should that run?",
     o: [
@@ -4246,6 +4578,7 @@ window.QUESTION_BANK = [
     refs: ["https://make.wordpress.org/cli/handbook/guides/commands-cookbook/"]
   },
   {
+    id: "q-0331",
     s: "Scalability", d: 3, level: "Editor", stage: 2,
     q: "Which library, used by WooCommerce and others, provides a scalable queue for background jobs in WordPress?",
     o: ["Transients API", "Action Scheduler", "Heartbeat API", "WP-Cron alone"],
@@ -4255,6 +4588,7 @@ window.QUESTION_BANK = [
     refs: ["https://actionscheduler.org/"]
   },
   {
+    id: "q-0332",
     s: "Performance", d: 3, level: "Editor", stage: 2,
     q: "During a large import, which function stops new items being added to the object cache to save memory?",
     o: [
@@ -4269,6 +4603,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_suspend_cache_addition/"]
   },
   {
+    id: "q-0333",
     s: "Performance", d: 3, level: "Editor", stage: 2,
     q: "During a bulk import, term counts are recalculated after every post. What speeds that up?",
     o: [
@@ -4283,6 +4618,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_defer_term_counting/"]
   },
   {
+    id: "q-0334",
     s: "Performance", d: 3, level: "Editor", stage: 2,
     q: "You cache several query results in a group. What's an efficient way to invalidate them all when posts change?",
     o: [
@@ -4297,6 +4633,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_cache_get_last_changed/"]
   },
   {
+    id: "q-0335",
     s: "Scalability", d: 3, level: "Editor", stage: 2,
     q: "An endpoint returns user-specific data. Which function sends headers that stop browsers and proxies from caching it?",
     o: [
@@ -4311,6 +4648,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/nocache_headers/"]
   },
   {
+    id: "q-0336",
     s: "Scalability", d: 3, level: "Editor", stage: 2,
     q: "Why should you avoid Vary: Cookie (or varying on many headers) on pages behind a CDN?",
     o: [
@@ -4325,6 +4663,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Vary"]
   },
   {
+    id: "q-0337",
     s: "Performance", d: 3, level: "Editor", stage: 2,
     q: "Which core function builds the srcset that lets browsers download an appropriately sized image?",
     o: ["add_image_size()", "wp_calculate_image_srcset()", "wp_get_attachment_url()", "image_downsize() only"],
@@ -4334,6 +4673,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/wp_calculate_image_srcset/"]
   },
   {
+    id: "q-0338",
     s: "Performance", d: 3, level: "Editor", stage: 2,
     q: "What does fetchpriority=\"high\" on the main hero image do?",
     o: [
@@ -4348,6 +4688,7 @@ window.QUESTION_BANK = [
     refs: ["https://web.dev/articles/fetch-priority"]
   },
   {
+    id: "q-0339",
     s: "Performance", d: 3, level: "Editor", stage: 2,
     q: "What's the difference between async and defer scripts?",
     o: [
@@ -4365,6 +4706,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0340",
     s: "Performance", d: 3, level: "Editor", stage: 2,
     q: "Which function, added in WordPress 6.4, changes the autoload flag of several options without rewriting their values?",
     o: [
@@ -4379,6 +4721,7 @@ window.QUESTION_BANK = [
     refs: ["https://make.wordpress.org/core/2023/10/17/new-option-functions-in-6-4/"]
   },
   {
+    id: "q-0341",
     s: "Scalability", d: 3, level: "Editor", stage: 2,
     q: "With a primary database and read replicas (for example via LudicrousDB), where must writes go?",
     o: [
@@ -4393,6 +4736,7 @@ window.QUESTION_BANK = [
     refs: ["https://github.com/stuttter/ludicrousdb"]
   },
   {
+    id: "q-0342",
     s: "Scalability", d: 3, level: "Editor", stage: 2,
     q: "After saving a post, a user immediately reloads and sees old data. Replicas are in use. What's the likely cause?",
     o: [
@@ -4407,6 +4751,7 @@ window.QUESTION_BANK = [
     refs: ["https://github.com/stuttter/ludicrousdb"]
   },
   {
+    id: "q-0343",
     s: "Performance", d: 3, level: "Editor", stage: 2,
     q: "Why does core WordPress search get slow on large sites?",
     o: [
@@ -4421,6 +4766,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/classes/wp_query/"]
   },
   {
+    id: "q-0344",
     s: "Performance", d: 3, level: "Editor", stage: 2,
     q: "Which object cache functions fetch or store many keys in one round trip?",
     o: [
@@ -4438,6 +4784,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0345",
     s: "Debugging", d: 3, level: "Editor", stage: 2,
     q: "Which Query Monitor panel points you to N+1 query problems?",
     o: ["Environment", "Request", "Languages", "Duplicate Queries"],
@@ -4447,6 +4794,7 @@ window.QUESTION_BANK = [
     refs: ["https://wordpress.org/plugins/query-monitor/"]
   },
   {
+    id: "q-0346",
     s: "Performance", d: 3, level: "Editor", stage: 2,
     q: "What does PHP's OPcache do?",
     o: [
@@ -4461,6 +4809,7 @@ window.QUESTION_BANK = [
     refs: ["https://www.php.net/manual/en/intro.opcache.php"]
   },
   {
+    id: "q-0347",
     s: "Scalability", d: 3, level: "Editor", stage: 2,
     q: "Under load the site returns 502/504 errors and every PHP-FPM worker is busy waiting on a slow external API. What's the core fix?",
     o: [
@@ -4478,6 +4827,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0348",
     s: "Scalability", d: 3, level: "Editor", stage: 2,
     q: "A cron task sometimes takes longer than its interval, and runs overlap and corrupt data. What helps?",
     o: [
@@ -4492,6 +4842,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/plugins/cron/"]
   },
   {
+    id: "q-0349",
     s: "Performance", d: 3, level: "Editor", stage: 2,
     q: "The Heartbeat API is causing heavy admin-ajax.php traffic. How do you reduce it?",
     o: [
@@ -4509,6 +4860,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0350",
     s: "Debugging", d: 3, level: "Editor", stage: 3,
     q: "Production returns a 500 error, debug.log is empty, and WP_DEBUG_LOG is on. Where do you look next?",
     o: [
@@ -4526,6 +4878,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0351",
     s: "Debugging", d: 3, level: "Editor", stage: 3,
     q: "A fatal error in a must-use plugin takes the site down. Why doesn't recovery mode let you pause it?",
     o: [
@@ -4543,6 +4896,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0352",
     s: "Debugging", d: 3, level: "Editor", stage: 3,
     q: "Which drop-in replaces WordPress's fatal error handler with your own?",
     o: [
@@ -4557,6 +4911,7 @@ window.QUESTION_BANK = [
     refs: ["https://make.wordpress.org/core/2019/04/16/fatal-error-recovery-mode-in-5-2/"]
   },
   {
+    id: "q-0353",
     s: "Debugging", d: 3, level: "Editor", stage: 3,
     q: "Which constant turns off the fatal error handler and recovery mode entirely?",
     o: ["WP_DEBUG", "WP_DISABLE_FATAL_ERROR_HANDLER", "WP_SANDBOX_SCRAPING", "DISABLE_RECOVERY"],
@@ -4566,6 +4921,7 @@ window.QUESTION_BANK = [
     refs: ["https://make.wordpress.org/core/2019/04/16/fatal-error-recovery-mode-in-5-2/"]
   },
   {
+    id: "q-0354",
     s: "Debugging", d: 3, level: "Editor", stage: 3,
     q: "A bug appeared somewhere in the last 80 commits. Which Git tool finds the commit fastest?",
     o: ["git log -p", "git blame on every file", "git stash", "git bisect"],
@@ -4575,6 +4931,7 @@ window.QUESTION_BANK = [
     refs: ["https://git-scm.com/docs/git-bisect"]
   },
   {
+    id: "q-0355",
     s: "Change Management", d: 3, level: "Editor", stage: 3,
     q: "What's blue-green deployment?",
     o: [
@@ -4589,6 +4946,7 @@ window.QUESTION_BANK = [
     refs: ["https://martinfowler.com/bliki/BlueGreenDeployment.html"]
   },
   {
+    id: "q-0356",
     s: "Change Management", d: 3, level: "Editor", stage: 3,
     q: "How should a plugin handle custom table schema changes across versions?",
     o: [
@@ -4603,6 +4961,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/plugins/creating-tables-with-plugins/"]
   },
   {
+    id: "q-0357",
     s: "Change Management", d: 3, level: "Editor", stage: 3,
     q: "What makes WordPress show \"Briefly unavailable for scheduled maintenance\" during updates?",
     o: [
@@ -4620,6 +4979,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0358",
     s: "Change Management", d: 3, level: "Editor", stage: 3,
     q: "In a Composer-managed project, where do you usually get WordPress.org plugins and themes as packages?",
     o: ["WordPress Packagist (wpackagist.org)", "PECL", "npm", "The Plugins screen only"],
@@ -4629,6 +4989,7 @@ window.QUESTION_BANK = [
     refs: ["https://wpackagist.org/"]
   },
   {
+    id: "q-0359",
     s: "Security", d: 3, level: "Editor", stage: 3,
     q: "How should production secrets reach wp-config.php in a Git-based workflow?",
     o: [
@@ -4643,6 +5004,7 @@ window.QUESTION_BANK = [
     refs: ["https://docs.github.com/en/get-started/learning-to-code/storing-your-secrets-safely"]
   },
   {
+    id: "q-0360",
     s: "Change Management", d: 3, level: "Editor", stage: 3,
     q: "What's the main benefit of feature toggles?",
     o: [
@@ -4657,6 +5019,7 @@ window.QUESTION_BANK = [
     refs: ["https://martinfowler.com/articles/feature-toggles.html"]
   },
   {
+    id: "q-0361",
     s: "Change Management", d: 3, level: "Editor", stage: 3,
     q: "What should a good changelog entry focus on?",
     o: [
@@ -4671,6 +5034,7 @@ window.QUESTION_BANK = [
     refs: ["https://keepachangelog.com/"]
   },
   {
+    id: "q-0362",
     s: "Security", d: 3, level: "Editor", stage: 3,
     q: "After a compromise, which WP-CLI command quickly lists every administrator?",
     o: ["wp user get admin", "wp user list --role=administrator", "wp admin list", "wp role list"],
@@ -4680,6 +5044,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/cli/commands/user/list/"]
   },
   {
+    id: "q-0363",
     s: "Security", d: 3, level: "Editor", stage: 3,
     q: "What's a limitation of wp plugin verify-checksums?",
     o: [
@@ -4694,6 +5059,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/cli/commands/plugin/verify-checksums/"]
   },
   {
+    id: "q-0364",
     s: "Disaster Recovery", d: 3, level: "Editor", stage: 3,
     q: "A table was dropped at 14:05. You have last night's full backup and MySQL binary logs. What lets you recover to 14:04?",
     o: [
@@ -4708,6 +5074,7 @@ window.QUESTION_BANK = [
     refs: ["https://dev.mysql.com/doc/refman/8.0/en/point-in-time-recovery.html"]
   },
   {
+    id: "q-0365",
     s: "Disaster Recovery", d: 3, level: "Editor", stage: 3,
     q: "What's a recovery time objective (RTO)?",
     o: [
@@ -4722,6 +5089,7 @@ window.QUESTION_BANK = [
     refs: ["https://csrc.nist.gov/glossary/term/recovery_time_objective"]
   },
   {
+    id: "q-0366",
     s: "Disaster Recovery", d: 3, level: "Editor", stage: 3,
     q: "Why is a backup stored only on the same server as the site a weak backup?",
     o: [
@@ -4736,6 +5104,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/security/hardening/"]
   },
   {
+    id: "q-0367",
     s: "Disaster Recovery", d: 3, level: "Editor", stage: 3,
     q: "You're moving a site to a new server tomorrow. What should you do with DNS today?",
     o: [
@@ -4750,6 +5119,7 @@ window.QUESTION_BANK = [
     refs: ["https://developers.cloudflare.com/dns/manage-dns-records/reference/ttl/"]
   },
   {
+    id: "q-0368",
     s: "Change Management", d: 3, level: "Editor", stage: 3,
     q: "What's the purpose of a blameless postmortem after an outage?",
     o: [
@@ -4764,6 +5134,7 @@ window.QUESTION_BANK = [
     refs: ["https://sre.google/sre-book/postmortem-culture/"]
   },
   {
+    id: "q-0369",
     s: "Debugging", d: 3, level: "Editor", stage: 3,
     q: "Logged-out REST requests work, but every authenticated one from an integration fails. Which filter shows where authentication is being rejected?",
     o: ["determine_current_user only", "rest_authentication_errors", "rest_url", "rest_pre_echo_response"],
@@ -4773,6 +5144,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/hooks/rest_authentication_errors/"]
   },
   {
+    id: "q-0370",
     s: "Debugging", d: 3, level: "Editor", stage: 3,
     q: "Your code runs too early. Which function tells you whether an action has already fired, and how many times?",
     o: ["current_filter()", "has_action()", "doing_action() only", "did_action()"],
@@ -4782,6 +5154,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/functions/did_action/"]
   },
   {
+    id: "q-0371",
     s: "Debugging", d: 3, level: "Editor", stage: 3,
     q: "Which action fires after every HTTP API request, so you can log the response for debugging?",
     o: ["pre_http_request", "wp_remote_complete", "http_request_args", "http_api_debug"],
@@ -4791,6 +5164,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/hooks/http_api_debug/"]
   },
   {
+    id: "q-0372",
     s: "Debugging", d: 3, level: "Editor", stage: 3,
     q: "Which statements about debugging on production are true?",
     o: [
@@ -4805,6 +5179,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/"]
   },
   {
+    id: "q-0373",
     s: "Debugging", d: 3, level: "Editor", stage: 3,
     q: "Which Query Monitor panel shows which template file rendered the current page?",
     o: ["HTTP API Calls", "Scripts", "Hooks & Actions", "Template"],
@@ -4814,6 +5189,7 @@ window.QUESTION_BANK = [
     refs: ["https://wordpress.org/plugins/query-monitor/"]
   },
   {
+    id: "q-0374",
     s: "Performance", d: 3, level: "Editor", stage: 2,
     q: "Which function, added in WordPress 6.1, clears a single object cache group, and how do you know the backend supports it?",
     o: [
@@ -4831,6 +5207,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0375",
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "A popular plugin you use changes owner and ships an update with obfuscated code. What's the risk category, and the right response?",
     o: [
@@ -4848,6 +5225,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0376",
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "Why does the hardening guide warn against revoking ALTER and CREATE from WordPress's database user?",
     o: [
@@ -4862,6 +5240,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/security/hardening/"]
   },
   {
+    id: "q-0377",
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "What can a web application firewall (WAF) do, and what can't it?",
     o: [
@@ -4876,6 +5255,7 @@ window.QUESTION_BANK = [
     refs: ["https://owasp.org/www-community/Web_Application_Firewall"]
   },
   {
+    id: "q-0378",
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "Why think twice before submitting a domain to the HSTS preload list?",
     o: [
@@ -4890,6 +5270,7 @@ window.QUESTION_BANK = [
     refs: ["https://hstspreload.org/"]
   },
   {
+    id: "q-0379",
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "Which wp-config.php constant blocks plugin and theme installs, updates and file edits from wp-admin, for a Git-deployed site?",
     o: ["DISALLOW_FILE_MODS", "AUTOMATIC_UPDATER_DISABLED only", "WP_AUTO_UPDATE_CORE", "DISALLOW_FILE_EDIT"],
@@ -4899,6 +5280,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/wordpress/wp-config/"]
   },
   {
+    id: "q-0380",
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "Which constant forces logins and wp-admin over HTTPS?",
     o: ["FORCE_HTTPS_LOGIN", "WP_HTTPS", "FORCE_SSL_ADMIN", "SSL_ONLY"],
@@ -4908,6 +5290,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/security/https/"]
   },
   {
+    id: "q-0381",
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "Behind a load balancer that ends TLS, WordPress thinks every request is HTTP and loops redirects. What's the fix?",
     o: [
@@ -4925,6 +5308,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0382",
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "Why is rate limiting by the X-Forwarded-For header risky?",
     o: [
@@ -4939,6 +5323,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For"]
   },
   {
+    id: "q-0383",
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "You output a PHP array into an inline <script> block. What's the correct escaping?",
     o: [
@@ -4956,6 +5341,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0384",
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "Since WordPress 6.2, how do you safely insert a table or column name into a prepared query?",
     o: [
@@ -4970,6 +5356,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/classes/wpdb/prepare/"]
   },
   {
+    id: "q-0385",
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "Which official tool checks a plugin against WordPress.org directory requirements and common security issues before submission?",
     o: ["The Plugin Check plugin", "WP-CLI doctor", "Query Monitor", "Health Check"],
@@ -4979,6 +5366,7 @@ window.QUESTION_BANK = [
     refs: ["https://wordpress.org/plugins/plugin-check/"]
   },
   {
+    id: "q-0386",
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "You find a security bug in WordPress core. Where should you report it?",
     o: [
@@ -4993,6 +5381,7 @@ window.QUESTION_BANK = [
     refs: ["https://wordpress.org/about/security/"]
   },
   {
+    id: "q-0387",
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "After a suspected account takeover, how do you log the user out of every device from code?",
     o: [
@@ -5007,6 +5396,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/classes/wp_session_tokens/"]
   },
   {
+    id: "q-0388",
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "Why should application and security logs be shipped off the web server?",
     o: [
@@ -5021,6 +5411,7 @@ window.QUESTION_BANK = [
     refs: ["https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html"]
   },
   {
+    id: "q-0389",
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "Which filters register a plugin's personal data exporter and eraser with WordPress's privacy tools?",
     o: [
@@ -5038,6 +5429,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0390",
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "What can the public REST users endpoint (/wp/v2/users) reveal on a default install?",
     o: [
@@ -5052,6 +5444,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/rest-api/reference/users/"]
   },
   {
+    id: "q-0391",
     s: "WordPress Core", d: 3, level: "Administrator", stage: 1,
     q: "How do you enable the Network Setup screen to turn a site into multisite?",
     o: [
@@ -5066,6 +5459,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/multisite/create-network/"]
   },
   {
+    id: "q-0392",
     s: "WordPress Core", d: 3, level: "Administrator", stage: 1,
     q: "Why does the choice between subdomains and subdirectories matter when creating a network?",
     o: [
@@ -5080,6 +5474,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/multisite/create-network/"]
   },
   {
+    id: "q-0393",
     s: "WordPress Core", d: 3, level: "Administrator", stage: 1,
     q: "On multisite, which data is shared by every site in the network?",
     o: ["Users (wp_users and wp_usermeta)", "Options", "Comments", "Posts"],
@@ -5089,6 +5484,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/multisite/"]
   },
   {
+    id: "q-0394",
     s: "WordPress Core", d: 3, level: "Administrator", stage: 1,
     q: "Which capability lets a Super Admin manage network settings?",
     o: [
@@ -5103,6 +5499,7 @@ window.QUESTION_BANK = [
     refs: ["https://wordpress.org/documentation/article/roles-and-capabilities/"]
   },
   {
+    id: "q-0395",
     s: "WordPress Core", d: 3, level: "Administrator", stage: 1,
     q: "Users on a multisite with mapped domains get logged out when moving between sites. Which wp-config.php constant is commonly involved?",
     o: ["COOKIE_DOMAIN", "NOBLOGREDIRECT", "WP_HOME", "WP_DEBUG"],
@@ -5112,6 +5509,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/wordpress/wp-config/"]
   },
   {
+    id: "q-0396",
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "During a code review you see extract( $_POST ). Why is it a problem?",
     o: [
@@ -5126,6 +5524,7 @@ window.QUESTION_BANK = [
     refs: ["https://www.php.net/manual/en/function.extract.php"]
   },
   {
+    id: "q-0397",
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "What do the WordPress.org plugin guidelines say about obfuscated code?",
     o: [
@@ -5140,6 +5539,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/plugins/wordpress-org/detailed-plugin-guidelines/"]
   },
   {
+    id: "q-0398",
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "Which statements about security layers are true?",
     o: [
@@ -5157,6 +5557,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0399",
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "Which statements about Application Passwords are true?",
     o: [
@@ -5171,6 +5572,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/rest-api/using-the-rest-api/authentication/"]
   },
   {
+    id: "q-0400",
     s: "Performance", d: 3, level: "Administrator", stage: 2,
     q: "What enables a full-page caching drop-in (advanced-cache.php) to load early?",
     o: [
@@ -5185,6 +5587,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/wordpress/wp-config/"]
   },
   {
+    id: "q-0401",
     s: "Scalability", d: 3, level: "Administrator", stage: 2,
     q: "How do cache tags (surrogate keys) improve CDN invalidation?",
     o: [
@@ -5199,6 +5602,7 @@ window.QUESTION_BANK = [
     refs: ["https://developers.cloudflare.com/cache/how-to/purge-cache/purge-by-tags/"]
   },
   {
+    id: "q-0402",
     s: "Performance", d: 3, level: "Administrator", stage: 2,
     q: "What does Time to First Byte (TTFB) mainly reflect?",
     o: [
@@ -5213,6 +5617,7 @@ window.QUESTION_BANK = [
     refs: ["https://web.dev/articles/ttfb"]
   },
   {
+    id: "q-0403",
     s: "Performance", d: 3, level: "Administrator", stage: 2,
     q: "Which three metrics make up the current Core Web Vitals?",
     o: ["LCP, FID and FCP", "FID, CLS and TTI", "LCP, INP and CLS", "TTFB, FCP and TBT"],
@@ -5222,6 +5627,7 @@ window.QUESTION_BANK = [
     refs: ["https://web.dev/articles/vitals"]
   },
   {
+    id: "q-0404",
     s: "Performance", d: 3, level: "Administrator", stage: 2,
     q: "How can you see server-side timing (database, cache, PHP) in the browser's network panel?",
     o: [
@@ -5236,6 +5642,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Server-Timing"]
   },
   {
+    id: "q-0405",
     s: "Scalability", d: 3, level: "Administrator", stage: 2,
     q: "Before a big launch, how do you find the traffic level at which the site starts failing?",
     o: [
@@ -5250,6 +5657,7 @@ window.QUESTION_BANK = [
     refs: ["https://grafana.com/docs/k6/latest/"]
   },
   {
+    id: "q-0406",
     s: "Scalability", d: 3, level: "Administrator", stage: 2,
     q: "Average response time is 0.5 s and you expect 100 requests per second reaching PHP. Roughly how many requests are in progress at once?",
     o: [
@@ -5264,6 +5672,7 @@ window.QUESTION_BANK = [
     refs: ["https://en.wikipedia.org/wiki/Little%27s_law"]
   },
   {
+    id: "q-0407",
     s: "Performance", d: 3, level: "Administrator", stage: 2,
     q: "Which MySQL setting has the biggest effect on keeping InnoDB data and indexes in memory?",
     o: ["query_cache_size", "max_allowed_packet", "wait_timeout", "innodb_buffer_pool_size"],
@@ -5273,6 +5682,7 @@ window.QUESTION_BANK = [
     refs: ["https://dev.mysql.com/doc/refman/8.0/en/innodb-buffer-pool.html"]
   },
   {
+    id: "q-0408",
     s: "Debugging", d: 3, level: "Administrator", stage: 2,
     q: "How do you find which queries are slow on the database server over a whole day?",
     o: [
@@ -5287,6 +5697,7 @@ window.QUESTION_BANK = [
     refs: ["https://dev.mysql.com/doc/refman/8.0/en/slow-query-log.html"]
   },
   {
+    id: "q-0409",
     s: "Performance", d: 3, level: "Administrator", stage: 2,
     q: "A custom table is queried with WHERE site_id = ? AND created_at > ? ORDER BY created_at. Which index helps most?",
     o: [
@@ -5301,6 +5712,7 @@ window.QUESTION_BANK = [
     refs: ["https://dev.mysql.com/doc/refman/8.0/en/multiple-column-indexes.html"]
   },
   {
+    id: "q-0410",
     s: "Scalability", d: 3, level: "Administrator", stage: 2,
     q: "Which Redis eviction policy suits a WordPress object cache?",
     o: [
@@ -5315,6 +5727,7 @@ window.QUESTION_BANK = [
     refs: ["https://redis.io/docs/latest/develop/reference/eviction/"]
   },
   {
+    id: "q-0411",
     s: "Scalability", d: 3, level: "Administrator", stage: 2,
     q: "Why must code never treat the object cache as the source of truth?",
     o: [
@@ -5329,6 +5742,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/performance/cache/"]
   },
   {
+    id: "q-0412",
     s: "Performance", d: 3, level: "Administrator", stage: 2,
     q: "Which SQL finds how much data is autoloaded on every request (WordPress 6.6+ values)?",
     o: [
@@ -5343,6 +5757,7 @@ window.QUESTION_BANK = [
     refs: ["https://make.wordpress.org/core/2024/06/18/options-api-disabling-autoload-for-large-options/"]
   },
   {
+    id: "q-0413",
     s: "Performance", d: 3, level: "Administrator", stage: 2,
     q: "Why is SQL_CALC_FOUND_ROWS (used by WP_Query for pagination) something to avoid on large tables?",
     o: [
@@ -5357,6 +5772,7 @@ window.QUESTION_BANK = [
     refs: ["https://dev.mysql.com/doc/refman/8.0/en/information-functions.html"]
   },
   {
+    id: "q-0414",
     s: "Performance", d: 3, level: "Administrator", stage: 2,
     q: "With HTTP/2, why is bundling every CSS and JS file into one less important than it used to be?",
     o: [
@@ -5371,6 +5787,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.mozilla.org/en-US/docs/Glossary/HTTP_2"]
   },
   {
+    id: "q-0415",
     s: "Performance", d: 3, level: "Administrator", stage: 2,
     q: "Which response header tells you the server compressed a text response with Brotli?",
     o: ["Transfer-Encoding: chunked", "Content-Type: br", "Accept-Encoding: br", "Content-Encoding: br"],
@@ -5380,6 +5797,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Encoding"]
   },
   {
+    id: "q-0416",
     s: "Performance", d: 3, level: "Administrator", stage: 2,
     q: "Which filter adds preconnect or dns-prefetch hints for a third-party origin you always use?",
     o: ["style_loader_src", "wp_head", "script_loader_tag only", "wp_resource_hints"],
@@ -5389,6 +5807,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/hooks/wp_resource_hints/"]
   },
   {
+    id: "q-0417",
     s: "Performance", d: 3, level: "Administrator", stage: 2,
     q: "What does WordPress 6.8's speculative loading do by default?",
     o: [
@@ -5403,6 +5822,7 @@ window.QUESTION_BANK = [
     refs: ["https://make.wordpress.org/core/2025/03/06/speculative-loading-in-6-8/"]
   },
   {
+    id: "q-0418",
     s: "Performance", d: 3, level: "Administrator", stage: 2,
     q: "How do you load a block's stylesheet only on pages that contain that block?",
     o: [
@@ -5420,6 +5840,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0419",
     s: "Scalability", d: 3, level: "Administrator", stage: 2,
     q: "On a site using Elasticsearch for queries, what should remain the source of truth?",
     o: [
@@ -5434,6 +5855,7 @@ window.QUESTION_BANK = [
     refs: ["https://docs.wpvip.com/wordpress-on-vip/search-options/elasticsearch/"]
   },
   {
+    id: "q-0420",
     s: "Scalability", d: 3, level: "Administrator", stage: 2,
     q: "You run ten web nodes. How should WP-Cron run?",
     o: [
@@ -5451,6 +5873,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0421",
     s: "Scalability", d: 3, level: "Administrator", stage: 2,
     q: "After scaling to more PHP workers, the database starts refusing connections. Which setting is likely too low?",
     o: ["innodb_log_file_size", "upload_max_filesize", "MySQL max_connections", "memory_limit"],
@@ -5460,6 +5883,7 @@ window.QUESTION_BANK = [
     refs: ["https://dev.mysql.com/doc/refman/8.0/en/server-system-variables.html"]
   },
   {
+    id: "q-0422",
     s: "Performance", d: 3, level: "Administrator", stage: 2,
     q: "A one-off WP-CLI script runs a query whose results won't be reused. Which WP_Query argument skips adding the posts to the object cache?",
     o: [
@@ -5474,6 +5898,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/reference/classes/wp_query/"]
   },
   {
+    id: "q-0423",
     s: "Scalability", d: 3, level: "Administrator", stage: 2,
     q: "Which statements about scaling WordPress horizontally are true?",
     o: [
@@ -5488,6 +5913,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/advanced-administration/performance/cache/"]
   },
   {
+    id: "q-0424",
     s: "Performance", d: 3, level: "Administrator", stage: 2,
     q: "Which statements about Core Web Vitals and WordPress are true?",
     o: [
@@ -5502,6 +5928,7 @@ window.QUESTION_BANK = [
     refs: ["https://web.dev/articles/vitals"]
   },
   {
+    id: "q-0425",
     s: "Change Management", d: 3, level: "Administrator", stage: 3,
     q: "In incident response, what's the incident commander's main job?",
     o: [
@@ -5516,6 +5943,7 @@ window.QUESTION_BANK = [
     refs: ["https://sre.google/sre-book/managing-incidents/"]
   },
   {
+    id: "q-0426",
     s: "Change Management", d: 3, level: "Administrator", stage: 3,
     q: "What's the difference between an SLI, an SLO and an SLA?",
     o: [
@@ -5530,6 +5958,7 @@ window.QUESTION_BANK = [
     refs: ["https://sre.google/sre-book/service-level-objectives/"]
   },
   {
+    id: "q-0427",
     s: "Change Management", d: 3, level: "Administrator", stage: 3,
     q: "Your SLO is 99.9% availability. What's the error budget for, in practice?",
     o: [
@@ -5544,6 +5973,7 @@ window.QUESTION_BANK = [
     refs: ["https://sre.google/sre-book/service-level-objectives/"]
   },
   {
+    id: "q-0428",
     s: "Change Management", d: 3, level: "Administrator", stage: 3,
     q: "What's a canary release?",
     o: [
@@ -5558,6 +5988,7 @@ window.QUESTION_BANK = [
     refs: ["https://martinfowler.com/bliki/CanaryRelease.html"]
   },
   {
+    id: "q-0429",
     s: "Change Management", d: 3, level: "Administrator", stage: 3,
     q: "Why build a release artifact once and promote that same artifact through staging to production?",
     o: [
@@ -5572,6 +6003,7 @@ window.QUESTION_BANK = [
     refs: ["https://12factor.net/build-release-run"]
   },
   {
+    id: "q-0430",
     s: "Change Management", d: 3, level: "Administrator", stage: 3,
     q: "Where should environment-specific configuration (database hosts, API keys) live?",
     o: [
@@ -5586,6 +6018,7 @@ window.QUESTION_BANK = [
     refs: ["https://12factor.net/config"]
   },
   {
+    id: "q-0431",
     s: "Change Management", d: 3, level: "Administrator", stage: 3,
     q: "You need to rename a database column without downtime while old and new code run side by side. Which pattern fits?",
     o: [
@@ -5600,6 +6033,7 @@ window.QUESTION_BANK = [
     refs: ["https://martinfowler.com/bliki/ParallelChange.html"]
   },
   {
+    id: "q-0432",
     s: "Change Management", d: 3, level: "Administrator", stage: 3,
     q: "Under semantic versioning, how should you deprecate a public function used by others?",
     o: [
@@ -5614,6 +6048,7 @@ window.QUESTION_BANK = [
     refs: ["https://semver.org/"]
   },
   {
+    id: "q-0433",
     s: "Security", d: 3, level: "Administrator", stage: 3,
     q: "What does GitHub Dependabot help with in a plugin repository?",
     o: [
@@ -5628,6 +6063,7 @@ window.QUESTION_BANK = [
     refs: ["https://docs.github.com/en/code-security/dependabot"]
   },
   {
+    id: "q-0434",
     s: "Change Management", d: 3, level: "Administrator", stage: 3,
     q: "What can branch protection rules on main enforce?",
     o: [
@@ -5644,6 +6080,7 @@ window.QUESTION_BANK = [
     ]
   },
   {
+    id: "q-0435",
     s: "Disaster Recovery", d: 3, level: "Administrator", stage: 3,
     q: "Why does ransomware guidance recommend offline or immutable backup copies?",
     o: [
@@ -5658,6 +6095,7 @@ window.QUESTION_BANK = [
     refs: ["https://www.cisa.gov/stopransomware/ransomware-guide"]
   },
   {
+    id: "q-0436",
     s: "Disaster Recovery", d: 3, level: "Administrator", stage: 3,
     q: "How does DNS failover move traffic to a standby site when the primary fails?",
     o: [
@@ -5672,6 +6110,7 @@ window.QUESTION_BANK = [
     refs: ["https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover.html"]
   },
   {
+    id: "q-0437",
     s: "Disaster Recovery", d: 3, level: "Administrator", stage: 3,
     q: "Why run regular restore drills (\"game days\")?",
     o: [
@@ -5686,6 +6125,7 @@ window.QUESTION_BANK = [
     refs: ["https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/welcome.html"]
   },
   {
+    id: "q-0438",
     s: "Disaster Recovery", d: 3, level: "Administrator", stage: 3,
     q: "Which guidance covers writing an IT contingency (recovery) plan, including roles, procedures and testing?",
     o: ["OWASP ASVS", "PSR-12", "RFC 5861", "NIST SP 800-34"],
@@ -5695,6 +6135,7 @@ window.QUESTION_BANK = [
     refs: ["https://csrc.nist.gov/pubs/sp/800/34/r1/upd1/final"]
   },
   {
+    id: "q-0439",
     s: "Disaster Recovery", d: 3, level: "Administrator", stage: 3,
     q: "Which mysqldump option gives a consistent backup of InnoDB tables without locking them for the whole dump?",
     o: ["--lock-all-tables", "--no-data", "--skip-opt", "--single-transaction"],
@@ -5704,6 +6145,7 @@ window.QUESTION_BANK = [
     refs: ["https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html"]
   },
   {
+    id: "q-0440",
     s: "Disaster Recovery", d: 3, level: "Administrator", stage: 3,
     q: "How do you pass extra mysqldump options through WP-CLI's database export?",
     o: [
@@ -5718,6 +6160,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/cli/commands/db/export/"]
   },
   {
+    id: "q-0441",
     s: "Security", d: 3, level: "Administrator", stage: 3,
     q: "During a security incident, why preserve logs and a copy of the affected system before cleaning?",
     o: [
@@ -5732,6 +6175,7 @@ window.QUESTION_BANK = [
     refs: ["https://csrc.nist.gov/pubs/sp/800/61/r3/final"]
   },
   {
+    id: "q-0442",
     s: "Debugging", d: 3, level: "Administrator", stage: 3,
     q: "Which PHP function reports the most memory a request has used so far?",
     o: [
@@ -5746,6 +6190,7 @@ window.QUESTION_BANK = [
     refs: ["https://www.php.net/manual/en/function.memory-get-peak-usage.php"]
   },
   {
+    id: "q-0443",
     s: "Debugging", d: 3, level: "Administrator", stage: 3,
     q: "Which tool produces a function-by-function profile of where PHP spends time on a request?",
     o: [
@@ -5760,6 +6205,7 @@ window.QUESTION_BANK = [
     refs: ["https://xdebug.org/docs/profiler"]
   },
   {
+    id: "q-0444",
     s: "Debugging", d: 3, level: "Administrator", stage: 3,
     q: "Imports occasionally fail with \"Deadlock found when trying to get lock\". Where do you see details of the last deadlock?",
     o: [
@@ -5774,6 +6220,7 @@ window.QUESTION_BANK = [
     refs: ["https://dev.mysql.com/doc/refman/8.0/en/innodb-deadlocks.html"]
   },
   {
+    id: "q-0445",
     s: "Debugging", d: 3, level: "Administrator", stage: 3,
     q: "How do you check what the persistent object cache holds for a key from the command line?",
     o: ["wp transient list", "redis-cli is the only way", "wp option get <key>", "wp cache get <key> <group>"],
@@ -5783,6 +6230,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/cli/commands/cache/get/"]
   },
   {
+    id: "q-0446",
     s: "Debugging", d: 3, level: "Administrator", stage: 3,
     q: "Scheduled events seem to run late. Which WP-CLI command checks whether WP-Cron can spawn properly?",
     o: ["wp cron check", "wp cron test", "wp schedule test", "wp cron run-all"],
@@ -5792,6 +6240,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/cli/commands/cron/test/"]
   },
   {
+    id: "q-0447",
     s: "Debugging", d: 3, level: "Administrator", stage: 3,
     q: "A custom URL returns 404. Which WP-CLI command shows the rewrite rules WordPress currently has?",
     o: ["wp option get permalinks", "wp rewrite flush --show", "wp route list", "wp rewrite list"],
@@ -5801,6 +6250,7 @@ window.QUESTION_BANK = [
     refs: ["https://developer.wordpress.org/cli/commands/rewrite/list/"]
   },
   {
+    id: "q-0448",
     s: "Security", d: 3, level: "Administrator", stage: 3,
     q: "What should your error and debug logs avoid recording?",
     o: [
@@ -5815,6 +6265,7 @@ window.QUESTION_BANK = [
     refs: ["https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html"]
   },
   {
+    id: "q-0449",
     s: "Debugging", d: 3, level: "Administrator", stage: 3,
     q: "How do you follow one request through the CDN, web server, PHP and an external API in your logs?",
     o: [
@@ -5829,6 +6280,7 @@ window.QUESTION_BANK = [
     refs: ["https://www.w3.org/TR/trace-context/"]
   },
   {
+    id: "q-0450",
     s: "Change Management", d: 3, level: "Administrator", stage: 3,
     q: "What makes a postmortem actually improve reliability?",
     o: [
