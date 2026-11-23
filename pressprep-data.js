@@ -58,7 +58,7 @@
           // The longest option shouldn't give the answer away.
           const len = q.o.map(o => String(o).length);
           const wrong = Math.max(...len.filter((_, k) => k !== q.a));
-          if (len[q.a] >= 1.3 * wrong) r.warn(where, `the correct option is ${(len[q.a] / wrong).toFixed(1)}× longer than the longest wrong one, which gives it away; trim it or make the wrong options fuller`);
+          if (len[q.a] > 1.1 * wrong) r.warn(where, `the correct option is ${(len[q.a] / wrong).toFixed(1)}× longer than the longest wrong one, which gives it away; trim it or make the wrong options fuller`);
         }
       }
       if (!isStr(q.t)) r.err(where, 'technical explanation "t" is empty');
