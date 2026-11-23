@@ -497,10 +497,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 2, level: "Author", stage: 1,
     q: "Since WordPress 5.5, what happens if you call register_rest_route() without a permission_callback?",
     o: [
-      "The route is limited to administrators",
-      "Every request returns a 401",
-      "The route still registers and is public, but WordPress triggers a _doing_it_wrong notice",
-      "The route fails to register"
+      "It registers, but only administrators are allowed to call it",
+      "It registers, but every request to it returns a 401 error",
+      "It registers and is public, but WordPress raises a _doing_it_wrong notice",
+      "It fails to register and WordPress logs a fatal error"
     ],
     a: 2,
     t: "WordPress 5.5 added a _doing_it_wrong notice, but the route still works and anyone can call it. For an intentionally public route, pass '__return_true'.",
@@ -602,9 +602,9 @@ window.QUESTION_BANK = [
     q: "In WordPress 6.3+, how do you enqueue a script with the defer loading strategy?",
     o: [
       "Pass array( 'strategy' => 'defer' ) as the 5th argument of wp_enqueue_script()",
-      "Add defer to the $src URL",
-      "Set $in_footer to 'defer'",
-      "Use add_filter( 'script_defer', '__return_true' )"
+      "Append ?defer=true to the $src URL so WordPress adds the attribute",
+      "Pass 'defer' as the $in_footer argument instead of true",
+      "Use add_filter( 'script_defer', '__return_true' ) for that handle"
     ],
     a: 0,
     t: "Since 6.3, the 5th parameter of wp_enqueue_script() accepts an array with 'strategy' ('defer' or 'async') and 'in_footer'.",
@@ -646,10 +646,10 @@ window.QUESTION_BANK = [
     s: "Performance", d: 2, level: "Author", stage: 1,
     q: "Why can a large number of autoloaded options hurt performance?",
     o: [
-      "They're only loaded in wp-admin",
-      "They're loaded on every request, which increases memory use and query or cache payload size",
-      "They disable the object cache",
-      "They're stored in a separate table"
+      "They load only in wp-admin, so admin screens slow down for editors",
+      "They load on every request, adding memory use and query or cache payload",
+      "They turn off the persistent object cache for options queries",
+      "They're stored in a separate table that needs an extra join"
     ],
     a: 1,
     t: "wp_load_alloptions() loads every autoloaded option on each request. If that set gets very large, it can also exceed object-cache size limits.",
@@ -800,10 +800,10 @@ window.QUESTION_BANK = [
     s: "WordPress Core", d: 2, level: "Author", stage: 1,
     q: "On a single site with no persistent object cache, where does set_transient() store its data?",
     o: [
-      "In the wp_options table, as _transient_ and _transient_timeout_ rows",
-      "In PHP memory only, for the current request",
-      "In the wp_postmeta table",
-      "In a file inside wp-content/cache"
+      "In wp_options, as _transient_ and _transient_timeout_ rows",
+      "In PHP memory only, so it's gone after the current request",
+      "In wp_postmeta, attached to a hidden placeholder post",
+      "In a file inside wp-content/cache, one per transient"
     ],
     a: 0,
     t: "Without an object-cache drop-in, transients are saved in wp_options with a matching timeout row. Once a persistent object cache is installed, they go there and skip the database. On multisite, set_site_transient() uses the network-wide sitemeta table instead.",
@@ -833,10 +833,10 @@ window.QUESTION_BANK = [
     s: "WordPress Core", d: 2, level: "Author", stage: 1,
     q: "How do you avoid scheduling duplicate recurring WP-Cron events?",
     o: [
-      "Check wp_next_scheduled( $hook ) and only call wp_schedule_event() if it returns false, ideally on activation",
-      "Use a PHP session flag",
+      "Schedule only when wp_next_scheduled( $hook ) returns false, ideally on activation",
+      "Store a PHP session flag once the event has been scheduled",
       "Call wp_clear_scheduled_hook() on every page load, then reschedule",
-      "Call wp_schedule_event() on every init"
+      "Call wp_schedule_event() on every init; WordPress ignores duplicates"
     ],
     a: 0,
     t: "wp_next_scheduled() returns a timestamp if the event already exists. Schedule on plugin activation, or guard the call with that check, and unschedule on deactivation. Clearing and rescheduling on every request writes to the cron option constantly.",
@@ -865,7 +865,12 @@ window.QUESTION_BANK = [
     id: "q-0060",
     s: "WordPress Core", d: 2, level: "Author", stage: 2,
     q: "In a classic theme, a single post of the custom post type 'book' with the slug 'my-book' is requested. Which template file does WordPress look for first?",
-    o: ["book.php", "single-book.php", "single-book-my-book.php", "singular.php"],
+    o: [
+      "single-my-book.php",
+      "single-book.php",
+      "single-book-my-book.php",
+      "singular-book.php"
+    ],
     a: 2,
     t: "The order is single-{post_type}-{slug}.php, then single-{post_type}.php, single.php, singular.php, and finally index.php. The slug-specific level was added in WordPress 4.4.",
     p: "WordPress starts with the most specific template it could use and works down to the most general fallback.",
@@ -876,10 +881,10 @@ window.QUESTION_BANK = [
     s: "WordPress Core", d: 2, level: "Author", stage: 2,
     q: "What's the recommended way to change how many posts the main blog archive shows?",
     o: [
-      "Run a second WP_Query and ignore the main one",
-      "Edit wp-includes/query.php",
-      "Call query_posts() in the template",
-      "Hook pre_get_posts and modify the query when $query->is_main_query() and ! is_admin()"
+      "Run a second WP_Query in the template and ignore the main one",
+      "Change posts_per_page directly in wp-includes/query.php",
+      "Call query_posts() in the template with the new posts_per_page",
+      "Hook pre_get_posts and change it when $query->is_main_query() and ! is_admin()"
     ],
     a: 3,
     t: "query_posts() throws away the main query and runs a new one, which wastes a query and breaks pagination and conditional tags. pre_get_posts changes the main query before it runs, so it's still a single query.",
@@ -891,10 +896,10 @@ window.QUESTION_BANK = [
     s: "WordPress Core", d: 2, level: "Author", stage: 2,
     q: "How does WordPress store an uploaded image in the database?",
     o: [
-      "In a dedicated wp_media table",
-      "As a post with post_type 'attachment', with file details such as dimensions and sizes in post meta (_wp_attachment_metadata)",
-      "As an option in wp_options",
-      "Only as a file. Nothing goes in the database."
+      "In a dedicated wp_media table, with one row per generated image size",
+      "As an 'attachment' post, with sizes in _wp_attachment_metadata post meta",
+      "As a serialized array in a single wp_options row",
+      "Only as files in uploads; nothing goes in the database"
     ],
     a: 1,
     t: "Attachments are rows in wp_posts. The relative file path is stored in _wp_attached_file, and intermediate image sizes, dimensions and EXIF data are in _wp_attachment_metadata.",
@@ -921,9 +926,9 @@ window.QUESTION_BANK = [
     s: "WordPress Core", d: 2, level: "Author", stage: 2,
     q: "When should a plugin call add_role() to create a custom role?",
     o: [
-      "On every admin page load",
-      "In the theme's functions.php",
-      "On every init",
+      "On every admin page load, so the role is always available",
+      "In the active theme's functions.php, so it loads early",
+      "On every init, before other plugins check capabilities",
       "On plugin activation, because roles are saved to the database"
     ],
     a: 3,
@@ -954,10 +959,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "What should a wp_ajax_ handler that deletes data do first?",
     o: [
-      "Check that $_POST is not empty",
-      "Verify the nonce with check_ajax_referer() and check permission with current_user_can()",
-      "Nothing, because admin-ajax.php is already protected",
-      "Check is_admin() only"
+      "Check that $_POST isn't empty before touching the database",
+      "Check the nonce (check_ajax_referer) and the permission (current_user_can)",
+      "Nothing, because admin-ajax.php only accepts logged-in users",
+      "Check is_admin(), which confirms the user is an administrator"
     ],
     a: 1,
     t: "check_ajax_referer() stops CSRF and dies with -1 or a 403 by default if it fails. current_user_can() is the authorization check. is_admin() returns true for every admin-ajax.php request, even from logged-out users, so it proves nothing.",
@@ -997,10 +1002,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "Why is xmlrpc.php often blocked or restricted when it isn't needed?",
     o: [
-      "It exposes the database password",
-      "system.multicall lets attackers try many passwords in one request, and pingbacks can be abused for DDoS",
-      "It disables the REST API",
-      "It slows down the block editor"
+      "It exposes the database credentials to anyone who sends it a request",
+      "system.multicall allows many password guesses per request, and pingbacks enable DDoS",
+      "It disables the REST API for as long as it remains enabled",
+      "It slows down the block editor by polling it every minute"
     ],
     a: 1,
     t: "Through XML-RPC, system.multicall can bundle hundreds of login attempts into one HTTP request, which gets around simple per-request login limits. The pingback.ping method can also be used to make the site attack others. Block it at the server or with the xmlrpc_enabled filter if nothing depends on it.",
@@ -1022,10 +1027,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "A plugin fetches any URL a user submits so it can generate a link preview. What's the main security risk?",
     o: [
-      "CSRF on the login form",
-      "SQL injection",
-      "Server-Side Request Forgery (SSRF): the server can be made to request internal services such as 169.254.169.254 cloud metadata",
-      "Clickjacking"
+      "Cross-site request forgery against the login form when a preview loads",
+      "SQL injection through the URL saved with the preview",
+      "Server-Side Request Forgery: the server can be made to call internal services",
+      "Clickjacking, because previews embed the target page in a frame"
     ],
     a: 2,
     t: "With SSRF, an attacker picks where your server sends requests. That can reach internal admin panels, databases, or cloud metadata endpoints that leak credentials. Defenses include validating the URL scheme and host, blocking private IP ranges (after DNS resolution too), and allowing only approved domains.",
@@ -1058,10 +1063,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "Your archive page accepts an orderby value from the URL and passes it to WP_Query. What's the best defense?",
     o: [
-      "Use base64_decode() on it",
-      "Trust WP_Query to sanitize it",
-      "Validate it against an allowlist of permitted values and fall back to a default",
-      "Run it through esc_html()"
+      "Run base64_decode() on it so special characters can't break the query",
+      "Pass it straight in, because WP_Query sanitizes every argument",
+      "Check it against an allowlist of permitted values, with a default",
+      "Run it through esc_html() before handing it to WP_Query"
     ],
     a: 2,
     t: "When the set of valid values is small, compare against it exactly, for example in_array( $value, $allowed, true ). That stops odd sorting, expensive meta_value sorts and injection through query arguments. Escaping functions are for output, not for validating input.",
@@ -1090,7 +1095,12 @@ window.QUESTION_BANK = [
     id: "q-0075",
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "Which tool, run in CI, would flag output that isn't escaped (for example, echo $var;) in a plugin?",
-    o: ["Xdebug", "wp-cli doctor", "PHPUnit", "PHPCS with the WordPress Coding Standards ruleset"],
+    o: [
+      "Xdebug, with step debugging turned on in CI",
+      "wp doctor, the WP-CLI health-check package",
+      "PHPUnit, with the WordPress test suite loaded",
+      "PHPCS with the WordPress Coding Standards ruleset"
+    ],
     a: 3,
     t: "WPCS includes security sniffs such as WordPress.Security.EscapeOutput, NonceVerification and ValidatedSanitizedInput, plus a prepared-SQL sniff. Running PHPCS in CI blocks those patterns before merge. PHPStan adds type-level analysis on top.",
     p: "It's an automatic proofreader for code that circles every place where something unsafe might be printed to the page.",
@@ -1131,10 +1141,10 @@ window.QUESTION_BANK = [
     s: "Performance", d: 2, level: "Author", stage: 2,
     q: "Why is a meta query with LIKE '%term%' slow on large tables?",
     o: [
-      "A leading wildcard stops MySQL from using an index, so it has to scan every row",
-      "LIKE is deprecated in MySQL 8",
-      "It disables the query cache for the whole site",
-      "It locks the table"
+      "A leading wildcard stops MySQL using an index, so it scans every row",
+      "LIKE is deprecated in MySQL 8 and runs in a slower compatibility mode",
+      "It disables the query cache for every query on the site",
+      "It locks the postmeta table until the query has finished"
     ],
     a: 0,
     t: "B-tree indexes can only match from the start of a value. 'term%' can use an index, but '%term%' can't, which forces a full scan. meta_value isn't usefully indexed by default anyway. Use exact key and value matches, taxonomies, or offload the search to something like Elasticsearch.",
@@ -1161,10 +1171,10 @@ window.QUESTION_BANK = [
     s: "Performance", d: 2, level: "Author", stage: 2,
     q: "By default, without any drop-in, how does the WordPress object cache (wp_cache_*) behave?",
     o: [
-      "It persists to Redis automatically",
-      "It writes to files in wp-content/cache",
-      "It's non-persistent: data only lasts for the current request unless you add an object-cache.php drop-in for Redis or Memcached",
-      "It stores data in the wp_options table"
+      "It saves to Redis automatically when the server has Redis installed",
+      "It writes each cache group to files in wp-content/cache",
+      "It lasts only for the current request until you add an object-cache.php drop-in",
+      "It stores cached values in wp_options with an expiry time"
     ],
     a: 2,
     t: "Core's WP_Object_Cache is an in-memory array that's thrown away at the end of each request. A wp-content/object-cache.php drop-in replaces it with a persistent backend, so cached queries, options and transients survive between requests.",
@@ -1201,10 +1211,10 @@ window.QUESTION_BANK = [
     s: "Performance", d: 2, level: "Author", stage: 2,
     q: "A post is updated on a site behind a full-page cache or CDN. What's the best invalidation strategy?",
     o: [
-      "Purge only the affected URLs, such as the post, home page, relevant archives and feeds",
-      "Never purge, and set a 1-year TTL",
-      "Purge the entire cache on every save",
-      "Disable the cache for logged-out users"
+      "Purge only the affected URLs: the post, home page, related archives and feeds",
+      "Never purge, and set a one-year TTL so the cache stays warm",
+      "Purge the entire cache on every save so nothing is ever stale",
+      "Turn off caching for logged-out visitors while content changes"
     ],
     a: 0,
     t: "Targeted purges keep the hit rate high and avoid a 'thundering herd' of requests hitting the origin after a full flush. Many hosts and CDN plugins hook into transition_post_status or save_post to work out which URLs are affected.",
@@ -1216,10 +1226,10 @@ window.QUESTION_BANK = [
     s: "Scalability", d: 2, level: "Author", stage: 3,
     q: "What does Cache-Control: max-age=60, stale-while-revalidate=300 tell a CDN?",
     o: [
-      "Only cache it for logged-in users",
-      "Cache it for 360s and then delete it permanently",
-      "Never cache the response",
-      "Treat it as fresh for 60s. For up to another 300s, serve the stale copy immediately while fetching a fresh one in the background."
+      "Cache it only for logged-in users, for up to 360 seconds",
+      "Cache it for 360 seconds in total, then delete it and never cache it again",
+      "Don't cache it, but revalidate with the origin every 60 seconds",
+      "Fresh for 60s; for another 300s, serve the stale copy while refreshing it in the background"
     ],
     a: 3,
     t: "stale-while-revalidate hides the cost of refreshing from users. The first request after the copy goes stale still gets an instant response while the CDN revalidates with the origin asynchronously.",
@@ -1234,10 +1244,10 @@ window.QUESTION_BANK = [
     s: "Scalability", d: 2, level: "Author", stage: 3,
     q: "When is offloading queries to Elasticsearch or OpenSearch most justified?",
     o: [
-      "For loading site options",
-      "For fetching a single post by ID",
-      "For relevance-ranked full-text search, faceted filtering or fuzzy matching across large datasets",
-      "For simple 10-post archive pages"
+      "Loading autoloaded site options, since every single request reads them",
+      "Fetching single posts by ID on the busiest pages of a large site",
+      "Relevance-ranked full-text search, faceted filters or fuzzy matching on large datasets",
+      "Simple 10-post archive pages that are already cached"
     ],
     a: 2,
     t: "MySQL handles primary-key and indexed lookups well, but struggles with relevance scoring, facets and many meta or taxonomy filters at scale. A search engine indexes the content (for example through ElasticPress) and answers those queries far more efficiently.",
@@ -1249,10 +1259,10 @@ window.QUESTION_BANK = [
     s: "Scalability", d: 2, level: "Author", stage: 3,
     q: "Before scaling horizontally by adding more web servers behind a load balancer, what must be solved?",
     o: [
-      "Raising PHP memory_limit",
-      "Switching every table to MyISAM",
-      "Disabling the REST API",
-      "Making the application stateless: uploads and sessions can't live only on one server's local disk, and the object cache must be shared"
+      "Raising PHP's memory_limit so each server can handle more requests",
+      "Switching every table to MyISAM for faster reads across servers",
+      "Disabling the REST API so servers don't share API sessions",
+      "Statelessness: shared uploads and sessions, and a shared object cache"
     ],
     a: 3,
     t: "Any request can land on any server. Media needs shared or object storage, cache and session state must be centralized (or not used, which is why PHP sessions are discouraged), and deploys must keep code identical on every node.",
@@ -1264,10 +1274,10 @@ window.QUESTION_BANK = [
     s: "Scalability", d: 2, level: "Author", stage: 3,
     q: "A sidebar widget runs 3 heavy queries on every page view, and its output only changes when posts are published. What's the best caching layer for it?",
     o: [
-      "Autoload it as an option",
-      "Cache it in the browser's localStorage",
-      "A PHP session",
-      "Cache the rendered HTML fragment in the object cache, and invalidate it on publish"
+      "Save the output as an autoloaded option, updated hourly",
+      "Cache it in each visitor's browser with localStorage",
+      "Store it in a PHP session for each visitor",
+      "Cache the rendered HTML in the object cache and clear it on publish"
     ],
     a: 3,
     t: "Fragment caching stores the finished HTML so the queries and rendering are skipped completely. Key it on anything that changes the output, and clear it on save_post or transition_post_status. It also helps logged-in users who skip the full-page cache.",
@@ -1282,10 +1292,10 @@ window.QUESTION_BANK = [
     s: "Scalability", d: 2, level: "Author", stage: 3,
     q: "A plugin records every page visit as a new post meta row. Traffic is millions of views a month. What's the better design?",
     o: [
-      "Store the visits in one serialized option",
-      "Keep using post meta, but add more RAM",
-      "Store the visits in transients",
-      "Write to a custom table designed for it, or send the data to an external analytics service or queue"
+      "One serialized option holding an array of every visit",
+      "Keep using post meta, but give the database server more RAM",
+      "Transients, one per visit, so old visits expire on their own",
+      "A custom table built for it, or an external analytics service or queue"
     ],
     a: 3,
     t: "wp_postmeta is a generic key-value table. High-volume writes bloat it, slow down every meta join and cause lock contention. A purpose-built table with the right indexes, or offloading writes to a separate service, keeps the main content tables lean.",
@@ -1336,7 +1346,12 @@ window.QUESTION_BANK = [
     id: "q-0092",
     s: "Debugging", d: 2, level: "Author", stage: 3,
     q: "Users report ERR_TOO_MANY_REDIRECTS. Which command shows each hop and its Location header?",
-    o: ["ping example.com", "curl -sIL https://example.com/page", "wp rewrite flush", "dig example.com"],
+    o: [
+      "ping -c 4 example.com",
+      "curl -sIL https://example.com/page",
+      "wp rewrite flush --hard",
+      "dig +trace www.example.com"
+    ],
     a: 1,
     t: "-I asks for headers only, and -L follows redirects, printing each response's status and Location. That shows whether WordPress (siteurl/home, an HTTP vs HTTPS mismatch behind a proxy), a plugin, or the server or CDN is causing the loop.",
     p: "It follows the trail of signposts one by one, so you can see exactly where it goes round in a circle.",
@@ -1382,10 +1397,10 @@ window.QUESTION_BANK = [
     s: "Change Management", d: 2, level: "Author", stage: 3,
     q: "Which deployment approach gives zero-downtime, atomic releases?",
     o: [
-      "Build the release in a new directory, then switch a 'current' symlink to it in one step, keeping earlier releases for rollback",
-      "Edit files live with the theme editor",
-      "Run git pull on production during peak traffic",
-      "FTP each changed file onto the live directory"
+      "Build in a new directory, then switch a 'current' symlink to it, keeping old releases",
+      "Edit the files live with the theme editor during quiet hours",
+      "Run git pull on production while traffic is at its peak",
+      "Upload each changed file over FTP into the live directory"
     ],
     a: 0,
     t: "Switching the symlink is effectively instant, so no request ever sees half-updated code. Rolling back means pointing the symlink at the previous release. Shared directories such as uploads are linked into each release.",
@@ -1397,10 +1412,10 @@ window.QUESTION_BANK = [
     s: "Change Management", d: 2, level: "Author", stage: 3,
     q: "Which core function lets plugin code behave differently on production, staging and local environments?",
     o: [
-      "get_bloginfo( 'version' )",
-      "wp_get_environment_type(), driven by the WP_ENVIRONMENT_TYPE constant or environment variable",
-      "is_multisite()",
-      "is_admin()"
+      "get_bloginfo( 'version' ), compared on each server",
+      "wp_get_environment_type(), set by WP_ENVIRONMENT_TYPE",
+      "is_multisite(), which is true on staging copies",
+      "is_admin(), which is true on local installs"
     ],
     a: 1,
     t: "Added in 5.5, it returns 'local', 'development', 'staging' or 'production', with production as the default. Use it to turn off things like outbound emails, payment gateways or search indexing outside production. Keep secrets in environment variables, not in code.",
@@ -1413,9 +1428,9 @@ window.QUESTION_BANK = [
     q: "After restoring a production database to staging, you need to replace the domain everywhere. What's the safe approach?",
     o: [
       "Find and replace in a text editor on the .sql dump",
-      "Run SQL UPDATE ... REPLACE() on every table",
-      "Change only siteurl and home",
-      "Use wp search-replace, which handles serialized data correctly (run with --dry-run first)"
+      "Run SQL UPDATE ... REPLACE() on every column of every table",
+      "Change only the siteurl and home options in wp_options",
+      "wp search-replace, which handles serialized data (try --dry-run first)"
     ],
     a: 3,
     t: "Serialized PHP strings store their length, for example s:18:\"...\". A plain text replace that changes the length corrupts them and the values silently fail to unserialize. wp search-replace unserializes, replaces and reserializes the data.",
@@ -1427,9 +1442,9 @@ window.QUESTION_BANK = [
     s: "Disaster Recovery", d: 2, level: "Author", stage: 3,
     q: "A bad commit was deployed from the shared main branch. What's the cleanest Git rollback that keeps history?",
     o: [
-      "git revert <commit>, which creates a new commit that undoes the change, then deploy",
-      "Delete the repository and re-clone it",
-      "Edit the files on the server by hand",
+      "git revert <commit>, which adds a commit undoing it, then deploy",
+      "Delete the repository, re-clone it and deploy again",
+      "Edit the affected files on the server by hand",
       "git reset --hard HEAD~1, then force-push to main"
     ],
     a: 0,
@@ -1442,10 +1457,10 @@ window.QUESTION_BANK = [
     s: "Debugging", d: 2, level: "Author", stage: 3,
     q: "The logs show 'Allowed memory size of 268435456 bytes exhausted' on an archive page. What's the best first step?",
     o: [
-      "Restart the server every hour",
-      "Raise WP_MEMORY_LIMIT to 2G and move on",
-      "Use the stack trace or a profiler to find what's loading too much (for example an unbounded query), and fix that code",
-      "Disable all caching"
+      "Schedule a server restart every hour so the leaked memory is freed",
+      "Raise WP_MEMORY_LIMIT to 2G so the archive page has enough room",
+      "Find what's loading too much with the stack trace or a profiler, and fix it",
+      "Turn off all caching layers so less data is held in memory"
     ],
     a: 2,
     t: "The trace shows which file and line was allocating when memory ran out. Common causes are posts_per_page => -1, loading full post objects when IDs would do, huge autoloaded options, or recursive hooks. Raising the limit only hides the problem until the data grows again.",
@@ -3495,10 +3510,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 2, level: "Author", stage: 1,
     q: "In register_post_meta(), what does auth_callback control?",
     o: [
-      "Whether the meta is shown on the front end",
-      "Whether it autoloads",
-      "Whether the current user may edit that meta (for example through the REST API)",
-      "How the value is sanitized"
+      "Whether the meta is shown on the front end of the site",
+      "Whether the meta autoloads along with the post",
+      "Whether the current user may edit that meta, for example via REST",
+      "How the value is sanitized before it's saved"
     ],
     a: 2,
     t: "auth_callback decides whether a user can add, edit or delete the meta key. sanitize_callback cleans the value.",
@@ -3513,10 +3528,10 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 2, level: "Author", stage: 1,
     q: "In block.json, what does the \"attributes\" property define?",
     o: [
-      "The block's CSS classes",
+      "The CSS classes the block adds to its wrapper",
       "The data the block stores, with types and where it's read from",
-      "The block's REST route",
-      "Which users can insert the block"
+      "The REST route the block uses to save its content",
+      "Which user roles are allowed to insert the block"
     ],
     a: 1,
     t: "Attributes describe the block's data (type, default, source). The editor reads and saves them.",
@@ -3531,10 +3546,10 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 2, level: "Author", stage: 1,
     q: "In a block's edit component, what is useBlockProps() for?",
     o: [
-      "Adding the props the editor needs (classes, data attributes, events) to the block's wrapper element",
-      "Registering the block",
-      "Saving to the database",
-      "Fetching posts"
+      "Adding the classes, data attributes and events the editor needs to the wrapper",
+      "Registering the block with the editor's block registry",
+      "Saving the block's attributes to the database on publish",
+      "Fetching the posts the block shows from the REST API"
     ],
     a: 0,
     t: "useBlockProps() returns the attributes the editor needs on the outer element. useBlockProps.save() does the same in save().",
@@ -3596,10 +3611,10 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 2, level: "Author", stage: 1,
     q: "What does register_block_style() add to a block?",
     o: [
-      "A new block variation with different defaults",
-      "A new block attribute",
-      "An alternative style the user can pick, applied as an is-style-{name} class",
-      "Inline styles on every instance"
+      "A block variation with its own default attributes",
+      "A new attribute that stores the chosen colour",
+      "An alternative style users can pick, applied as an is-style-{name} class",
+      "Inline styles applied to every instance of the block"
     ],
     a: 2,
     t: "Block styles add a CSS class option. Variations are different: they preset attributes and inner blocks.",
@@ -3611,10 +3626,10 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 2, level: "Author", stage: 1,
     q: "Strings in your block's JavaScript aren't being translated. What's missing?",
     o: [
-      "load_plugin_textdomain() in JavaScript",
-      "A call to wp_set_script_translations() for the script handle",
-      "A second text domain",
-      "Escaping"
+      "A load_plugin_textdomain() call inside the JavaScript",
+      "A wp_set_script_translations() call for the script handle",
+      "A second text domain registered just for JavaScript",
+      "Escaping the strings with esc_html__() before output"
     ],
     a: 1,
     t: "wp_set_script_translations() tells WordPress to load JSON translation files for that script.",
@@ -3690,9 +3705,9 @@ window.QUESTION_BANK = [
     q: "What does the $capability argument of add_submenu_page() do?",
     o: [
       "Hides the page and blocks access for users without that capability",
-      "Sets the menu position",
-      "Sets the menu icon",
-      "Nothing; it's a label"
+      "Sets where the page appears in the admin menu",
+      "Sets the dashicon shown next to the menu item",
+      "Nothing; it's only a label shown to screen readers"
     ],
     a: 0,
     t: "Only users with the capability see the menu item and can open the page.",
@@ -3704,10 +3719,10 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 2, level: "Author", stage: 1,
     q: "With the Settings API, how do fields added with add_settings_field() appear on your page?",
     o: [
-      "Through the REST API only",
+      "Only through the REST API settings endpoint",
       "They print when you call do_settings_sections() for that page",
-      "Only via a shortcode",
-      "Automatically in Settings → General"
+      "Only where you place a settings shortcode",
+      "Automatically at the bottom of Settings → General"
     ],
     a: 1,
     t: "Sections and fields attach to a page slug. do_settings_sections() outputs them, and settings_fields() adds the hidden fields.",
@@ -3723,9 +3738,9 @@ window.QUESTION_BANK = [
     q: "What does wp_verify_nonce() return for a valid nonce?",
     o: [
       "1 or 2, depending on which 12-hour half it was created in",
-      "The nonce string",
-      "The user ID",
-      "Always true"
+      "The nonce string itself, so it can be reused",
+      "The ID of the user the nonce was created for",
+      "Always true, whenever the nonce is still valid"
     ],
     a: 0,
     t: "It returns 1 (current tick) or 2 (previous tick) when valid, and false when invalid.",
@@ -3736,7 +3751,12 @@ window.QUESTION_BANK = [
     id: "q-0270",
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "A REST route is meant to be public. What should its permission_callback be?",
-    o: ["is_user_logged_in", "__return_true, stated explicitly", "null", "Left out"],
+    o: [
+      "'is_user_logged_in', so only members can call it",
+      "__return_true, stated explicitly",
+      "null, which WordPress treats as public",
+      "Left out, since public routes don't need one"
+    ],
     a: 1,
     t: "Public routes should set permission_callback to __return_true. Leaving it out triggers a notice since WordPress 5.5.",
     p: "Say clearly \"anyone may use this\", rather than forgetting to say anything.",
@@ -3747,9 +3767,9 @@ window.QUESTION_BANK = [
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "In register_rest_route() args, what are validate_callback and sanitize_callback for?",
     o: [
-      "Formatting the response",
-      "Logging requests",
-      "Caching the route",
+      "Formatting the response data before it's sent back",
+      "Logging each request for later security auditing",
+      "Caching the route's response for each argument",
       "Rejecting bad input with an error, and cleaning accepted input"
     ],
     a: 3,
@@ -3761,7 +3781,12 @@ window.QUESTION_BANK = [
     id: "q-0272",
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "You need to save a URL to the database (not print it). Which function cleans it?",
-    o: ["esc_url_raw() (or sanitize_url())", "esc_url()", "esc_attr()", "urlencode()"],
+    o: [
+      "esc_url_raw() or sanitize_url()",
+      "esc_url() with its default protocols",
+      "esc_attr() on the full URL",
+      "urlencode() on the whole string"
+    ],
     a: 0,
     t: "esc_url_raw() cleans a URL without HTML-encoding it, which suits storage and redirects. esc_url() is for display.",
     p: "Clean it for storage, and save the display-safe version for output.",
@@ -3772,9 +3797,9 @@ window.QUESTION_BANK = [
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "You want to allow only <a href> and <strong> in a field. Which function fits?",
     o: [
-      "strip_tags() with no list",
-      "esc_html()",
-      "wp_kses_post()",
+      "strip_tags() with no allowed list",
+      "esc_html() on the whole field",
+      "wp_kses_post() on the whole field",
       "wp_kses() with your own allowed-tags array"
     ],
     a: 3,
@@ -3810,9 +3835,9 @@ window.QUESTION_BANK = [
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "Why use $wpdb->insert() instead of building an INSERT string yourself?",
     o: [
-      "It skips the database",
-      "It caches the row",
-      "It's the only way to insert",
+      "It skips the database and writes to the cache",
+      "It caches the new row for later reads",
+      "It's the only way to insert rows in WordPress",
       "It prepares and escapes the values for you"
     ],
     a: 3,
@@ -3835,10 +3860,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "Which measures help against brute-force login attacks?",
     o: [
-      "Hiding the login button with CSS",
-      "Using the username admin",
-      "Limiting login attempts and adding two-factor authentication",
-      "Turning off HTTPS"
+      "Hiding the login button on the front end with CSS",
+      "Keeping the default admin username so it's easy to monitor",
+      "Turning off HTTPS on the login page to reduce load",
+      "Limiting login attempts and adding two-factor authentication"
     ],
     a: 2,
     t: "Rate limiting, strong passwords and 2FA make guessing passwords impractical.",
@@ -3866,9 +3891,9 @@ window.QUESTION_BANK = [
     q: "What's the difference between wp_cache_add() and wp_cache_set()?",
     o: [
       "add only stores if the key doesn't exist; set always overwrites",
-      "add is persistent, set isn't",
-      "They're identical",
-      "set only works in admin"
+      "add saves persistently, while set lasts one request",
+      "None; they're aliases kept for backwards compatibility",
+      "set only works in wp-admin, while add works everywhere"
     ],
     a: 0,
     t: "wp_cache_add() returns false if the key already exists. wp_cache_set() replaces any value.",
@@ -3883,10 +3908,10 @@ window.QUESTION_BANK = [
     s: "Performance", d: 2, level: "Author", stage: 2,
     q: "A cached value depends on a post. What do you do when that post is saved?",
     o: [
-      "Wait for the cache to expire",
+      "Wait for the cache entry to expire on its own",
       "Delete the key with wp_cache_delete() on save_post",
-      "Nothing",
-      "Flush the whole cache"
+      "Nothing; WordPress clears related keys itself",
+      "Flush the whole object cache with wp_cache_flush()"
     ],
     a: 1,
     t: "Invalidate the specific key when its source changes. Flushing everything hurts other cached data.",
@@ -3901,9 +3926,9 @@ window.QUESTION_BANK = [
     s: "Performance", d: 2, level: "Author", stage: 2,
     q: "With a persistent object cache active, where are transients stored?",
     o: [
-      "In the browser",
-      "In the filesystem",
-      "Always in wp_options",
+      "In the visitor's browser storage",
+      "In files under wp-content/cache",
+      "Always in wp_options, as before",
       "In the object cache instead of wp_options"
     ],
     a: 3,
@@ -3916,10 +3941,10 @@ window.QUESTION_BANK = [
     s: "Performance", d: 2, level: "Author", stage: 2,
     q: "A loop calls get_post_meta() for 50 posts and runs 50 queries. What reduces that to one?",
     o: [
-      "Use a shortcode",
-      "Add an index to wp_options",
-      "Prime the meta cache first with update_meta_cache() (WP_Query does this by default)",
-      "Increase memory"
+      "Wrap each call in a shortcode so it runs once per page",
+      "Add an index to wp_options so meta lookups are faster",
+      "Prime the meta cache with update_meta_cache() first (WP_Query does it by default)",
+      "Raise the PHP memory limit so all meta fits in one query"
     ],
     a: 2,
     t: "Loading meta for all IDs in one query fills the cache, so later get_post_meta() calls hit memory.",
@@ -3946,10 +3971,10 @@ window.QUESTION_BANK = [
     s: "Performance", d: 2, level: "Author", stage: 2,
     q: "On a low-traffic site, scheduled tasks run late or not at all. What's the robust fix?",
     o: [
-      "Add more plugins",
-      "Call wp_cron() in the theme",
-      "Shorten every interval",
-      "Set DISABLE_WP_CRON and trigger wp-cron.php from the server's real scheduler"
+      "Install a second cron plugin to run alongside WP-Cron",
+      "Call wp_cron() from the theme on every page view",
+      "Shorten every interval so tasks run more often",
+      "Set DISABLE_WP_CRON and run wp-cron.php from the server's scheduler"
     ],
     a: 3,
     t: "WP-Cron only runs on page loads. A system cron makes timing reliable.",
@@ -3981,10 +4006,10 @@ window.QUESTION_BANK = [
     s: "Change Management", d: 2, level: "Author", stage: 3,
     q: "You're replacing a public plugin function with a new one. How do you warn developers still using the old one?",
     o: [
-      "Rename it silently",
-      "Add a comment only",
-      "Keep it, call _deprecated_function() inside it, and forward to the new function",
-      "Delete it in a patch release"
+      "Rename it silently and update the calls in your own code",
+      "Add a @deprecated comment in the docblock and leave the code alone",
+      "Keep it, call _deprecated_function() inside it, and forward to the new one",
+      "Delete it in the next patch release and note it in the changelog"
     ],
     a: 2,
     t: "_deprecated_function() logs a notice with WP_DEBUG on, giving developers time before a major release removes it.",
@@ -3995,7 +4020,12 @@ window.QUESTION_BANK = [
     id: "q-0289",
     s: "Debugging", d: 2, level: "Author", stage: 3,
     q: "Which WP-CLI command runs a line of PHP in the WordPress context?",
-    o: ["wp eval 'echo get_option( \"home\" );'", "wp run", "wp php", "wp exec-php"],
+    o: [
+      "wp eval 'echo get_option( \"home\" );'",
+      "wp run 'echo get_option( \"home\" );'",
+      "wp php 'echo get_option( \"home\" );'",
+      "wp exec-php 'echo get_option( \"home\" );'"
+    ],
     a: 0,
     t: "wp eval loads WordPress and runs the code. wp eval-file runs a file, and wp shell opens an interactive session.",
     p: "Run a quick snippet with WordPress already loaded.",
@@ -4015,7 +4045,12 @@ window.QUESTION_BANK = [
     id: "q-0291",
     s: "Debugging", d: 2, level: "Author", stage: 3,
     q: "Which tool lets you pause PHP on a breakpoint and inspect variables in your IDE?",
-    o: ["WP_DEBUG_LOG", "Query Monitor", "Xdebug step debugging", "PHPCS"],
+    o: [
+      "WP_DEBUG_LOG with logging on",
+      "Query Monitor's PHP panel",
+      "Xdebug step debugging",
+      "PHPCS in strict mode"
+    ],
     a: 2,
     t: "Xdebug's step debugger connects to an IDE so you can pause, step through code and inspect state.",
     p: "It lets you freeze the code mid-run and look around.",
@@ -4027,9 +4062,9 @@ window.QUESTION_BANK = [
     q: "In WordPress's PHPUnit test suite, what do test factories such as self::factory()->post->create() do?",
     o: [
       "Create test data (posts, users, terms) in the test database",
-      "Mock HTTP calls automatically",
-      "Deploy code",
-      "Run the linter"
+      "Mock every outgoing HTTP call automatically",
+      "Deploy the plugin to a staging server after the tests",
+      "Run the coding-standards linter before each test"
     ],
     a: 0,
     t: "Factories quickly create fixtures. Each test runs in a transaction that rolls back afterwards.",
@@ -4051,10 +4086,10 @@ window.QUESTION_BANK = [
     s: "Disaster Recovery", d: 2, level: "Author", stage: 3,
     q: "Why shouldn't you copy a staging database over production on a live shop?",
     o: [
-      "Staging databases are larger",
-      "It would erase orders, users and comments created on production since staging was copied",
-      "It's slower than files",
-      "WordPress forbids it"
+      "Staging databases are larger and slow the shop down",
+      "It would erase orders, users and comments made on production since the copy",
+      "Copying a database is slower than copying files",
+      "WordPress blocks imports from a different domain"
     ],
     a: 1,
     t: "Production keeps changing. Move code forward and apply schema or settings changes deliberately instead of overwriting live data.",
@@ -4066,10 +4101,10 @@ window.QUESTION_BANK = [
     s: "Change Management", d: 2, level: "Author", stage: 3,
     q: "How do you mark the exact commit you released as version 1.2.0?",
     o: [
-      "git commit -m \"1.2.0\"",
-      "git stash save 1.2.0",
+      "git commit -m \"Release 1.2.0\"",
+      "git stash push -m v1.2.0",
       "git tag v1.2.0 (and push the tag)",
-      "git branch 1.2.0"
+      "git branch v1.2.0 (and push it)"
     ],
     a: 2,
     t: "Tags name a specific commit permanently, which makes releases easy to find and roll back to.",
@@ -4081,10 +4116,10 @@ window.QUESTION_BANK = [
     s: "Change Management", d: 2, level: "Author", stage: 3,
     q: "What's the main purpose of opening a pull request before merging into main?",
     o: [
-      "To have changes reviewed and checked (tests, linting) before they reach the shared branch",
-      "To delete the branch",
-      "To back up the repository",
-      "To deploy instantly"
+      "To have changes reviewed and checked (tests, linting) before they reach main",
+      "To delete the feature branch once the work on it is finished",
+      "To keep a backup copy of the repository on the Git host",
+      "To deploy the branch to production straight away, skipping CI"
     ],
     a: 0,
     t: "Pull requests let teammates review the diff and let CI run checks before merging.",
@@ -4098,10 +4133,10 @@ window.QUESTION_BANK = [
     s: "Change Management", d: 2, level: "Author", stage: 3,
     q: "What should CI run on every pull request for a WordPress plugin?",
     o: [
-      "Only a spell check",
-      "Nothing until release day",
+      "Only a spell check on the readme",
+      "Nothing until release day, to save minutes",
       "Coding standards (PHPCS) and automated tests",
-      "A full production deploy"
+      "A full production deploy of the branch"
     ],
     a: 2,
     t: "Running linting and tests on each pull request catches problems before merge.",
@@ -4113,10 +4148,10 @@ window.QUESTION_BANK = [
     s: "Scalability", d: 2, level: "Author", stage: 3,
     q: "How does a CDN help a WordPress site under load?",
     o: [
-      "It stores user sessions",
-      "It speeds up database queries",
-      "It serves static files (and cached pages) from servers near users, so fewer requests reach the origin",
-      "It replaces PHP"
+      "It stores logged-in users' sessions across data centres",
+      "It speeds up database queries by caching them at the edge",
+      "Serves static files and cached pages near users, so fewer requests hit the origin",
+      "It replaces PHP with pre-rendered pages for every user"
     ],
     a: 2,
     t: "Offloading static assets and cacheable pages reduces origin traffic and latency.",
@@ -4128,10 +4163,10 @@ window.QUESTION_BANK = [
     s: "Scalability", d: 2, level: "Author", stage: 3,
     q: "Why do full-page caches usually skip logged-in users?",
     o: [
-      "Logged-in users never visit twice",
-      "Caches can't store cookies",
-      "Their pages are personalised (admin bar, names, carts), so a shared copy could show the wrong content",
-      "It's a WordPress rule"
+      "Logged-in users rarely load the same page twice",
+      "Caches can't store pages for requests that send cookies",
+      "Their pages are personalised (admin bar, carts), so a shared copy could be wrong",
+      "WordPress forbids caching for logged-in sessions"
     ],
     a: 2,
     t: "Cookies signal personalised responses, so caches typically bypass them, which is why logged-in traffic costs more server time.",
@@ -4143,10 +4178,10 @@ window.QUESTION_BANK = [
     s: "Disaster Recovery", d: 2, level: "Author", stage: 3,
     q: "What's a recovery point objective (RPO)?",
     o: [
-      "The cost of a backup",
-      "The point in time you must be able to recover data to, which sets how much data loss is acceptable",
-      "The number of backup copies",
-      "How long the site may be down"
+      "The monthly cost of storing and restoring backups for the site",
+      "The point in time you must recover to, which sets how much data loss is acceptable",
+      "The number of backup copies you must keep, and where they live",
+      "How long the site may stay down before it must be back online"
     ],
     a: 1,
     t: "NIST defines RPO as the point in time to which data must be recovered after an outage. RTO is how quickly service must return.",
@@ -4158,10 +4193,10 @@ window.QUESTION_BANK = [
     s: "Disaster Recovery", d: 2, level: "Author", stage: 3,
     q: "Why should you test-restore backups regularly?",
     o: [
-      "It speeds up the site",
-      "Hosts require it",
+      "Restoring clears caches and speeds the site up",
+      "Most hosts require a monthly restore test",
       "A backup you've never restored may be incomplete or unusable",
-      "It deletes old backups"
+      "Each restore deletes the oldest backups"
     ],
     a: 2,
     t: "WordPress's upgrade guide tells you to verify backups are there and usable. Only a restore proves it.",
@@ -4173,10 +4208,10 @@ window.QUESTION_BANK = [
     s: "Disaster Recovery", d: 2, level: "Author", stage: 3,
     q: "What does the 3-2-1 backup rule recommend?",
     o: [
-      "Three daily backups kept for one week",
-      "Back up every three hours",
-      "Three copies of data, on two different media or devices, one stored off-site",
-      "One backup on the same server"
+      "Three daily backups, each kept for one week",
+      "A backup every three hours, kept for two days",
+      "Three copies, on two different media, with one stored off-site",
+      "One backup on the same server, checked twice a year"
     ],
     a: 2,
     t: "Several copies in different places protect against device failure, ransomware and site-wide disasters.",
@@ -6446,10 +6481,10 @@ window.QUESTION_BANK = [
     s: "Performance", d: 2, level: "Author", stage: 1,
     q: "You edit a theme's style.css, but returning visitors still see the old styles. The theme enqueues the file with a hard-coded version '1.13' and a very long cache lifetime. What's the most durable fix?",
     o: [
-      "Make the version change whenever the file changes, for example by using the file's modification time as the version",
-      "Set the version to false so WordPress picks one",
-      "Set the version to null to remove it",
-      "Ask visitors to clear their browser cache"
+      "Change the version whenever the file changes, e.g. use its modification time",
+      "Set the version to false so WordPress adds its own version number",
+      "Set the version to null to remove the query string",
+      "Ask returning visitors to clear their browser cache"
     ],
     a: 0,
     t: "wp_enqueue_style() appends $ver to the URL. With false it uses the WordPress core version, which changes only on core updates. With null it adds no version. Deriving $ver from filemtime() gives a new URL on every edit, the versioned-URL cache-busting pattern MDN describes.",
@@ -6497,9 +6532,9 @@ window.QUESTION_BANK = [
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "An internal WordPress tool exposes its custom post types to anonymous visitors through the REST API. What does the official REST API FAQ recommend?",
     o: [
-      "Return an authentication error from the rest_authentication_errors filter when the user isn't logged in",
-      "Disable the REST API completely",
-      "Block /wp-json/ in robots.txt",
+      "Return an auth error from rest_authentication_errors when the user isn't logged in",
+      "Turn off the REST API completely for the whole site",
+      "Block /wp-json/ in robots.txt so it isn't crawled",
       "Rename the post types so their endpoints are hard to guess"
     ],
     a: 0,
@@ -6638,10 +6673,10 @@ window.QUESTION_BANK = [
     s: "Change Management", d: 2, level: "Author", stage: 1,
     q: "At launch, a client site's domain moves to a new DNS host so the web records can point at the new server. The client's email is hosted with a separate provider. What has to happen so email keeps working?",
     o: [
-      "Copy every existing record (MX, mail-related TXT records such as SPF, DKIM and DMARC, and any CNAMEs) to the new DNS host before switching nameservers, then change only the web records",
-      "Nothing; MX records stay with the domain registrar whichever DNS host is in use",
-      "Add only the new server's A record; email providers re-create their own records automatically",
-      "Switch the nameservers first and copy the mail records over after propagation has finished"
+      "Copy every record (MX, SPF, DKIM, DMARC, CNAMEs) to the new host first, then change only the web records",
+      "Nothing; MX records stay with the domain registrar whichever DNS host is used",
+      "Add only the new server's A record; the email provider re-creates its records automatically",
+      "Switch the nameservers first, then copy the mail records once propagation has finished"
     ],
     a: 0,
     t: "Once the nameservers change, the new DNS host's zone is the only one resolvers see. Any MX, SPF, DKIM, DMARC or other record that wasn't recreated there stops existing, so mail routing and authentication break. Google's guidance on moving DNS hosts is to move all records to the new host.",
@@ -6653,10 +6688,10 @@ window.QUESTION_BANK = [
     s: "Debugging", d: 2, level: "Author", stage: 2,
     q: "To get contact-form email through a new SMTP service, a developer adds a second TXT record beginning v=spf1 for that service and leaves the domain's existing SPF record in place. What happens when receiving servers check SPF?",
     o: [
-      "SPF returns a permanent error (permerror), because a domain must publish only one SPF record; the two should be merged into one",
+      "A permerror, because a domain may publish only one SPF record; merge the two",
       "Receivers combine both records, so mail from either sender passes",
       "Receivers use whichever SPF record was added most recently",
-      "Only the SMTP service's mail is checked; mail from the old provider skips SPF"
+      "Only the SMTP service's mail is checked; the old provider's skips SPF"
     ],
     a: 0,
     t: "RFC 7208 says a domain MUST NOT have multiple records that would select more than one SPF record, and check_host() returns permerror if it does. The fix is one v=spf1 record with both senders' include: mechanisms, staying within the 10-lookup limit.",
@@ -6671,10 +6706,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 1, level: "Author", stage: 1,
     q: "A staging site is kept out of search only by a robots.txt file containing Disallow: /. Why isn't that enough?",
     o: [
-      "robots.txt controls crawling, not indexing; a disallowed URL can still be indexed if other pages link to it, so staging should be password-protected",
-      "Search engines ignore robots.txt on subdomains",
-      "robots.txt only applies to images, not HTML pages",
-      "robots.txt is enough; a disallowed site can never appear in search results"
+      "It blocks crawling, not indexing; linked URLs can still be indexed, so use a password",
+      "Search engines ignore robots.txt files served on subdomains",
+      "robots.txt only applies to images and media, not HTML pages",
+      "It is enough; a disallowed site can never appear in search results"
     ],
     a: 0,
     t: "Google says robots.txt isn't a mechanism for keeping a page out of Google, and a disallowed URL linked from elsewhere may still be indexed. Password protection keeps out crawlers and people alike. A noindex rule only works if crawlers are allowed to fetch the page and see it.",
@@ -6689,10 +6724,10 @@ window.QUESTION_BANK = [
     s: "Debugging", d: 2, level: "Author", stage: 1,
     q: "Weeks after a redesign launches, Search Console lists most pages as \"Excluded by 'noindex' tag\". robots.txt looks normal. The production database was copied from staging at launch. What's the most likely cause?",
     o: [
-      "The \"Discourage search engines from indexing this site\" setting came across with the database, and WordPress outputs a noindex robots meta tag on every page when it's on",
-      "The XML sitemap wasn't resubmitted after launch",
-      "The permalink structure changed, and Google treats new URLs as noindex for 30 days",
-      "robots.txt needs an explicit Allow: / line for pages to be indexed"
+      "The \"Discourage search engines\" setting came over with the database, so every page outputs noindex",
+      "The XML sitemap wasn't resubmitted in Search Console after launch",
+      "The permalinks changed, and Google treats new URLs as noindex for 30 days",
+      "robots.txt needs an explicit Allow: / line before pages can be indexed"
     ],
     a: 0,
     t: "The setting is stored in the blog_public option, so a database copied from staging brings it with it. Since WordPress 5.3 it adds a noindex robots meta tag instead of a robots.txt Disallow, which is why robots.txt looks fine. In current versions wp_robots_no_robots() adds it.",
@@ -6722,10 +6757,10 @@ window.QUESTION_BANK = [
     s: "Debugging", d: 2, level: "Author", stage: 1,
     q: "On a newly launched site, wp_mail() returns true for every contact-form submission, but the client says notifications never arrive. What does that true actually tell you?",
     o: [
-      "Only that the mail method processed the request without an error; it doesn't confirm the message was delivered",
+      "Only that the mail method accepted it without an error, not that it was delivered",
       "That the recipient's mail server accepted and delivered the message",
-      "That the message passed SPF and DKIM checks",
-      "That the recipient opened the email"
+      "That the message passed SPF, DKIM and DMARC checks on the way",
+      "That the recipient received and opened the notification email"
     ],
     a: 0,
     t: "The wp_mail() reference says a true return doesn't mean the user received the email, only that the method used processed the request without errors. By default PHPMailer hands off to PHP's mail(), so delivery problems happen further down the line. Check mail logs, spam folders and DNS authentication.",
@@ -6755,10 +6790,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 2, level: "Author", stage: 2,
     q: "During a client handoff you remove a former contractor who was a verified owner of the site's Search Console property. What else should you do so they can't get owner access back?",
     o: [
-      "Remove the verification token they used (for example the HTML file, meta tag or DNS TXT record), because a leftover token can restore their access",
+      "Remove their verification token (HTML file, meta tag or DNS TXT record), which could restore access",
       "Nothing; removing them in Users and permissions is permanent",
-      "Delete and re-create the Search Console property",
-      "Change the WordPress admin password"
+      "Delete the Search Console property and create it again from scratch",
+      "Change the WordPress admin password and the hosting password"
     ],
     a: 0,
     t: "Search Console's help says a removed verified owner may regain access through verification tokens that are still in place, so remove those tokens too. Verification can live in a theme's head output, a file in the web root or a DNS record, so check all three.",
