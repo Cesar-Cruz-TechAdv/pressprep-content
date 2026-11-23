@@ -54,6 +54,12 @@
           if (new Set(q.a).size !== q.a.length) r.err(where, 'answer "a" lists the same option twice');
           if (q.a.length === n) r.warn(where, 'every option is correct, so the question can\'t be failed');
         } else if (!isInt(q.a, 0, n - 1)) r.err(where, `answer "a" must be an index from 0 to ${n - 1}, or a list of them`);
+        else {
+          // The longest option shouldn't give the answer away.
+          const len = q.o.map(o => String(o).length);
+          const wrong = Math.max(...len.filter((_, k) => k !== q.a));
+          if (len[q.a] >= 1.5 * wrong) r.warn(where, `the correct option is ${(len[q.a] / wrong).toFixed(1)}× longer than the longest wrong one, which gives it away; trim it or make the wrong options fuller`);
+        }
       }
       if (!isStr(q.t)) r.err(where, 'technical explanation "t" is empty');
       if (!isStr(q.p)) r.err(where, 'plain-English explanation "p" is empty');

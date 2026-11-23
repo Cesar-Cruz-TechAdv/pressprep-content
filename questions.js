@@ -66,10 +66,10 @@ window.QUESTION_BANK = [
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "What's the main difference between posts and pages?",
     o: [
-      "There's no difference; they're stored and displayed the same way",
-      "Posts are time-based entries shown in date order and feeds; pages are for timeless, standalone content",
-      "Pages can contain images but posts can't",
-      "Posts are private and pages are public"
+      "None really; both are stored and displayed the same way, only the menu label differs",
+      "Posts are dated entries shown in date order and feeds; pages are standalone, timeless content",
+      "Pages can hold images and embeds, while posts are limited to text and links",
+      "Posts are visible only to logged-in members, while pages are always public"
     ],
     a: 1,
     t: "Posts are time-oriented and appear in archives and feeds. Pages hold \"static\" information that's typically timeless, like About or Contact.",
@@ -107,9 +107,9 @@ window.QUESTION_BANK = [
     q: "What should you do before updating WordPress core, themes or plugins on a live site?",
     o: [
       "Back up the database and files, and check the backup works",
-      "Change the admin password",
-      "Delete the cache folder",
-      "Nothing; updates are always safe"
+      "Change the admin password so nobody can log in during the update",
+      "Delete the cache folder so the new files aren't overwritten",
+      "Nothing, since updates from WordPress.org are tested on every host"
     ],
     a: 0,
     t: "WordPress's own upgrade instructions start with backing up the database and all files, then checking the backups are usable, so you can restore if an update breaks something.",
@@ -148,10 +148,10 @@ window.QUESTION_BANK = [
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "What does the \"Discourage search engines from indexing this site\" setting do?",
     o: [
-      "Deletes the sitemap permanently",
+      "Deletes the XML sitemap and removes the site from Google's index",
       "Asks search engines not to index the site, which they may or may not honour",
-      "Password-protects the site",
-      "Blocks all visitors except logged-in users"
+      "Password-protects the front end so only people with the link can see it",
+      "Blocks every visitor who isn't logged in until you untick it again"
     ],
     a: 1,
     t: "The Search Engine Visibility option in Settings → Reading asks search engines not to index the site. It's a request, not access control, so use real protection for private sites.",
@@ -201,10 +201,10 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "Every WordPress theme needs a style.css file. What is its most important job?",
     o: [
-      "Storing the theme's database tables",
-      "Registering the theme with WordPress through the header comment at the top",
-      "Holding all the PHP templates",
-      "Setting the site's permalink structure"
+      "Creating the theme's database tables when it's first activated",
+      "Registering the theme with WordPress through its header comment",
+      "Holding the PHP templates that WordPress loads for each page",
+      "Setting the permalink structure the theme's templates expect"
     ],
     a: 1,
     t: "style.css's header comment (Theme Name, Description and so on) registers the theme. Child themes also use the Template field to name the parent.",
@@ -216,10 +216,10 @@ window.QUESTION_BANK = [
     s: "Debugging", d: 1, level: "Subscriber", stage: 2,
     q: "What does setting WP_DEBUG to true in wp-config.php do?",
     o: [
-      "Automatically fixes PHP errors",
-      "Turns on WordPress's debug mode, so PHP notices and warnings are reported",
-      "Speeds the site up by skipping plugins",
-      "Makes the site read-only"
+      "Fixes common PHP errors automatically and logs what it changed",
+      "Turns on debug mode, so PHP notices and warnings are reported",
+      "Speeds up page loads by skipping plugins that throw errors",
+      "Makes the site read-only so you can investigate safely"
     ],
     a: 1,
     t: "WP_DEBUG enables debug mode and raises error reporting. Its companions WP_DEBUG_LOG and WP_DEBUG_DISPLAY control whether errors are logged to a file and shown on screen.",
@@ -251,9 +251,9 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "What's the minimum a PHP file needs for WordPress to recognise it as a plugin?",
     o: [
-      "A readme.txt file",
-      "A class that extends WP_Plugin",
-      "Registration on WordPress.org",
+      "A readme.txt file with the plugin's version and description",
+      "A main class that extends WordPress's WP_Plugin base class",
+      "An approved listing in the WordPress.org plugin directory",
       "A header comment with at least a Plugin Name line"
     ],
     a: 3,
@@ -294,10 +294,10 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 1, level: "Subscriber", stage: 3,
     q: "What does get_template_part( 'parts/card' ) do?",
     o: [
-      "Registers a new block called card",
-      "Creates a page called Card",
+      "Registers a new block called card for the block editor",
+      "Creates a page called Card and assigns it a template",
       "Loads the reusable template file parts/card.php from the theme",
-      "Downloads a template from WordPress.org"
+      "Downloads the card template from the WordPress.org directory"
     ],
     a: 2,
     t: "get_template_part() includes a template file, looking in the child theme first and then the parent, which keeps repeated markup in one place.",
@@ -439,10 +439,10 @@ window.QUESTION_BANK = [
     s: "Performance", d: 2, level: "Contributor", stage: 3,
     q: "Which is true about get_posts() compared with new WP_Query() with the same arguments?",
     o: [
-      "get_posts() always returns every post",
-      "get_posts() can't query custom post types",
-      "get_posts() sets suppress_filters to true by default, so query filters like posts_where don't run",
-      "get_posts() runs the extra pagination count query"
+      "get_posts() ignores posts_per_page and always returns every matching post",
+      "get_posts() can only query posts, not pages or custom post types",
+      "get_posts() sets suppress_filters to true by default, so filters like posts_where don't run",
+      "get_posts() runs the extra found-rows count query needed for pagination"
     ],
     a: 2,
     t: "get_posts() defaults suppress_filters to true and forces no_found_rows and ignore_sticky_posts to true. Filters you add won't apply unless you pass suppress_filters => false.",
@@ -548,10 +548,10 @@ window.QUESTION_BANK = [
     s: "Performance", d: 1, level: "Contributor", stage: 1,
     q: "Why is 'posts_per_page' => -1 discouraged on high-traffic sites?",
     o: [
-      "It ignores post_status",
-      "It's deprecated",
-      "It disables the object cache",
-      "It returns an unbounded result set that can exhaust memory and slow the database as content grows"
+      "It ignores post_status, so drafts and trashed posts show up too",
+      "It's deprecated and triggers a notice when WP_DEBUG is on",
+      "It turns off the object cache for that query and every later one",
+      "It returns an unbounded result set that can exhaust memory and slow the database"
     ],
     a: 3,
     t: "Unbounded queries get slower as content grows. Set a sensible limit, or process the posts in batches.",
@@ -684,10 +684,10 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 1, level: "Contributor", stage: 2,
     q: "When should a plugin call flush_rewrite_rules()?",
     o: [
-      "On plugin activation and deactivation, or after rewrite rules actually change",
-      "On every admin_init",
-      "On every init",
-      "Inside template_redirect"
+      "On activation and deactivation, or after its rewrite rules actually change",
+      "On every admin_init, so rules refresh whenever someone opens wp-admin",
+      "On every init, right after the plugin registers its post types",
+      "Inside template_redirect, just before the theme loads a template"
     ],
     a: 0,
     t: "Flushing is expensive because it rebuilds and saves the rules. Doing it on every request is a known performance anti-pattern.",
@@ -755,10 +755,10 @@ window.QUESTION_BANK = [
     s: "WordPress Core", d: 1, level: "Contributor", stage: 2,
     q: "What is the key functional difference between an action callback and a filter callback?",
     o: [
-      "Filters can only be used in themes",
-      "Actions accept arguments, filters don't",
-      "Actions run before filters on every hook",
-      "A filter callback must return a value (usually the modified input); an action callback performs side effects and its return value is ignored"
+      "Filters only work in themes, while actions work in themes and plugins",
+      "Actions accept arguments from the hook, while filters receive none",
+      "On any hook, every action callback runs before the filter callbacks",
+      "A filter must return the (changed) value; an action does work and its return value is ignored"
     ],
     a: 3,
     t: "apply_filters() passes a value through each callback and uses what it returns. If a filter callback forgets to return, the value becomes null. do_action() ignores return values, so actions are for side effects like sending an email or registering something.",
@@ -1101,10 +1101,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 1, level: "Contributor", stage: 2,
     q: "When building an audit log of authentication events, which of these should NEVER be written to the log?",
     o: [
-      "The timestamp and IP address",
+      "The timestamp and IP address of each login attempt",
       "The submitted password, even for failed attempts",
-      "Role changes and who made them",
-      "The username for failed logins"
+      "Role changes, with who made them and when",
+      "The username entered for each failed login"
     ],
     a: 1,
     t: "Logs are often less protected than the database and get sent to third-party tools. A failed attempt's password is often a typo of the real one. Log who, when, from where and the outcome, but never secrets.",
@@ -1323,9 +1323,9 @@ window.QUESTION_BANK = [
     q: "A page is slow. How do you find out which plugin is responsible for the slow database queries and outbound HTTP calls?",
     o: [
       "Query Monitor's Queries by Component and HTTP API Calls panels",
-      "The browser's Elements panel",
-      "Site Health's Info tab",
-      "phpinfo()"
+      "The browser's Elements panel, filtered by plugin stylesheet",
+      "Site Health's Info tab, which lists each plugin's load time",
+      "phpinfo(), which shows which extensions each plugin uses"
     ],
     a: 0,
     t: "Query Monitor groups queries by the plugin or theme that triggered them, flags duplicate and slow queries, and lists every wp_remote_*() call with its timing and response. It also shows hooks, conditionals and enqueued assets.",
@@ -1347,10 +1347,10 @@ window.QUESTION_BANK = [
     s: "Debugging", d: 1, level: "Contributor", stage: 3,
     q: "You've migrated a site to a new server and want to test it on the real domain before changing DNS. What do you do?",
     o: [
-      "Change the DNS and hope it works",
-      "Edit siteurl to the server's IP address",
-      "Use a URL shortener",
-      "Add an entry to your local hosts file that maps the domain to the new server's IP"
+      "Switch the DNS over and roll it back quickly if something breaks",
+      "Change siteurl to the new server's IP address and browse to it",
+      "Point a URL shortener at the new server and test through that",
+      "Map the domain to the new server's IP in your local hosts file"
     ],
     a: 3,
     t: "/etc/hosts on macOS and Linux, or C:\\Windows\\System32\\drivers\\etc\\hosts on Windows, overrides DNS for your machine only. You browse the new server with the real hostname, including SSL and cookies, while everyone else still reaches the old server.",
@@ -1877,10 +1877,10 @@ window.QUESTION_BANK = [
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "What does marking a post as \"sticky\" do?",
     o: [
-      "Stops comments on it",
+      "Closes comments on it while keeping existing ones visible",
       "Keeps it at the top of the blog posts page, above newer posts",
-      "Hides it from search engines",
-      "Locks it so nobody else can edit it"
+      "Hides it from search engines but leaves it on the blog",
+      "Locks it so only its author can edit it from now on"
     ],
     a: 1,
     t: "Sticky posts are placed at the top of the posts page (the home page when it shows latest posts). is_sticky() checks whether a post is sticky.",
@@ -1935,10 +1935,10 @@ window.QUESTION_BANK = [
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "In a block theme, what's a template part?",
     o: [
-      "A plugin settings page",
-      "A database table",
-      "A single paragraph block",
-      "A reusable area such as a header or footer shared by several templates"
+      "A settings page that a plugin adds for the theme's options",
+      "A database table that stores the theme's saved layouts",
+      "A single paragraph block saved for reuse within one post",
+      "A reusable area, such as a header or footer, shared by several templates"
     ],
     a: 3,
     t: "Template parts are reusable structural pieces (header, footer, sidebar) placed in templates and edited in the Site Editor.",
@@ -1962,10 +1962,10 @@ window.QUESTION_BANK = [
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "Where does WordPress get the profile pictures it shows next to comments by default?",
     o: [
-      "From the user's browser",
-      "From the theme folder",
-      "From the Media Library",
-      "From Gravatar, based on the email address"
+      "From the profile picture saved in the visitor's browser",
+      "From an avatars folder inside the active theme",
+      "From images uploaded to the site's Media Library",
+      "From Gravatar, based on the commenter's email address"
     ],
     a: 3,
     t: "get_avatar() returns a Gravatar image tied to an email address unless a plugin or filter changes the source.",
@@ -1997,10 +1997,10 @@ window.QUESTION_BANK = [
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "What's a post's slug?",
     o: [
-      "Its database ID number",
-      "Its featured image",
-      "Its URL-friendly name used in the permalink, such as my-first-post",
-      "Its excerpt"
+      "Its numeric database ID, as shown in the edit link",
+      "The file name of its featured image in the uploads folder",
+      "Its URL-friendly name in the permalink, such as my-first-post",
+      "The short summary shown on archive pages, its excerpt"
     ],
     a: 2,
     t: "The slug is the URL-safe version of the title used in pretty permalinks, such as example.com/my-first-post/.",
@@ -2052,10 +2052,10 @@ window.QUESTION_BANK = [
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "Who can see a post set to \"Private\" visibility?",
     o: [
-      "Only the post's author, even Administrators can't",
-      "Everyone, but it's hidden from search engines",
-      "Only logged-in users with the right capability, such as Editors and Administrators",
-      "Anyone with a password"
+      "Only the post's author; not even Administrators can open it",
+      "Everyone, but it's hidden from search engines and feeds",
+      "Logged-in users with the right capability, such as Editors and Administrators",
+      "Anyone who has the post's password, logged in or not"
     ],
     a: 2,
     t: "Private posts are visible only to logged-in users who can read private posts (Editors and Administrators by default) and the author.",
@@ -2194,10 +2194,10 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "Why must a classic theme call wp_head() before the closing </head> tag?",
     o: [
-      "It's only needed for the admin bar",
-      "It prints the site title",
+      "It's only needed so the admin bar shows for logged-in users",
+      "It prints the site's logo and tagline at the top of the page",
       "Core and plugins hook into it to add styles, scripts and meta tags",
-      "It closes the HTML document"
+      "It closes the HTML head and opens the body for the theme"
     ],
     a: 2,
     t: "wp_head() fires the wp_head action, which enqueued styles, scripts and many plugins rely on.",
@@ -2224,10 +2224,10 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "What does body_class() add to the <body> tag?",
     o: [
-      "Inline styles",
-      "The page ID as the tag name",
-      "A list of CSS classes describing the current page, such as home, single or logged-in",
-      "A nonce"
+      "Inline styles from the Customizer's colour and font settings",
+      "The page ID as a data attribute that scripts can read",
+      "CSS classes describing the current page, such as home, single or logged-in",
+      "A nonce that forms on the page use to verify requests"
     ],
     a: 2,
     t: "body_class() prints classes based on the request (page type, template, user state) and can be extended with the body_class filter.",
@@ -2249,10 +2249,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 1, level: "Subscriber", stage: 2,
     q: "What does this line at the top of a plugin file do: if ( ! defined( 'ABSPATH' ) ) exit;",
     o: [
-      "Speeds up loading",
-      "Disables the plugin on multisite",
-      "Stops the file from being run directly by visiting its URL",
-      "Checks the user is an Administrator"
+      "Speeds up loading by skipping the file once it's cached",
+      "Disables the plugin on multisite networks where it isn't needed",
+      "Stops the file running when someone visits its URL directly",
+      "Checks that the current user is an Administrator"
     ],
     a: 2,
     t: "ABSPATH is defined when WordPress loads. If it's missing, the file was requested directly, so the script exits.",
@@ -2327,10 +2327,10 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "What's the recommended way to register a custom block's settings, scripts and styles?",
     o: [
-      "Edit wp-includes/blocks",
-      "Paste JavaScript into a Custom HTML block",
-      "Describe them in block.json and call register_block_type() with its folder",
-      "Add a shortcode"
+      "Add them to the core files in wp-includes/blocks",
+      "Paste the JavaScript into a Custom HTML block on each page",
+      "Describe them in block.json and pass its folder to register_block_type()",
+      "Register a shortcode that prints the block's scripts and styles"
     ],
     a: 2,
     t: "register_block_type() accepts the path to a folder containing block.json, which declares the block's name, attributes and assets.",
@@ -2345,10 +2345,10 @@ window.QUESTION_BANK = [
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 2,
     q: "What are post meta fields used for?",
     o: [
-      "Storing extra key-value data attached to a post, such as a price or rating",
-      "Storing the post's title",
-      "Storing user passwords",
-      "Storing site-wide settings"
+      "Extra key-value data attached to a post, such as a price or rating",
+      "Storing the post's title and slug for quick lookups",
+      "Storing the password hashes of the post's authors",
+      "Storing site-wide settings shared by every post"
     ],
     a: 0,
     t: "Post meta lives in wp_postmeta and is read and written with get_post_meta(), add_post_meta() and update_post_meta().",
@@ -2388,10 +2388,10 @@ window.QUESTION_BANK = [
     s: "Debugging", d: 1, level: "Subscriber", stage: 3,
     q: "What does setting SCRIPT_DEBUG to true do?",
     o: [
-      "Disables all scripts",
-      "Shows SQL queries",
-      "Logs PHP errors",
-      "Loads the unminified \"dev\" versions of core CSS and JavaScript"
+      "Stops all front-end scripts loading until you turn it off",
+      "Shows the SQL queries each page runs at the bottom",
+      "Logs JavaScript errors to wp-content/debug.log",
+      "Loads the unminified dev versions of core CSS and JavaScript"
     ],
     a: 3,
     t: "SCRIPT_DEBUG makes WordPress load the full, readable versions of its own scripts and styles, which helps when debugging them.",
@@ -2412,7 +2412,12 @@ window.QUESTION_BANK = [
     id: "q-0166",
     s: "Change Management", d: 1, level: "Subscriber", stage: 3,
     q: "Which WP-CLI command creates a new user?",
-    o: ["wp user add", "wp user create <login> <email>", "wp create user", "wp new user"],
+    o: [
+      "wp user add <login> <email>",
+      "wp user create <login> <email>",
+      "wp create user <login> <email>",
+      "wp new-user <login> <email>"
+    ],
     a: 1,
     t: "wp user create takes a login and email, plus options such as --role.",
     p: "One command makes a new account without using the dashboard.",
@@ -2423,10 +2428,10 @@ window.QUESTION_BANK = [
     s: "Debugging", d: 1, level: "Subscriber", stage: 3,
     q: "You suspect a plugin conflict but can't risk breaking the site for visitors. Which tool lets you disable plugins only for your own session?",
     o: [
-      "Switching the site to Plain permalinks",
-      "Deleting the plugins folder",
-      "Health Check & Troubleshooting plugin's Troubleshooting Mode",
-      "Settings → Reading"
+      "Switching the site to Plain permalinks while you test",
+      "Renaming the plugins folder over SFTP for a few minutes",
+      "Turning on maintenance mode from Settings → Reading",
+      "Troubleshooting Mode in the Health Check & Troubleshooting plugin"
     ],
     a: 2,
     t: "Troubleshooting Mode disables plugins and switches to a default theme for your session only, while visitors see the normal site.",
@@ -2438,10 +2443,10 @@ window.QUESTION_BANK = [
     s: "Debugging", d: 1, level: "Subscriber", stage: 3,
     q: "You see \"Error establishing a database connection\". What do you check first?",
     o: [
-      "The theme's style.css",
-      "The permalink settings",
-      "The Media Library",
-      "The database name, user, password and host in wp-config.php, and whether the database server is up"
+      "The theme's style.css header, in case the theme failed to load",
+      "The permalink settings, then resave them to rebuild the rules",
+      "The Media Library, for an upload that corrupted the database",
+      "The database credentials in wp-config.php, and whether the database server is up"
     ],
     a: 3,
     t: "This error means WordPress couldn't connect to MySQL: wrong credentials, a wrong host, or a database server that's down.",
@@ -2453,10 +2458,10 @@ window.QUESTION_BANK = [
     s: "Debugging", d: 1, level: "Subscriber", stage: 3,
     q: "A site shows a blank white page with no error. What's a sensible first step?",
     o: [
-      "Reinstall the database",
-      "Clear the browser history only",
-      "Change the site title",
-      "Enable WP_DEBUG (with logging) to see the PHP error"
+      "Restore the database from last night's backup",
+      "Clear your browser history and reload the page",
+      "Change the site title to force the cache to refresh",
+      "Enable WP_DEBUG with logging to see the PHP error"
     ],
     a: 3,
     t: "The \"white screen of death\" is usually a PHP fatal error. Debug logging reveals the message and the file responsible.",
@@ -2481,10 +2486,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 1, level: "Subscriber", stage: 3,
     q: "Which is a basic hardening step for user accounts?",
     o: [
-      "Use strong, unique passwords and avoid predictable usernames such as \"admin\"",
-      "Email passwords to users",
-      "Share one admin account among the team",
-      "Disable all logins"
+      "Strong, unique passwords and no predictable usernames like \"admin\"",
+      "Email each new user their password so they don't forget it",
+      "Share one admin account so there are fewer logins to attack",
+      "Disable logins entirely except during business hours"
     ],
     a: 0,
     t: "The hardening guide recommends strong passwords and not using guessable usernames, which helps against brute-force attacks.",
@@ -2495,7 +2500,12 @@ window.QUESTION_BANK = [
     id: "q-0172",
     s: "Security", d: 1, level: "Subscriber", stage: 3,
     q: "Which function cleans a single-line text input before saving it?",
-    o: ["wp_kses_post()", "esc_html()", "sanitize_text_field()", "esc_url()"],
+    o: [
+      "wp_kses_post( $value )",
+      "esc_html( $value )",
+      "sanitize_text_field( $value )",
+      "esc_url( $value )"
+    ],
     a: 2,
     t: "sanitize_text_field() strips tags, line breaks and extra whitespace. esc_html() escapes for output, not input.",
     p: "Tidy the input when it comes in, and wrap it safely when it goes out.",
@@ -2534,10 +2544,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 1, level: "Subscriber", stage: 3,
     q: "Why should you delete plugins and themes you no longer use?",
     o: [
-      "They use up the database",
-      "WordPress limits you to 10 plugins",
-      "They slow down the editor",
-      "Inactive code can still contain vulnerable files that can be reached directly"
+      "Inactive plugins keep filling the database with their tables",
+      "WordPress caps each site at 10 installed plugins and themes",
+      "They still load in the editor and slow it down",
+      "Inactive code can still hold vulnerable files that can be reached directly"
     ],
     a: 3,
     t: "Deactivated plugins and themes still have files on the server. Removing unused code reduces the attack surface.",
@@ -2574,9 +2584,9 @@ window.QUESTION_BANK = [
     s: "Security", d: 1, level: "Subscriber", stage: 3,
     q: "Where does a user create an Application Password for API access?",
     o: [
-      "With a plugin only",
-      "In Settings → General",
-      "In wp-config.php",
+      "Only through an extra security plugin",
+      "Under Settings → General, by an Administrator",
+      "In wp-config.php, as a constant",
       "On their profile screen in wp-admin"
     ],
     a: 3,
@@ -2589,9 +2599,9 @@ window.QUESTION_BANK = [
     s: "Change Management", d: 1, level: "Subscriber", stage: 3,
     q: "Why test plugin and theme updates on a staging copy first?",
     o: [
-      "It's required by WordPress",
-      "Updates only work on staging",
-      "Staging sites update faster",
+      "Because WordPress refuses updates that weren't tested first",
+      "Because updates only install correctly on staging sites",
+      "Because staging sites download updates faster",
       "So problems show up where visitors aren't affected"
     ],
     a: 3,
@@ -2649,10 +2659,10 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 1, level: "Contributor", stage: 1,
     q: "A callback was added with add_action( 'init', 'my_fn', 20 ). What must remove_action() pass to remove it?",
     o: [
-      "Only the hook name",
-      "Any priority, it ignores it",
-      "The same hook, callback and priority (20)",
-      "The callback only"
+      "Only the hook name; it removes every callback on it",
+      "The hook and callback; the priority is ignored",
+      "Just the callback, wherever it's hooked",
+      "The same hook, callback and priority (20)"
     ],
     a: 2,
     t: "remove_action() must match the hook, the callback and the priority used when it was added, otherwise nothing is removed.",
@@ -2689,10 +2699,10 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 1, level: "Contributor", stage: 1,
     q: "Your filter callback needs the hook's second and third arguments, but only gets the first. What's missing?",
     o: [
-      "A higher priority",
-      "A return statement",
+      "A higher priority, so it runs after the others",
+      "A return statement at the end of the callback",
       "The accepted_args parameter of add_filter(), which defaults to 1",
-      "A global variable"
+      "A global variable holding the extra arguments"
     ],
     a: 2,
     t: "add_filter( $hook, $cb, $priority, $accepted_args ) passes only one argument unless accepted_args is raised.",
@@ -2824,9 +2834,9 @@ window.QUESTION_BANK = [
     q: "What's the difference between __() and _e()?",
     o: [
       "__() returns the translated string; _e() echoes it",
-      "_e() is for errors only",
-      "__() echoes; _e() returns",
-      "They both escape HTML"
+      "_e() translates error messages; __() handles the rest",
+      "__() echoes the translated string; _e() returns it",
+      "Both escape HTML, but only _e() also translates"
     ],
     a: 0,
     t: "Both translate. __() returns the string and _e() prints it. Neither escapes, so use esc_html__() and similar when outputting.",
@@ -2878,10 +2888,10 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 1, level: "Contributor", stage: 1,
     q: "What does wp_register_script() do on its own?",
     o: [
-      "Adds the script to the database",
-      "Minifies the script",
+      "Saves the script's code in the database for later use",
+      "Minifies the script and saves a cached copy",
       "Defines a script so it can be enqueued later, without loading it",
-      "Loads the script on every page"
+      "Loads the script on every front-end and admin page"
     ],
     a: 2,
     t: "Registering only describes the script (handle, source, dependencies). It loads when something enqueues that handle.",
@@ -2893,10 +2903,10 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 1, level: "Contributor", stage: 1,
     q: "Your script needs jQuery loaded first. How do you declare that?",
     o: [
-      "Load jQuery from a CDN in header.php",
-      "Rename your file jquery.js",
+      "Load jQuery from a CDN with a script tag in header.php",
+      "Name your file jquery-plugin.js so it loads after jQuery",
       "Pass array( 'jquery' ) as the dependencies argument of wp_enqueue_script()",
-      "Enqueue it with a lower priority number"
+      "Give your script a lower version number than jQuery's"
     ],
     a: 2,
     t: "The deps argument lists handles that must load first. WordPress orders the output to match.",
@@ -2928,9 +2938,9 @@ window.QUESTION_BANK = [
     s: "WordPress Core", d: 1, level: "Contributor", stage: 2,
     q: "What does get_post_meta( $id, 'price', true ) return?",
     o: [
-      "The meta ID",
-      "An array of all values",
-      "true or false",
+      "The meta ID of the price row",
+      "An array of all values stored under price",
+      "true or false, depending on whether it exists",
       "A single value (or an empty string if missing)"
     ],
     a: 3,
@@ -3006,10 +3016,10 @@ window.QUESTION_BANK = [
     s: "WordPress Core", d: 2, level: "Contributor", stage: 2,
     q: "You want to sort products by a numeric \"price\" meta field. What do you pass?",
     o: [
-      "'meta_value' => 'price'",
-      "'order' => 'price'",
+      "'meta_value' => 'price', 'order' => 'ASC'",
+      "'order' => 'price', 'orderby' => 'meta'",
       "'meta_key' => 'price', 'orderby' => 'meta_value_num'",
-      "'orderby' => 'price'"
+      "'orderby' => 'price', 'order' => 'DESC'"
     ],
     a: 2,
     t: "meta_value_num sorts numerically by the meta_key you name. meta_value would sort as text, putting \"100\" before \"20\".",
@@ -3081,10 +3091,10 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 1, level: "Contributor", stage: 2,
     q: "How do you change the URL base of a custom post type from /book/ to /library/?",
     o: [
-      "'menu_name' => 'library'",
+      "'labels' => array( 'menu_name' => 'library' )",
       "'rewrite' => array( 'slug' => 'library' )",
-      "'query_var' => 'library'",
-      "'name' => 'library'"
+      "'query_var' => 'library', 'public' => true",
+      "'labels' => array( 'name' => 'library' )"
     ],
     a: 1,
     t: "The rewrite slug sets the permalink base. Flush rewrite rules once afterwards (for example on activation).",
@@ -3116,10 +3126,10 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 1, level: "Contributor", stage: 2,
     q: "A shortcode's output appears at the top of the post instead of where the shortcode is. Why?",
     o: [
-      "The shortcode name has a dash",
+      "The shortcode name contains a dash, which WordPress mishandles",
       "The callback echoes its output instead of returning it",
-      "Shortcodes always render first",
-      "It needs a higher priority"
+      "Shortcodes always render before the rest of the content",
+      "The shortcode was registered with too low a priority"
     ],
     a: 1,
     t: "Shortcode callbacks must return a string. Echoing prints immediately, before the content is output.",
@@ -3131,10 +3141,10 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 1, level: "Contributor", stage: 2,
     q: "What does shortcode_atts() do?",
     o: [
-      "Runs shortcodes in a string",
-      "Escapes the output",
+      "Runs any shortcodes it finds inside a string of content",
+      "Escapes the shortcode's output so it's safe to print",
       "Merges the user's attributes with your defaults and drops unknown ones",
-      "Registers a shortcode"
+      "Registers a shortcode and the attributes it accepts"
     ],
     a: 2,
     t: "shortcode_atts( $defaults, $atts, $tag ) returns defaults overridden by provided attributes, ignoring keys you didn't define.",
@@ -3145,7 +3155,12 @@ window.QUESTION_BANK = [
     id: "q-0225",
     s: "Custom Development", d: 1, level: "Contributor", stage: 2,
     q: "What's a good namespace for your plugin's custom REST routes?",
-    o: ["No namespace", "'api'", "'wp/v2'", "A vendor-and-version namespace such as 'myplugin/v1'"],
+    o: [
+      "No namespace, so the routes sit at the top of /wp-json/",
+      "'api', so the routes are short and easy to remember",
+      "'wp/v2', so they sit alongside core's endpoints",
+      "A vendor-and-version namespace such as 'myplugin/v1'"
+    ],
     a: 3,
     t: "Namespaces separate your routes from core's wp/v2 and let you version them, for example /wp-json/myplugin/v1/items.",
     p: "Put your routes under your own name and version number.",
@@ -3202,10 +3217,10 @@ window.QUESTION_BANK = [
     s: "Debugging", d: 1, level: "Contributor", stage: 3,
     q: "What does defining SAVEQUERIES as true do?",
     o: [
-      "Logs queries to the browser console",
-      "Caches every query",
-      "Stores each database query, with its time and caller, in $wpdb->queries",
-      "Disables the database"
+      "Logs every query to the browser console on each page",
+      "Caches every query result so repeated queries are skipped",
+      "Stores each query, with its time and caller, in $wpdb->queries",
+      "Pauses database writes until you set it back to false"
     ],
     a: 2,
     t: "SAVEQUERIES records queries for analysis. It slows the site, so use it only while debugging.",
@@ -3216,7 +3231,12 @@ window.QUESTION_BANK = [
     id: "q-0231",
     s: "Change Management", d: 1, level: "Contributor", stage: 3,
     q: "Which values does wp_get_environment_type() return?",
-    o: ["true or false", "dev or live", "debug or release", "local, development, staging or production"],
+    o: [
+      "true or false, for whether it's production",
+      "dev or live, as set by the host",
+      "debug or release, based on WP_DEBUG",
+      "local, development, staging or production"
+    ],
     a: 3,
     t: "It reads WP_ENVIRONMENT_TYPE and defaults to production when it isn't set.",
     p: "It tells your code which kind of site it's running on.",
@@ -3271,7 +3291,12 @@ window.QUESTION_BANK = [
     id: "q-0236",
     s: "Debugging", d: 1, level: "Contributor", stage: 3,
     q: "Which WP-CLI command lists pages?",
-    o: ["wp list pages", "wp page list", "wp post pages", "wp post list --post_type=page"],
+    o: [
+      "wp list pages --status=publish",
+      "wp page list --format=table",
+      "wp post pages --format=table",
+      "wp post list --post_type=page"
+    ],
     a: 3,
     t: "wp post list accepts WP_Query-style filters such as --post_type and --post_status.",
     p: "List content of a chosen type from the command line.",
@@ -3362,10 +3387,10 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 1, level: "Contributor", stage: 3,
     q: "When does a plugin's uninstall.php run?",
     o: [
-      "When it's updated",
-      "When it's deactivated",
+      "When the plugin is updated to a new version",
+      "When the plugin is deactivated on the Plugins screen",
       "When the plugin is deleted from the Plugins screen",
-      "On every page load"
+      "On every page load, after the plugin's main file"
     ],
     a: 2,
     t: "uninstall.php (or register_uninstall_hook) runs on deletion, which is where permanent clean-up belongs. Deactivation shouldn't delete user data.",
@@ -3405,10 +3430,10 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 1, level: "Contributor", stage: 3,
     q: "Why should a custom table name use $wpdb->prefix?",
     o: [
-      "It encrypts the table",
-      "Sites can use a table prefix other than wp_, and multisite uses one per site",
-      "It makes queries faster",
-      "It's needed for indexes"
+      "The prefix encrypts the table so other plugins can't read it",
+      "Sites can use a prefix other than wp_, and multisite uses one per site",
+      "Prefixed tables are faster because MySQL caches them",
+      "MySQL only allows indexes on tables with the site's prefix"
     ],
     a: 1,
     t: "$wpdb->prefix holds the site's prefix, so the table name matches the install and each multisite site.",
@@ -6335,10 +6360,10 @@ window.QUESTION_BANK = [
     s: "WordPress Core", d: 1, level: "Contributor", stage: 1,
     q: "You correct the rewrite slug of a custom post type, but its new URLs still 404. What step is missing?",
     o: [
-      "Rebuild the rewrite rules once, for example by visiting Settings > Permalinks and saving",
-      "Clear your browser history",
-      "Delete all posts of that post type and recreate them",
-      "Raise the PHP memory limit"
+      "Rebuild the rewrite rules once, for example by saving Settings > Permalinks",
+      "Clear your browser history so the old URLs stop loading",
+      "Delete the posts of that type and recreate them under the new slug",
+      "Raise the PHP memory limit so the new rules fit in memory"
     ],
     a: 0,
     t: "Rewrite rules are stored in the rewrite_rules option, so a slug change only takes effect once the rules are rebuilt, either from Settings > Permalinks or with a single flush_rewrite_rules() call. Existing items of that post type move to the new URL, so plan redirects for old links.",
@@ -6406,9 +6431,9 @@ window.QUESTION_BANK = [
     s: "Security", d: 2, level: "Contributor", stage: 2,
     q: "Old theme code runs $wpdb->query( \"DELETE FROM wp_options WHERE option_name = '$name'\" ), with $name taken straight from POST. What is the safe fix?",
     o: [
-      "Use delete_option() with a sanitized name, or build the query with $wpdb->prepare() and a %s placeholder",
-      "Run esc_html() on $name before the query",
-      "Switch the single quotes around $name to double quotes",
+      "Use delete_option() with a sanitized name, or $wpdb->prepare() with a %s placeholder",
+      "Run esc_html() on $name before it goes into the query",
+      "Wrap $name in double quotes instead of single quotes in the SQL",
       "Base64-encode $name before putting it in the query"
     ],
     a: 0,
@@ -6712,10 +6737,10 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 2, level: "Contributor", stage: 3,
     q: "You want wp_mail() to send through an authenticated SMTP server instead of PHP's mail(). Which hook lets your code reconfigure the mailer?",
     o: [
-      "The phpmailer_init action, which passes the PHPMailer instance so you can call isSMTP() and set the host and credentials",
-      "The wp_mail_failed action",
-      "The wp_mail_content_type filter",
-      "The wp_mail_from filter"
+      "phpmailer_init, which passes the PHPMailer object so you can call isSMTP() and set credentials",
+      "wp_mail_failed, which runs when PHP's mail() can't send a message",
+      "wp_mail_content_type, which sets how outgoing messages are encoded",
+      "wp_mail_from, which sets the sending address and mail server"
     ],
     a: 0,
     t: "phpmailer_init fires after PHPMailer is initialized and passes the instance by reference, so a callback can switch the transport to SMTP. wp_mail_failed only fires after a send fails; the other two filters change the content type and the sender address.",
@@ -6745,10 +6770,10 @@ window.QUESTION_BANK = [
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 2,
     q: "Right after a site launches, you submit its XML sitemap in Search Console. What does that guarantee?",
     o: [
-      "Nothing about indexing; it helps Google discover the URLs, but they may not all be crawled or indexed",
-      "Every URL in the sitemap will be indexed within 24 hours",
+      "Nothing about indexing; it helps Google find the URLs, but not all may be indexed",
+      "Every URL in the sitemap will be indexed within about 24 hours",
       "Pages in the sitemap will rank above the old site's pages",
-      "Google will stop crawling URLs that aren't in the sitemap"
+      "Google will stop crawling URLs that aren't listed in the sitemap"
     ],
     a: 0,
     t: "Google's sitemap documentation says submitting one doesn't guarantee all items will be crawled and indexed, and recrawling can take days to weeks. A sitemap is a discovery hint, not an instruction.",
