@@ -5311,10 +5311,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "A popular plugin you use changes owner and ships an update with obfuscated code. What's the risk category, and the right response?",
     o: [
-      "Supply-chain risk from a third-party component: pin the version, review the diff, and replace or remove it if the change can't be explained",
-      "A licensing issue only",
-      "None; WordPress.org reviews every update",
-      "A false positive; update anyway"
+      "Supply-chain risk: pin the version, review the diff, and remove it if it can't be explained",
+      "A licensing issue only, since obfuscation breaks the GPL's source terms",
+      "No risk; WordPress.org reviews every update before it's released",
+      "A scanner false positive; obfuscation is normal, so update anyway"
     ],
     a: 0,
     t: "OWASP lists vulnerable and outdated components as a top risk. Ownership changes and unreadable code are warning signs.",
@@ -5329,10 +5329,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "Why does the hardening guide warn against revoking ALTER and CREATE from WordPress's database user?",
     o: [
-      "They speed up queries",
-      "Core and plugin updates sometimes change the schema, and missing privileges can break those updates",
-      "WordPress needs them on every request",
-      "MySQL requires them"
+      "Removing them slows down queries, since MySQL rechecks grants",
+      "Updates sometimes change the schema, and missing privileges can break them",
+      "WordPress uses ALTER and CREATE on every request to tidy tables",
+      "MySQL won't let a user connect without those two privileges"
     ],
     a: 1,
     t: "Restricting privileges is possible but needs a plan for updates, plus tested backups.",
@@ -5344,10 +5344,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "What can a web application firewall (WAF) do, and what can't it?",
     o: [
-      "It can block known attack patterns and bad traffic, but it doesn't fix vulnerable code",
-      "It makes escaping unnecessary",
-      "It replaces updates",
-      "It guarantees no breaches"
+      "It blocks known attack patterns and bad traffic, but doesn't fix vulnerable code",
+      "It escapes all output, so the code no longer needs escaping",
+      "It patches plugins virtually, so updates are no longer needed",
+      "It filters every request, so it guarantees there are no breaches"
     ],
     a: 0,
     t: "A WAF is a useful layer, not a substitute for patching and secure code.",
@@ -5359,10 +5359,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "Why think twice before submitting a domain to the HSTS preload list?",
     o: [
-      "It slows the site",
-      "It breaks the REST API",
-      "Browsers then refuse plain HTTP for the domain and all subdomains, and removal takes a long time",
-      "It disables cookies"
+      "Every page load gets slower while browsers check the list",
+      "It breaks the REST API, which needs plain HTTP for callbacks",
+      "Browsers then refuse plain HTTP for it and all subdomains, and removal is slow",
+      "It disables cookies on every subdomain of the preloaded domain"
     ],
     a: 2,
     t: "hstspreload.org warns that preloading is effectively permanent for a while. Every subdomain must support HTTPS first.",
@@ -5394,10 +5394,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "Behind a load balancer that ends TLS, WordPress thinks every request is HTTP and loops redirects. What's the fix?",
     o: [
-      "Set $_SERVER['HTTPS'] = 'on' in wp-config.php when the trusted proxy sends X-Forwarded-Proto: https",
-      "Change siteurl to http",
-      "Turn off HTTPS",
-      "Disable FORCE_SSL_ADMIN"
+      "Set $_SERVER['HTTPS'] = 'on' when the trusted proxy sends X-Forwarded-Proto: https",
+      "Change siteurl and home to http:// so the redirects stop",
+      "Turn off HTTPS on the load balancer and serve plain HTTP",
+      "Remove FORCE_SSL_ADMIN from wp-config.php so admin uses HTTP"
     ],
     a: 0,
     t: "WordPress checks $_SERVER['HTTPS']. The handbook shows mapping the proxy's header so is_ssl() is correct.",
@@ -5412,10 +5412,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "Why is rate limiting by the X-Forwarded-For header risky?",
     o: [
-      "It's always empty",
-      "Clients can set or spoof it unless it's added by a proxy you trust, so attackers can dodge limits or frame others",
-      "Browsers block it",
-      "It contains passwords"
+      "It's always empty unless the site runs behind HTTP/2 and a CDN",
+      "Clients can spoof it unless a trusted proxy sets it, so limits can be dodged",
+      "Browsers strip it from requests for privacy reasons",
+      "It contains session cookies that mustn't be logged"
     ],
     a: 1,
     t: "Only trust forwarded headers set by your own proxies, and take the right entry from the chain.",
@@ -5427,10 +5427,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "You output a PHP array into an inline <script> block. What's the correct escaping?",
     o: [
-      "esc_html() the whole block",
-      "No escaping is needed inside script tags",
-      "Encode it with wp_json_encode() (JSON is the JavaScript context escape)",
-      "esc_attr() each value"
+      "esc_html() the whole block before printing it",
+      "None; code inside script tags can't be injected",
+      "wp_json_encode() it, since JSON is the escape for JavaScript",
+      "esc_attr() each value as it goes into the array"
     ],
     a: 2,
     t: "Each output context needs its own escaping. In JavaScript, JSON encoding prevents breaking out of the string or script.",
@@ -5459,7 +5459,12 @@ window.QUESTION_BANK = [
     id: "q-0385",
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "Which official tool checks a plugin against WordPress.org directory requirements and common security issues before submission?",
-    o: ["The Plugin Check plugin", "WP-CLI doctor", "Query Monitor", "Health Check"],
+    o: [
+      "The Plugin Check plugin",
+      "The wp doctor WP-CLI package",
+      "Query Monitor's PHP errors panel",
+      "The Health Check plugin"
+    ],
     a: 0,
     t: "Plugin Check runs static checks (including PHPCS-based ones) aligned with directory guidelines.",
     p: "It's the directory's own pre-flight checklist.",
@@ -5470,10 +5475,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "You find a security bug in WordPress core. Where should you report it?",
     o: [
-      "Social media",
-      "Privately, through the process on WordPress.org's security page, not a public ticket",
-      "The support forums",
-      "A public Trac ticket"
+      "On social media, tagging the WordPress account",
+      "Privately, through WordPress.org's security reporting process",
+      "In the support forums, so other users are warned",
+      "In a public Trac ticket, so core developers see it"
     ],
     a: 1,
     t: "Core vulnerabilities go through the private disclosure process so a fix can ship before details are public.",
@@ -5485,10 +5490,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "After a suspected account takeover, how do you log the user out of every device from code?",
     o: [
-      "Delete their cookies in your browser",
-      "Clear the object cache",
-      "Destroy their sessions with WP_Session_Tokens (for example destroy_all())",
-      "Change the site title"
+      "Delete the session cookies in your own browser",
+      "Flush the object cache, which holds their sessions",
+      "Destroy their sessions with WP_Session_Tokens (e.g. destroy_all())",
+      "Change the auth keys for that user's account only"
     ],
     a: 2,
     t: "Session tokens are stored per user. Destroying them invalidates every login cookie for that user.",
@@ -5500,10 +5505,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "Why should application and security logs be shipped off the web server?",
     o: [
-      "WordPress can't write logs",
-      "An attacker who compromises the server can delete or alter local logs",
-      "It makes PHP faster",
-      "Local disks can't store logs"
+      "WordPress can't write logs to the server it runs on",
+      "An attacker on the server can delete or change local logs",
+      "Writing logs locally slows PHP down noticeably",
+      "Local disks fill up too quickly to keep any logs"
     ],
     a: 1,
     t: "OWASP recommends protecting log integrity. Central, append-only storage keeps evidence safe.",
@@ -5515,10 +5520,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "Which filters register a plugin's personal data exporter and eraser with WordPress's privacy tools?",
     o: [
-      "user_has_cap",
+      "user_has_cap and map_meta_cap for the privacy screens",
       "wp_privacy_personal_data_exporters and wp_privacy_personal_data_erasers",
-      "wp_privacy_export",
-      "privacy_policy_content only"
+      "wp_privacy_export and wp_privacy_erase with your callbacks",
+      "privacy_policy_content and privacy_policy_erasers"
     ],
     a: 1,
     t: "Registering exporters and erasers lets site owners include your plugin's data in core export and erasure requests.",
@@ -5533,9 +5538,9 @@ window.QUESTION_BANK = [
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "What can the public REST users endpoint (/wp/v2/users) reveal on a default install?",
     o: [
-      "Nothing at all",
-      "Password hashes",
-      "Email addresses to everyone",
+      "Nothing; the endpoint is disabled for visitors",
+      "Password hashes for every user with posts",
+      "Email addresses of all users, to anyone",
       "Author display names and slugs, which may match login names"
     ],
     a: 3,
@@ -5548,9 +5553,9 @@ window.QUESTION_BANK = [
     s: "WordPress Core", d: 3, level: "Administrator", stage: 1,
     q: "How do you enable the Network Setup screen to turn a site into multisite?",
     o: [
-      "Settings → General",
-      "Install a plugin",
-      "wp core multisite on",
+      "Tick the Network option under Settings → General",
+      "Install and activate the official Multisite plugin",
+      "Run wp core multisite on from the site's root folder",
       "Add define( 'WP_ALLOW_MULTISITE', true ); to wp-config.php"
     ],
     a: 3,
@@ -5563,10 +5568,10 @@ window.QUESTION_BANK = [
     s: "WordPress Core", d: 3, level: "Administrator", stage: 1,
     q: "Why does the choice between subdomains and subdirectories matter when creating a network?",
     o: [
-      "Subdirectories are faster",
-      "Changing it later isn't easy, so decide up front",
-      "Subdomains can't use HTTPS",
-      "It only affects the admin colour"
+      "Subdirectory networks load much faster for visitors",
+      "It isn't easy to change later, so decide up front",
+      "Subdomain networks can't use HTTPS",
+      "It changes the admin colour scheme"
     ],
     a: 1,
     t: "The handbook notes the structure can be changed after installation, but reconfiguring it might not be easy.",
@@ -5577,7 +5582,12 @@ window.QUESTION_BANK = [
     id: "q-0393",
     s: "WordPress Core", d: 3, level: "Administrator", stage: 1,
     q: "On multisite, which data is shared by every site in the network?",
-    o: ["Users (wp_users and wp_usermeta)", "Options", "Comments", "Posts"],
+    o: [
+      "Users (wp_users and wp_usermeta)",
+      "Options (wp_options)",
+      "Comments (wp_comments and wp_commentmeta)",
+      "Posts (wp_posts and wp_postmeta)"
+    ],
     a: 0,
     t: "Each site has its own content tables, but user accounts are network-wide. Roles are assigned per site.",
     p: "One staff list for the whole network, separate rooms for each site.",
@@ -5588,10 +5598,10 @@ window.QUESTION_BANK = [
     s: "WordPress Core", d: 3, level: "Administrator", stage: 1,
     q: "Which capability lets a Super Admin manage network settings?",
     o: [
-      "edit_users",
-      "activate_plugins",
-      "manage_options",
-      "manage_network (and related manage_network_* capabilities)"
+      "edit_users, granted on every site in the network",
+      "activate_plugins, granted at network level",
+      "manage_options on the main site",
+      "manage_network and the other manage_network_* caps"
     ],
     a: 3,
     t: "Network-level capabilities are held only by Super Admins.",
@@ -5613,10 +5623,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "During a code review you see extract( $_POST ). Why is it a problem?",
     o: [
-      "It's deprecated in PHP 8",
-      "It's slow",
-      "It only works with GET",
-      "It turns request keys into variables, so an attacker can overwrite variables your code relies on"
+      "It's deprecated in PHP 8 and logs a notice on every call",
+      "It's slow, because it copies every value in the array",
+      "It only works with GET data, so POST values are lost",
+      "It turns request keys into variables, so attackers can overwrite yours"
     ],
     a: 3,
     t: "PHP's manual warns against using extract() on untrusted data such as user input.",
@@ -5676,10 +5686,10 @@ window.QUESTION_BANK = [
     s: "Performance", d: 3, level: "Administrator", stage: 2,
     q: "What enables a full-page caching drop-in (advanced-cache.php) to load early?",
     o: [
-      "Activating any plugin",
-      "Settings → Reading",
+      "Activating any caching plugin from the Plugins screen",
+      "Turning on caching under Settings → Reading",
       "define( 'WP_CACHE', true ); in wp-config.php",
-      "WP_DEBUG"
+      "define( 'WP_DEBUG', false ); in wp-config.php"
     ],
     a: 2,
     t: "With WP_CACHE true, WordPress loads wp-content/advanced-cache.php very early, before most of core.",
@@ -5691,10 +5701,10 @@ window.QUESTION_BANK = [
     s: "Scalability", d: 3, level: "Administrator", stage: 2,
     q: "How do cache tags (surrogate keys) improve CDN invalidation?",
     o: [
-      "Pages are tagged with the content they include, so updating one post purges every page tagged with it",
-      "They make caches permanent",
-      "They encrypt cached pages",
-      "They're only for images"
+      "Pages carry tags for their content, so one post update purges every page with its tag",
+      "They make cached pages permanent, so nothing is purged until the tags change",
+      "They encrypt cached pages so only the origin can read them",
+      "They only apply to images and static files, not HTML pages"
     ],
     a: 0,
     t: "Tag-based purging removes exactly the affected pages without clearing everything.",
@@ -5706,10 +5716,10 @@ window.QUESTION_BANK = [
     s: "Performance", d: 3, level: "Administrator", stage: 2,
     q: "What does Time to First Byte (TTFB) mainly reflect?",
     o: [
-      "JavaScript execution time",
-      "How long images take to decode",
-      "How long the server and network take before the first byte of the response arrives",
-      "Layout shift"
+      "How long the page's JavaScript takes to execute",
+      "How long images take to download and decode",
+      "How long the server and network take before the first byte arrives",
+      "How much the layout shifts while the page loads"
     ],
     a: 2,
     t: "TTFB includes redirects, DNS, connection and server processing. A slow TTFB delays every later metric.",
@@ -5731,10 +5741,10 @@ window.QUESTION_BANK = [
     s: "Performance", d: 3, level: "Administrator", stage: 2,
     q: "How can you see server-side timing (database, cache, PHP) in the browser's network panel?",
     o: [
-      "Use console.log in PHP",
-      "Add a <meta> tag",
+      "Call console.log() from PHP so it reaches DevTools",
+      "Add a <meta> tag with the timings in the page head",
       "Send a Server-Timing response header with named metrics",
-      "It isn't possible"
+      "You can't; the browser only sees network timings"
     ],
     a: 2,
     t: "Server-Timing exposes backend durations to browser DevTools. Limit it to trusted users if the values are sensitive.",
@@ -5746,10 +5756,10 @@ window.QUESTION_BANK = [
     s: "Scalability", d: 3, level: "Administrator", stage: 2,
     q: "Before a big launch, how do you find the traffic level at which the site starts failing?",
     o: [
-      "Wait for launch day",
-      "Ask the host",
-      "Load test a production-like environment with a tool such as k6, increasing load until errors or latency rise",
-      "Check Site Health"
+      "Wait for launch day and watch the server graphs closely for spikes",
+      "Ask the host how much traffic the plan is rated for",
+      "Load test a production-like copy with a tool like k6, raising load until errors rise",
+      "Run Site Health and check the performance section"
     ],
     a: 2,
     t: "Load tests reveal bottlenecks (workers, database, cache) before real users do.",
@@ -5761,10 +5771,10 @@ window.QUESTION_BANK = [
     s: "Scalability", d: 3, level: "Administrator", stage: 2,
     q: "Average response time is 0.5 s and you expect 100 requests per second reaching PHP. Roughly how many requests are in progress at once?",
     o: [
-      "About 50, by Little's law (concurrency = arrival rate × time in system)",
-      "100 exactly",
-      "About 200",
-      "About 5"
+      "About 50, by Little's law (concurrency = arrival rate × time)",
+      "Exactly 100, one for each request that arrives per second",
+      "About 200, because each request holds two workers",
+      "About 5, since most requests are served from cache"
     ],
     a: 0,
     t: "Little's law, L = λW: 100 × 0.5 = 50 concurrent requests, which helps size PHP workers (plus headroom).",
@@ -5786,10 +5796,10 @@ window.QUESTION_BANK = [
     s: "Debugging", d: 3, level: "Administrator", stage: 2,
     q: "How do you find which queries are slow on the database server over a whole day?",
     o: [
-      "Check Site Health",
+      "Check the Site Health screen at the end of the day",
       "Enable MySQL's slow query log with a sensible long_query_time",
-      "Use the browser network panel",
-      "Turn on WP_DEBUG_DISPLAY"
+      "Watch the browser network panel during busy hours",
+      "Turn on WP_DEBUG_DISPLAY so slow queries are shown"
     ],
     a: 1,
     t: "The slow query log captures queries above a threshold from every request, not just the ones you test.",
@@ -5816,10 +5826,10 @@ window.QUESTION_BANK = [
     s: "Scalability", d: 3, level: "Administrator", stage: 2,
     q: "Which Redis eviction policy suits a WordPress object cache?",
     o: [
-      "volatile-ttl only",
-      "noeviction",
+      "volatile-ttl, which only evicts keys that will expire soon",
+      "noeviction, so cached data is never thrown away",
       "allkeys-lru (evict least recently used keys when memory is full)",
-      "Persist everything to disk"
+      "No eviction, with everything persisted to disk"
     ],
     a: 2,
     t: "Redis recommends allkeys-lru as a good default when some keys are used far more than others. With noeviction, writes fail when full.",
@@ -5831,10 +5841,10 @@ window.QUESTION_BANK = [
     s: "Scalability", d: 3, level: "Administrator", stage: 2,
     q: "Why must code never treat the object cache as the source of truth?",
     o: [
-      "Entries can be evicted or flushed at any time, so data must be recoverable from the database",
-      "It's per-user",
-      "It's read-only",
-      "It's slower than MySQL"
+      "Entries can be evicted or flushed any time, so data must be recoverable",
+      "Each user has a separate cache, so others can't see the data",
+      "It's read-only for plugins once the request has started",
+      "It's slower than MySQL for anything but the smallest values"
     ],
     a: 0,
     t: "Caches are disposable. Code should regenerate data on a miss.",
@@ -5846,10 +5856,10 @@ window.QUESTION_BANK = [
     s: "Performance", d: 3, level: "Administrator", stage: 2,
     q: "Which SQL finds how much data is autoloaded on every request (WordPress 6.6+ values)?",
     o: [
-      "SELECT COUNT(*) FROM wp_posts",
-      "SELECT * FROM wp_options WHERE autoload = 'no'",
+      "SELECT COUNT(*) FROM wp_options WHERE autoload = 'yes'",
+      "SELECT SUM(LENGTH(option_value)) FROM wp_options WHERE autoload = 'no'",
       "SELECT SUM(LENGTH(option_value)) FROM wp_options WHERE autoload IN ('yes','on','auto-on','auto')",
-      "SHOW TABLE STATUS"
+      "SHOW TABLE STATUS LIKE 'wp_options'"
     ],
     a: 2,
     t: "Summing autoloaded values shows the payload loaded each request. Large totals point to options to un-autoload.",
@@ -5861,10 +5871,10 @@ window.QUESTION_BANK = [
     s: "Performance", d: 3, level: "Administrator", stage: 2,
     q: "Why is SQL_CALC_FOUND_ROWS (used by WP_Query for pagination) something to avoid on large tables?",
     o: [
-      "It forces MySQL to count every matching row, and it's deprecated as of MySQL 8.0.17",
-      "It locks the table",
-      "It's only for MyISAM",
-      "It returns wrong results"
+      "It makes MySQL count every matching row, and it's deprecated since MySQL 8.0.17",
+      "It locks the whole posts table until the count has finished running",
+      "It only works on MyISAM tables, not InnoDB ones",
+      "It returns wrong totals when the query has a LIMIT"
     ],
     a: 0,
     t: "Skip it with no_found_rows when you don't need totals, or count separately and cache the result.",
@@ -5876,10 +5886,10 @@ window.QUESTION_BANK = [
     s: "Performance", d: 3, level: "Administrator", stage: 2,
     q: "With HTTP/2, why is bundling every CSS and JS file into one less important than it used to be?",
     o: [
-      "Bundles are not cacheable",
-      "Browsers block bundles",
-      "HTTP/2 multiplexes many requests over one connection, reducing per-request overhead",
-      "HTTP/2 compresses JavaScript automatically"
+      "Bundled files can't be cached by browsers or CDNs",
+      "Browsers block bundles larger than a few hundred KB",
+      "HTTP/2 multiplexes many requests over one connection, cutting per-request cost",
+      "HTTP/2 compresses and minifies JavaScript automatically"
     ],
     a: 2,
     t: "Multiplexing lowers the cost of several files, so smaller, separately cached files can be better.",
@@ -5911,10 +5921,10 @@ window.QUESTION_BANK = [
     s: "Performance", d: 3, level: "Administrator", stage: 2,
     q: "What does WordPress 6.8's speculative loading do by default?",
     o: [
-      "Uses the Speculation Rules API to prefetch likely next pages with conservative eagerness",
-      "Prerenders every link on load",
-      "Loads images earlier",
-      "Caches pages on the server"
+      "Uses the Speculation Rules API to prefetch likely next pages, conservatively",
+      "Prerenders every link on the page as soon as it loads",
+      "Loads below-the-fold images earlier than lazy loading would",
+      "Caches the next likely pages on the server ahead of time"
     ],
     a: 0,
     t: "Core adds a default speculation rule for conservative prefetching, which can improve LCP on navigation.",
@@ -5926,10 +5936,10 @@ window.QUESTION_BANK = [
     s: "Performance", d: 3, level: "Administrator", stage: 2,
     q: "How do you load a block's stylesheet only on pages that contain that block?",
     o: [
-      "wp_enqueue_block_style(), with separate block assets loading enabled",
-      "Inline it in header.php",
-      "Use @import in style.css",
-      "Enqueue it on every page"
+      "wp_enqueue_block_style(), with separate block assets loading on",
+      "Inline it in header.php inside a check for the block",
+      "Use @import in style.css with a media query for the block",
+      "Enqueue it on every page; browsers skip unused CSS"
     ],
     a: 0,
     t: "wp_enqueue_block_style() attaches styles to a block so they print only when it renders.",
@@ -5944,10 +5954,10 @@ window.QUESTION_BANK = [
     s: "Scalability", d: 3, level: "Administrator", stage: 2,
     q: "On a site using Elasticsearch for queries, what should remain the source of truth?",
     o: [
-      "The Elasticsearch index",
-      "The object cache",
-      "The CDN",
-      "The WordPress database; the search index can lag and is rebuilt from it"
+      "The Elasticsearch index, since it's always up to date",
+      "The object cache, which both systems read from",
+      "The CDN's cached copies of the search pages",
+      "The WordPress database; the index can lag and is rebuilt from it"
     ],
     a: 3,
     t: "Indexing is asynchronous, so there can be a delay between a change in WordPress and the index.",
@@ -5959,10 +5969,10 @@ window.QUESTION_BANK = [
     s: "Scalability", d: 3, level: "Administrator", stage: 2,
     q: "You run ten web nodes. How should WP-Cron run?",
     o: [
-      "Disable request-triggered cron and run due events from one scheduled runner (for example wp cron event run --due-now)",
-      "Run it on the database server inside MySQL",
-      "Don't use cron at scale",
-      "Let every node trigger it on page loads"
+      "Turn off request-triggered cron and run due events from one scheduled runner",
+      "Run it on the database server, inside a MySQL scheduled event",
+      "Don't use WP-Cron at that scale; drop scheduled tasks",
+      "Let every node trigger it on page loads, as on one server"
     ],
     a: 0,
     t: "One runner avoids duplicate and racing runs across nodes and keeps timing reliable.",
@@ -6032,10 +6042,10 @@ window.QUESTION_BANK = [
     s: "Change Management", d: 3, level: "Administrator", stage: 3,
     q: "In incident response, what's the incident commander's main job?",
     o: [
-      "Finding who caused it",
-      "Talking to the press only",
-      "Coordinating the response and communication, delegating hands-on work to others",
-      "Writing the fix personally"
+      "Finding out who caused the incident so it's on the record",
+      "Handling press and customer questions, and nothing else",
+      "Coordinating the response and communication, and delegating the hands-on work",
+      "Writing and deploying the fix personally, as the most senior engineer"
     ],
     a: 2,
     t: "Google's SRE guidance separates coordination from technical work, so someone keeps the big picture.",
@@ -6047,10 +6057,10 @@ window.QUESTION_BANK = [
     s: "Change Management", d: 3, level: "Administrator", stage: 3,
     q: "What's the difference between an SLI, an SLO and an SLA?",
     o: [
-      "They're synonyms",
-      "SLA is internal, SLO is legal",
-      "SLI is a measured metric, SLO is the target for it, SLA is a contract with consequences",
-      "SLI is the budget"
+      "They're synonyms used by different teams for uptime",
+      "SLA is the internal target, SLO the legal contract, SLI the alert",
+      "SLI is a measured metric, SLO the target for it, SLA a contract with consequences",
+      "SLI is the error budget, SLO the uptime, SLA the support hours"
     ],
     a: 2,
     t: "For example: SLI = share of requests under 500 ms, SLO = 99% of them, SLA = refunds if below an agreed level.",
@@ -6062,10 +6072,10 @@ window.QUESTION_BANK = [
     s: "Change Management", d: 3, level: "Administrator", stage: 3,
     q: "Your SLO is 99.9% availability. What's the error budget for, in practice?",
     o: [
-      "Paying for outages",
-      "Measuring developer speed",
-      "Buying servers",
-      "Deciding how much risk to take: releases continue while budget remains, and reliability work comes first when it's spent"
+      "Paying refunds to customers for the downtime allowed under the SLO",
+      "Measuring how fast each developer ships changes in a given sprint",
+      "Setting how much the team may spend on extra servers each month",
+      "Deciding risk: releases go on while budget remains; reliability comes first once it's spent"
     ],
     a: 3,
     t: "The 0.1% allowed failure is a budget that balances shipping speed against reliability.",
@@ -6077,10 +6087,10 @@ window.QUESTION_BANK = [
     s: "Change Management", d: 3, level: "Administrator", stage: 3,
     q: "What's a canary release?",
     o: [
-      "A release with no tests",
-      "Releasing on Fridays",
-      "Deploying only to staging",
-      "Rolling a change out to a small share of users or servers first and watching metrics before going wider"
+      "A release that skips the test suite so the fix ships faster",
+      "Releasing on Friday evenings, when traffic is usually at its lowest",
+      "Deploying only to staging and leaving production alone",
+      "Releasing to a small share of users first, then widening if metrics stay healthy"
     ],
     a: 3,
     t: "Canaries limit the blast radius of a bad change.",
@@ -6092,10 +6102,10 @@ window.QUESTION_BANK = [
     s: "Change Management", d: 3, level: "Administrator", stage: 3,
     q: "Why build a release artifact once and promote that same artifact through staging to production?",
     o: [
-      "It saves disk space",
-      "What you tested is exactly what you ship; rebuilding per environment can introduce differences",
-      "Production can't run builds",
-      "It's required by WordPress"
+      "It saves disk space on the build server by keeping one copy",
+      "What you tested is what you ship; rebuilding per environment can differ",
+      "Production servers aren't able to run Composer or npm builds",
+      "WordPress.org requires one artifact per release for updates"
     ],
     a: 1,
     t: "The twelve-factor approach separates build, release and run stages, so a build is immutable.",
@@ -6107,10 +6117,10 @@ window.QUESTION_BANK = [
     s: "Change Management", d: 3, level: "Administrator", stage: 3,
     q: "Where should environment-specific configuration (database hosts, API keys) live?",
     o: [
-      "Hard-coded per branch",
+      "Hard-coded in the code, with one branch per environment",
       "In environment variables or config outside the code, so one build runs anywhere",
-      "In the theme",
-      "In post meta"
+      "In the active theme's functions.php, so it loads early everywhere",
+      "In post meta on a hidden settings page"
     ],
     a: 1,
     t: "The twelve-factor app stores config in the environment, separate from code.",
@@ -6122,10 +6132,10 @@ window.QUESTION_BANK = [
     s: "Change Management", d: 3, level: "Administrator", stage: 3,
     q: "You need to rename a database column without downtime while old and new code run side by side. Which pattern fits?",
     o: [
-      "Ask users to log out",
-      "Drop the table and recreate it",
-      "Rename it during deploy and hope",
-      "Expand and contract: add the new column, write to both, migrate reads, then remove the old one"
+      "Put the site in maintenance mode and ask users to log out during the deploy",
+      "Drop the table and recreate it with the new column name in one migration",
+      "Rename it during the deploy and hope nothing reads it",
+      "Expand and contract: add the new column, write to both, move reads, then drop the old"
     ],
     a: 3,
     t: "Parallel change (expand/contract) keeps both versions working during the transition.",
@@ -6137,10 +6147,10 @@ window.QUESTION_BANK = [
     s: "Change Management", d: 3, level: "Administrator", stage: 3,
     q: "Under semantic versioning, how should you deprecate a public function used by others?",
     o: [
-      "Deprecate and remove in the same release",
-      "Rename it without notice",
-      "Remove it in a patch release",
-      "Mark it deprecated in a minor release, keep it working, and remove it only in the next major version"
+      "Deprecate and remove it in the same release, with a changelog note",
+      "Rename it without notice and update your own calls",
+      "Remove it in the next patch release, since it's only one function",
+      "Deprecate it in a minor release, keep it working, and remove it in the next major"
     ],
     a: 3,
     t: "semver.org advises deprecating in a minor release before removing in a major one, giving users time.",
@@ -6152,10 +6162,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 3, level: "Administrator", stage: 3,
     q: "What does GitHub Dependabot help with in a plugin repository?",
     o: [
-      "Writing tests",
-      "Translating strings",
-      "Alerts and pull requests for vulnerable or outdated dependencies (for example Composer and npm)",
-      "Deploying to production"
+      "Writing unit tests automatically for each new function you add",
+      "Translating the plugin's strings into other languages on each release",
+      "Alerts and pull requests for vulnerable or outdated Composer and npm dependencies",
+      "Deploying each tagged release to production and WordPress.org"
     ],
     a: 2,
     t: "Automated dependency updates reduce the window during which known vulnerabilities stay in your code.",
@@ -6167,10 +6177,10 @@ window.QUESTION_BANK = [
     s: "Change Management", d: 3, level: "Administrator", stage: 3,
     q: "What can branch protection rules on main enforce?",
     o: [
-      "Required reviews and passing status checks before merging, and no force-pushes",
-      "Hiding the branch",
-      "Faster CI",
-      "Automatic deployments"
+      "Required reviews and passing checks before merging, and no force-pushes",
+      "Hiding the branch from contributors without access",
+      "Faster CI, by skipping the slower checks on the main branch",
+      "Automatic deployment to production on every push"
     ],
     a: 0,
     t: "Protected branches stop unreviewed or failing code from landing on the shared branch.",
@@ -6184,10 +6194,10 @@ window.QUESTION_BANK = [
     s: "Disaster Recovery", d: 3, level: "Administrator", stage: 3,
     q: "Why does ransomware guidance recommend offline or immutable backup copies?",
     o: [
-      "They restore faster",
+      "They restore much faster than online copies do",
       "Attackers often encrypt or delete reachable backups too",
-      "They don't need testing",
-      "They're cheaper"
+      "They never need to be test-restored",
+      "They're cheaper to store than cloud copies"
     ],
     a: 1,
     t: "CISA's guide recommends offline, encrypted backups that are tested regularly.",
@@ -6199,10 +6209,10 @@ window.QUESTION_BANK = [
     s: "Disaster Recovery", d: 3, level: "Administrator", stage: 3,
     q: "How does DNS failover move traffic to a standby site when the primary fails?",
     o: [
-      "The CDN rewrites PHP",
-      "Health checks mark the primary unhealthy and DNS answers switch to the secondary",
-      "WordPress redirects automatically",
-      "Browsers detect the outage"
+      "The CDN rewrites PHP so it runs from the standby",
+      "Health checks mark the primary down and DNS answers switch to the standby",
+      "WordPress redirects visitors to the standby automatically",
+      "Browsers notice the outage and try the next IP address"
     ],
     a: 1,
     t: "Managed DNS with health checks can answer with the standby's address. Low TTLs shorten the switch.",
@@ -6214,10 +6224,10 @@ window.QUESTION_BANK = [
     s: "Disaster Recovery", d: 3, level: "Administrator", stage: 3,
     q: "Why run regular restore drills (\"game days\")?",
     o: [
-      "To prove the recovery procedure works and meets RTO and RPO before a real incident",
-      "Because backups expire",
-      "To test the CDN",
-      "To generate reports"
+      "To prove recovery works and meets RTO and RPO before a real incident",
+      "Because backups expire if they aren't restored every few months",
+      "To check that the CDN serves cached pages",
+      "To produce compliance reports for the host"
     ],
     a: 0,
     t: "The AWS reliability guidance stresses testing recovery procedures, not just taking backups.",
@@ -6249,10 +6259,10 @@ window.QUESTION_BANK = [
     s: "Disaster Recovery", d: 3, level: "Administrator", stage: 3,
     q: "How do you pass extra mysqldump options through WP-CLI's database export?",
     o: [
-      "Edit wp-config.php",
-      "You can't",
-      "Add them to wp db export, for example wp db export --single-transaction",
-      "Use wp db optimize"
+      "Edit wp-config.php to set the mysqldump options",
+      "You can't; WP-CLI uses fixed mysqldump settings",
+      "Add them to wp db export, e.g. wp db export --single-transaction",
+      "Use wp db optimize, which accepts mysqldump flags"
     ],
     a: 2,
     t: "wp db export passes extra arguments on to mysqldump.",
@@ -6264,10 +6274,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 3, level: "Administrator", stage: 3,
     q: "During a security incident, why preserve logs and a copy of the affected system before cleaning?",
     o: [
-      "Evidence is needed to find the entry point and scope; cleaning first destroys it",
-      "It speeds up cleaning",
-      "Hosts require it",
-      "It isn't necessary"
+      "You need evidence to find the entry point and scope; cleaning first destroys it",
+      "Having a copy makes the cleanup itself run faster afterwards",
+      "Most hosts require a copy before they'll help with cleanup",
+      "It isn't needed as long as you have a recent clean backup"
     ],
     a: 0,
     t: "NIST incident response guidance includes evidence gathering and analysis as part of handling an incident.",
@@ -6294,10 +6304,10 @@ window.QUESTION_BANK = [
     s: "Debugging", d: 3, level: "Administrator", stage: 3,
     q: "Which tool produces a function-by-function profile of where PHP spends time on a request?",
     o: [
-      "WP_DEBUG_LOG",
-      "Xdebug's profiler (cachegrind output viewed in a visualiser)",
-      "Site Health",
-      "PHPCS"
+      "WP_DEBUG_LOG, with a timestamp written on every log line",
+      "Xdebug's profiler, with cachegrind output viewed in a visualiser",
+      "Site Health's Info tab, under the server section",
+      "PHPCS with the WordPress performance sniffs enabled"
     ],
     a: 1,
     t: "A profiler records time and calls per function, showing hot paths a log can't.",
@@ -6309,10 +6319,10 @@ window.QUESTION_BANK = [
     s: "Debugging", d: 3, level: "Administrator", stage: 3,
     q: "Imports occasionally fail with \"Deadlock found when trying to get lock\". Where do you see details of the last deadlock?",
     o: [
-      "debug.log",
-      "wp_options",
+      "wp-content/debug.log, which lists each database error",
+      "The wp_options table, in WordPress's last_db_error row",
       "SHOW ENGINE INNODB STATUS (the LATEST DETECTED DEADLOCK section)",
-      "The browser console"
+      "The browser console, while the import screen is open"
     ],
     a: 2,
     t: "InnoDB reports the transactions and locks involved, which shows which queries conflict.",
@@ -6354,10 +6364,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 3, level: "Administrator", stage: 3,
     q: "What should your error and debug logs avoid recording?",
     o: [
-      "Error messages",
-      "Request paths",
+      "Error messages and the stack traces that go with them",
+      "Request paths, HTTP methods and response status codes",
       "Passwords, tokens, session IDs and unnecessary personal data",
-      "Timestamps"
+      "Timestamps, recorded in the server's own time zone"
     ],
     a: 2,
     t: "OWASP's logging guidance lists sensitive data that shouldn't be logged, or should be masked.",
@@ -6369,10 +6379,10 @@ window.QUESTION_BANK = [
     s: "Debugging", d: 3, level: "Administrator", stage: 3,
     q: "How do you follow one request through the CDN, web server, PHP and an external API in your logs?",
     o: [
-      "Use one huge log file",
-      "You can't",
-      "Pass a shared trace or request ID (for example the W3C traceparent header) and log it everywhere",
-      "Compare timestamps by eye"
+      "Send every layer's output into one shared log file on the server",
+      "You can't; each layer keeps separate logs with no shared fields",
+      "Pass a shared request ID (e.g. the W3C traceparent header) and log it everywhere",
+      "Line up the timestamps across all the logs by eye"
     ],
     a: 2,
     t: "Trace context propagation ties log lines from different systems to the same request.",
@@ -6384,10 +6394,10 @@ window.QUESTION_BANK = [
     s: "Change Management", d: 3, level: "Administrator", stage: 3,
     q: "What makes a postmortem actually improve reliability?",
     o: [
-      "Naming who caused the incident",
-      "Concrete action items with owners and due dates that are tracked to completion",
-      "Closing the ticket quickly",
-      "A long document nobody reads"
+      "Naming who caused the incident in the summary",
+      "Concrete action items with owners and due dates, tracked to completion",
+      "Closing the incident ticket as quickly as possible",
+      "A long, detailed document shared with everyone"
     ],
     a: 1,
     t: "Google's SRE guidance stresses follow-up actions; without them the same incident tends to recur.",
