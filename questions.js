@@ -6607,5 +6607,155 @@ window.QUESTION_BANK = [
     refs: [
       "https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/03-Identity_Management_Testing/04-Testing_for_Account_Enumeration_and_Guessable_User_Account"
     ]
+  },
+  {
+    id: "q-0470",
+    s: "Change Management", d: 2, level: "Author", stage: 1,
+    q: "At launch, a client site's domain moves to a new DNS host so the web records can point at the new server. The client's email is hosted with a separate provider. What has to happen so email keeps working?",
+    o: [
+      "Copy every existing record (MX, mail-related TXT records such as SPF, DKIM and DMARC, and any CNAMEs) to the new DNS host before switching nameservers, then change only the web records",
+      "Nothing; MX records stay with the domain registrar whichever DNS host is in use",
+      "Add only the new server's A record; email providers re-create their own records automatically",
+      "Switch the nameservers first and copy the mail records over after propagation has finished"
+    ],
+    a: 0,
+    t: "Once the nameservers change, the new DNS host's zone is the only one resolvers see. Any MX, SPF, DKIM, DMARC or other record that wasn't recreated there stops existing, so mail routing and authentication break. Google's guidance on moving DNS hosts is to move all records to the new host.",
+    p: "Switching DNS hosts is like moving house with a new address book: anything you don't copy across is gone. Copy the email settings first, then change only what the website needs.",
+    refs: ["https://support.google.com/a/answer/6398669"]
+  },
+  {
+    id: "q-0471",
+    s: "Debugging", d: 2, level: "Author", stage: 2,
+    q: "To get contact-form email through a new SMTP service, a developer adds a second TXT record beginning v=spf1 for that service and leaves the domain's existing SPF record in place. What happens when receiving servers check SPF?",
+    o: [
+      "SPF returns a permanent error (permerror), because a domain must publish only one SPF record; the two should be merged into one",
+      "Receivers combine both records, so mail from either sender passes",
+      "Receivers use whichever SPF record was added most recently",
+      "Only the SMTP service's mail is checked; mail from the old provider skips SPF"
+    ],
+    a: 0,
+    t: "RFC 7208 says a domain MUST NOT have multiple records that would select more than one SPF record, and check_host() returns permerror if it does. The fix is one v=spf1 record with both senders' include: mechanisms, staying within the 10-lookup limit.",
+    p: "Email checks expect a single list of approved senders. Two lists count as a broken setup, so add the new sender to the existing list instead.",
+    refs: [
+      "https://datatracker.ietf.org/doc/html/rfc7208#section-3.2",
+      "https://datatracker.ietf.org/doc/html/rfc7208#section-4.5"
+    ]
+  },
+  {
+    id: "q-0472",
+    s: "Security", d: 1, level: "Author", stage: 1,
+    q: "A staging site is kept out of search only by a robots.txt file containing Disallow: /. Why isn't that enough?",
+    o: [
+      "robots.txt controls crawling, not indexing; a disallowed URL can still be indexed if other pages link to it, so staging should be password-protected",
+      "Search engines ignore robots.txt on subdomains",
+      "robots.txt only applies to images, not HTML pages",
+      "robots.txt is enough; a disallowed site can never appear in search results"
+    ],
+    a: 0,
+    t: "Google says robots.txt isn't a mechanism for keeping a page out of Google, and a disallowed URL linked from elsewhere may still be indexed. Password protection keeps out crawlers and people alike. A noindex rule only works if crawlers are allowed to fetch the page and see it.",
+    p: "robots.txt is a 'please don't look' sign, not a locked door. A password actually keeps strangers and search engines out.",
+    refs: [
+      "https://developers.google.com/search/docs/crawling-indexing/robots/intro",
+      "https://developers.google.com/search/docs/crawling-indexing/block-indexing"
+    ]
+  },
+  {
+    id: "q-0473",
+    s: "Debugging", d: 2, level: "Author", stage: 1,
+    q: "Weeks after a redesign launches, Search Console lists most pages as \"Excluded by 'noindex' tag\". robots.txt looks normal. The production database was copied from staging at launch. What's the most likely cause?",
+    o: [
+      "The \"Discourage search engines from indexing this site\" setting came across with the database, and WordPress outputs a noindex robots meta tag on every page when it's on",
+      "The XML sitemap wasn't resubmitted after launch",
+      "The permalink structure changed, and Google treats new URLs as noindex for 30 days",
+      "robots.txt needs an explicit Allow: / line for pages to be indexed"
+    ],
+    a: 0,
+    t: "The setting is stored in the blog_public option, so a database copied from staging brings it with it. Since WordPress 5.3 it adds a noindex robots meta tag instead of a robots.txt Disallow, which is why robots.txt looks fine. In current versions wp_robots_no_robots() adds it.",
+    p: "Staging's 'hide me from Google' switch was copied to the live site with the rest of the data. It works through a hidden tag on each page, so the file people usually check looks normal.",
+    refs: [
+      "https://make.wordpress.org/core/2019/09/02/changes-to-prevent-search-engines-indexing-sites/",
+      "https://developer.wordpress.org/reference/functions/wp_robots_no_robots/"
+    ]
+  },
+  {
+    id: "q-0474",
+    s: "Change Management", d: 2, level: "Author", stage: 2,
+    q: "A redesign changes the URL structure of about 300 existing pages. Which redirect plan follows Google's site-move guidance?",
+    o: [
+      "Map each old URL to its closest new equivalent with a server-side permanent (301) redirect, and keep the redirects for at least a year",
+      "Redirect every old URL to the new home page so no visitor sees a 404",
+      "Use temporary (302) redirects for the first few months in case the structure changes again",
+      "Leave the old URLs returning 404 and rely on the new XML sitemap"
+    ],
+    a: 0,
+    t: "Google recommends server-side permanent redirects (301 or 308) based on an old-to-new URL map, and keeping them generally at least a year. Sending many old URLs to one unrelated page such as the home page can be treated as a soft 404.",
+    p: "Each old address should forward to the page that replaced it, permanently. Sending everyone to the home page confuses visitors, and Google treats it almost like a dead link.",
+    refs: ["https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes"]
+  },
+  {
+    id: "q-0475",
+    s: "Debugging", d: 2, level: "Author", stage: 1,
+    q: "On a newly launched site, wp_mail() returns true for every contact-form submission, but the client says notifications never arrive. What does that true actually tell you?",
+    o: [
+      "Only that the mail method processed the request without an error; it doesn't confirm the message was delivered",
+      "That the recipient's mail server accepted and delivered the message",
+      "That the message passed SPF and DKIM checks",
+      "That the recipient opened the email"
+    ],
+    a: 0,
+    t: "The wp_mail() reference says a true return doesn't mean the user received the email, only that the method used processed the request without errors. By default PHPMailer hands off to PHP's mail(), so delivery problems happen further down the line. Check mail logs, spam folders and DNS authentication.",
+    p: "'True' means WordPress handed the letter to the postal service without trouble. It says nothing about whether the letter arrived.",
+    refs: ["https://developer.wordpress.org/reference/functions/wp_mail/"]
+  },
+  {
+    id: "q-0476",
+    s: "Custom Development", d: 2, level: "Contributor", stage: 3,
+    q: "You want wp_mail() to send through an authenticated SMTP server instead of PHP's mail(). Which hook lets your code reconfigure the mailer?",
+    o: [
+      "The phpmailer_init action, which passes the PHPMailer instance so you can call isSMTP() and set the host and credentials",
+      "The wp_mail_failed action",
+      "The wp_mail_content_type filter",
+      "The wp_mail_from filter"
+    ],
+    a: 0,
+    t: "phpmailer_init fires after PHPMailer is initialized and passes the instance by reference, so a callback can switch the transport to SMTP. wp_mail_failed only fires after a send fails; the other two filters change the content type and the sender address.",
+    p: "There's one hook that hands you WordPress's mail engine before each send, so you can tell it to use a proper mail server. The others only adjust details or report failures.",
+    refs: [
+      "https://developer.wordpress.org/reference/hooks/phpmailer_init/",
+      "https://developer.wordpress.org/reference/hooks/wp_mail_failed/"
+    ]
+  },
+  {
+    id: "q-0477",
+    s: "Security", d: 2, level: "Author", stage: 2,
+    q: "During a client handoff you remove a former contractor who was a verified owner of the site's Search Console property. What else should you do so they can't get owner access back?",
+    o: [
+      "Remove the verification token they used (for example the HTML file, meta tag or DNS TXT record), because a leftover token can restore their access",
+      "Nothing; removing them in Users and permissions is permanent",
+      "Delete and re-create the Search Console property",
+      "Change the WordPress admin password"
+    ],
+    a: 0,
+    t: "Search Console's help says a removed verified owner may regain access through verification tokens that are still in place, so remove those tokens too. Verification can live in a theme's head output, a file in the web root or a DNS record, so check all three.",
+    p: "Their proof of ownership is still sitting on the site. Take it down, or they can simply prove ownership again.",
+    refs: ["https://support.google.com/webmasters/answer/7687615"]
+  },
+  {
+    id: "q-0478",
+    s: "WordPress Core", d: 1, level: "Subscriber", stage: 2,
+    q: "Right after a site launches, you submit its XML sitemap in Search Console. What does that guarantee?",
+    o: [
+      "Nothing about indexing; it helps Google discover the URLs, but they may not all be crawled or indexed",
+      "Every URL in the sitemap will be indexed within 24 hours",
+      "Pages in the sitemap will rank above the old site's pages",
+      "Google will stop crawling URLs that aren't in the sitemap"
+    ],
+    a: 0,
+    t: "Google's sitemap documentation says submitting one doesn't guarantee all items will be crawled and indexed, and recrawling can take days to weeks. A sitemap is a discovery hint, not an instruction.",
+    p: "A sitemap is a list of suggestions for Google. It helps Google find pages but doesn't promise when, or whether, they show up in search.",
+    refs: [
+      "https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview",
+      "https://developers.google.com/search/docs/crawling-indexing/ask-google-to-recrawl"
+    ]
   }
 ];

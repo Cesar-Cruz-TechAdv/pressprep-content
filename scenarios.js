@@ -2070,5 +2070,304 @@ window.SCENARIO_BANK = [
     ideal: {
       safest: ["s1:1", "s2:all"]
     }
+  },
+
+  {
+    id: "email-down-after-dns-cutover",
+    title: "No email since this morning's launch",
+    s: "Change Management",
+    level: "Author",
+    stage: 2,
+    d: 2,
+    priorities: { speed: 2, security: 1, stability: 3, rootCause: 3, communication: 2 },
+    intro: "This morning you launched a client site by switching the domain's nameservers to a new DNS host. Two hours later the client's team says nobody has received outside email since. Before launch you exported the old zone's records, but you only recreated the web records at the new host.",
+    timeNotes: "The up-to-72-hours figure for MX changes to take effect comes from Google Workspace's MX documentation. Minutes for editing records are judgment.",
+    refs: [
+      "https://support.google.com/a/answer/6398669",
+      "https://support.google.com/a/answer/45679",
+      "https://datatracker.ietf.org/doc/html/rfc7208#section-3.2"
+    ],
+    start: "s1",
+    steps: {
+      s1: {
+        type: "single",
+        prompt: "What's your first move?",
+        options: [
+          {
+            text: "Recreate the MX records from the pre-launch export at the new DNS host, then confirm with a DNS lookup",
+            m: { speed: 1, rootCause: 2, stability: 1 },
+            min: [10, 20],
+            t: "The new zone is authoritative now, so the missing MX records are the direct cause. Restoring them from the export fixes routing without touching the new website records.",
+            p: "Email has no forwarding address any more. Put the address back.",
+            next: "s2"
+          },
+          {
+            text: "Switch the nameservers back to the old DNS host",
+            m: { speed: -1, stability: 1, rootCause: -1 },
+            min: [5, 10],
+            t: "The old zone still has the mail records, but it also points the website back at the old server. And a nameserver change has to propagate again, so the launch is undone and email still waits.",
+            p: "It undoes the whole launch to fix one missing setting, and it takes a while to take effect.",
+            next: "o:rolled-back"
+          },
+          {
+            text: "Tell the client DNS changes take up to 48 hours and email will catch up on its own",
+            m: { speed: -2, rootCause: -2, communication: -1 },
+            min: 5,
+            t: "Propagation won't create records that don't exist in the new zone. Mail stays broken however long you wait.",
+            p: "Waiting doesn't help when the setting was never copied.",
+            next: "o:waited-it-out"
+          }
+        ]
+      },
+      s2: {
+        type: "multi",
+        prompt: "Mail is flowing again. Which other records do you check came across from the export? Select all that apply.",
+        missPenalty: { rootCause: -1, stability: -1 },
+        options: [
+          {
+            text: "The SPF TXT record (exactly one v=spf1 record)",
+            good: true,
+            critical: true,
+            m: { rootCause: 1, security: 1 },
+            t: "Without SPF, or with two SPF records, receivers may reject or junk outgoing mail. RFC 7208 allows only one SPF record per domain.",
+            p: "This record tells other mail servers who may send email for the domain."
+          },
+          {
+            text: "DKIM records (TXT or CNAME at the selector name)",
+            good: true,
+            critical: true,
+            m: { rootCause: 1, security: 1 },
+            t: "A missing DKIM key makes signatures fail verification, which hurts deliverability and DMARC alignment.",
+            p: "This is the email signature check. Without it, mail looks less trustworthy."
+          },
+          {
+            text: "The DMARC TXT record at _dmarc",
+            good: true,
+            m: { security: 1 },
+            t: "DMARC tells receivers how to handle mail that fails SPF and DKIM and where to send reports; losing it removes that policy.",
+            p: "This is the domain's rule for what to do with fake-looking email."
+          },
+          {
+            text: "Other CNAMEs and verification TXT records for mail clients and third-party services",
+            good: true,
+            m: { rootCause: 1, stability: 1 },
+            t: "Autodiscover, service verification and similar records also lived in the old zone and fail quietly when missing.",
+            p: "Other tools connected to the domain depend on these too."
+          },
+          {
+            text: "The WordPress siteurl and home options",
+            good: false,
+            m: { speed: -1 },
+            t: "These control the website's URLs, not email routing or authentication.",
+            p: "Website settings have nothing to do with email."
+          }
+        ],
+        next: "s3"
+      },
+      s3: {
+        type: "single",
+        prompt: "How do you close this out?",
+        options: [
+          {
+            text: "Explain to the client what happened and when it was fixed, ask staff to have key contacts resend anything that bounced, and add 'recreate every exported record before switching nameservers' to the launch checklist",
+            m: { communication: 2, rootCause: 1 },
+            min: [15, 30],
+            t: "Some senders may have had bounces during the outage. Google's guidance for mail-routing changes is to tell contacts to resend bounced messages. The checklist change stops it happening again.",
+            p: "Be honest about the gap, help them recover missed mail, and change the process.",
+            next: "o:fixed-for-good"
+          },
+          {
+            text: "Say nothing more, since mail is working again",
+            m: { communication: -2 },
+            min: 0,
+            t: "Bounced messages during the outage go unnoticed, and the process gap remains for the next launch.",
+            p: "The client may never learn some emails didn't arrive.",
+            next: "o:fixed-quietly"
+          }
+        ]
+      }
+    },
+    outcomes: {
+      "fixed-for-good": {
+        title: "Fixed, explained and prevented",
+        verdict: "good",
+        summary: "Mail and authentication records are restored, the client knows what to resend, and the launch checklist now covers the full zone.",
+        t: "Restoring records from the export fixed the cause directly; checking SPF, DKIM and DMARC caught the quieter failures.",
+        p: "The problem is fixed, the client is in the loop, and it won't happen at the next launch."
+      },
+      "rolled-back": {
+        title: "Launch undone",
+        verdict: "mixed",
+        summary: "Email recovers once the old nameservers propagate, but the new site is offline and the launch has to be redone.",
+        t: "Reverting nameservers restored the old zone in full, including web records, and added another propagation delay.",
+        p: "Email came back, but the new website went away with it."
+      },
+      "waited-it-out": {
+        title: "Still no email tomorrow",
+        verdict: "bad",
+        summary: "The records were never recreated, so mail stays down until someone checks the zone.",
+        t: "Propagation only spreads records that exist; the new zone had no MX records to spread.",
+        p: "Waiting doesn't fix a missing setting."
+      },
+      "fixed-quietly": {
+        title: "Fixed, but nobody knows",
+        verdict: "mixed",
+        summary: "Mail works, but bounced messages from the outage are lost and the same gap waits for the next launch.",
+        t: "The technical cause is fixed but not the process cause, and the client can't act on what they missed.",
+        p: "It works now, but the client is in the dark and it will happen again."
+      }
+    },
+    ideal: {
+      safest: ["s1:0", "s2:all", "s3:0"]
+    }
+  },
+
+  {
+    id: "noindex-left-on-after-launch",
+    title: "Search traffic vanished after launch",
+    s: "Debugging",
+    level: "Author",
+    stage: 1,
+    d: 2,
+    priorities: { speed: 2, security: 1, stability: 2, rootCause: 3, communication: 2 },
+    intro: "Three weeks after a redesign launched, the client says leads from search have dropped sharply. Search Console shows most pages as \"Excluded by 'noindex' tag\". The production database was copied from the password-protected staging site at launch.",
+    timeNotes: "Recrawl time (days to weeks) comes from Google's recrawl documentation. Minutes for checks and setting changes are judgment.",
+    refs: [
+      "https://make.wordpress.org/core/2019/09/02/changes-to-prevent-search-engines-indexing-sites/",
+      "https://developer.wordpress.org/reference/functions/wp_robots_no_robots/",
+      "https://developers.google.com/search/docs/crawling-indexing/ask-google-to-recrawl"
+    ],
+    start: "s1",
+    steps: {
+      s1: {
+        type: "single",
+        prompt: "What's your first move?",
+        options: [
+          {
+            text: "View the source of a live page for a robots meta tag, and check Settings > Reading on production",
+            m: { speed: 1, rootCause: 2 },
+            min: [5, 10],
+            t: "Since WordPress 5.3, 'Discourage search engines' outputs a noindex robots meta tag, and the blog_public option travels with a copied database. Checking the HTML confirms what crawlers actually see.",
+            p: "Look at what Google sees on the page, then at the setting that usually causes it.",
+            next: "s2"
+          },
+          {
+            text: "Add Allow: / to robots.txt",
+            m: { speed: -1, rootCause: -2 },
+            min: 5,
+            t: "robots.txt controls crawling, and the pages are already being crawled; the noindex comes from the page itself.",
+            p: "That's the wrong file. The block is on the pages.",
+            next: "o:wrong-file"
+          },
+          {
+            text: "Resubmit the sitemap and request indexing for every page",
+            m: { speed: -1, rootCause: -2 },
+            min: [20, 40],
+            t: "Google will recrawl and find the same noindex tag. The requests use up the URL Inspection quota without changing anything.",
+            p: "Asking Google to look again doesn't help while the pages still say 'don't list me'.",
+            next: "o:resubmitted"
+          }
+        ]
+      },
+      s2: {
+        type: "single",
+        prompt: "The setting is on in production. How do you fix it?",
+        options: [
+          {
+            text: "Turn the setting off on production, purge the page cache and CDN, then confirm the tag is gone from live HTML",
+            m: { speed: 1, rootCause: 2, stability: 1 },
+            min: [5, 15],
+            t: "Changing blog_public removes the tag at render time, but cached HTML can keep serving the old tag until it's purged.",
+            p: "Flip the switch, clear the stored copies, and check the live page.",
+            next: "s3"
+          },
+          {
+            text: "Copy the staging database to production again, after fixing the setting on staging",
+            m: { stability: -2, speed: -1 },
+            min: [30, 60],
+            t: "Overwriting production discards three weeks of form entries, content edits and users, and it's a far bigger change than one option.",
+            p: "That wipes out everything that happened on the live site since launch.",
+            next: "o:overwrote-content"
+          }
+        ]
+      },
+      s3: {
+        type: "multi",
+        prompt: "The tag is gone. What else do you do? Select all that apply.",
+        missPenalty: { rootCause: -1, communication: -1 },
+        options: [
+          {
+            text: "Request indexing for the most important pages and resubmit the sitemap",
+            good: true,
+            m: { speed: 1 },
+            t: "Google suggests URL Inspection for individual pages and a sitemap for many URLs. Recrawling still takes days to weeks.",
+            p: "Now that the block is gone, ask Google to come back."
+          },
+          {
+            text: "Check that no SEO plugin also sets noindex on page types or individual pages",
+            good: true,
+            m: { rootCause: 1 },
+            t: "A second noindex source would keep some pages excluded after the core setting is fixed.",
+            p: "Make sure nothing else is still hiding pages."
+          },
+          {
+            text: "Add 'search engine visibility on, noindex absent' to the launch checklist",
+            good: true,
+            critical: true,
+            m: { rootCause: 1, stability: 1 },
+            t: "The database copy will carry the setting again at the next launch unless a check catches it.",
+            p: "Make sure the next launch can't repeat this."
+          },
+          {
+            text: "Tell the client what happened and that recovery in search will take days to weeks",
+            good: true,
+            m: { communication: 2 },
+            t: "Recrawling and reindexing aren't instant or guaranteed, so set expectations.",
+            p: "Be clear that traffic will come back gradually, not overnight."
+          },
+          {
+            text: "Change the permalink structure to force Google to treat the pages as new",
+            good: false,
+            m: { stability: -2 },
+            t: "New URLs throw away existing signals and create a redirect project, with no benefit.",
+            p: "That creates a new problem rather than fixing the old one."
+          }
+        ],
+        next: "o:recovered"
+      }
+    },
+    outcomes: {
+      recovered: {
+        title: "Back in the index",
+        verdict: "good",
+        summary: "The noindex is gone, Google is recrawling, the client knows the timeline, and the launch checklist catches it next time.",
+        t: "Fixing blog_public at the source and purging caches removed the tag. Recrawl requests and the checklist dealt with recovery and prevention.",
+        p: "The site is visible again, and the next launch won't repeat the mistake."
+      },
+      "wrong-file": {
+        title: "Still invisible",
+        verdict: "bad",
+        summary: "robots.txt changes don't touch the meta tag, so pages stay excluded.",
+        t: "The noindex lives in each page's HTML, not in robots.txt.",
+        p: "The block is still on every page."
+      },
+      resubmitted: {
+        title: "Google looked again and left",
+        verdict: "bad",
+        summary: "Google recrawled, saw the same noindex, and kept the pages out.",
+        t: "Recrawl requests only help after the directive is removed.",
+        p: "Asking again doesn't help until the 'don't list me' note is removed."
+      },
+      "overwrote-content": {
+        title: "Fixed one thing, lost three weeks",
+        verdict: "bad",
+        summary: "The noindex is gone, but recent leads, edits and users on production are lost.",
+        t: "A full database copy over a live site discards everything written since the last copy.",
+        p: "The site is visible again, but recent work and enquiries are gone."
+      }
+    },
+    ideal: {
+      safest: ["s1:0", "s2:0", "s3:all"]
+    }
   }
 ];
