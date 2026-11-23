@@ -172,7 +172,12 @@ window.QUESTION_BANK = [
     id: "q-0011",
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "In a theme, which file is the usual place to add features like menu support or to load scripts and styles?",
-    o: ["readme.txt", "functions.php", "header.php", "style.css"],
+    o: [
+      "readme.txt",
+      "functions.php",
+      "front-page.php",
+      "style.css"
+    ],
     a: 1,
     t: "functions.php is where a theme hooks into WordPress to add features. Only the active theme's functions.php runs, and a child theme can have its own.",
     p: "It's the theme's toolbox of extra behaviour.",
@@ -563,10 +568,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 2, level: "Author", stage: 1,
     q: "Which statement about WordPress nonces is correct?",
     o: [
-      "They're single-use tokens that expire after one request",
+      "They're single-use tokens that expire right after the request that uses them",
       "They help confirm intent and prevent CSRF, but you still need capability checks",
       "They authenticate the user and can replace capability checks",
-      "They encrypt form data"
+      "They encrypt the submitted form data so it can't be read in transit"
     ],
     a: 1,
     t: "A nonce confirms the request was intended (CSRF protection), but it doesn't check permission, so always pair it with current_user_can(). WordPress nonces are also time-limited rather than truly single-use.",
@@ -663,7 +668,12 @@ window.QUESTION_BANK = [
     id: "q-0046",
     s: "Security", d: 3, level: "Editor", stage: 1,
     q: "Which function translates meta capabilities like edit_post into the primitive capabilities a user actually needs?",
-    o: ["map_meta_cap()", "get_role()", "user_can()", "add_cap()"],
+    o: [
+      "map_meta_cap( $cap, $user_id )",
+      "get_role( $role )",
+      "user_can( $user_id, $cap )",
+      "add_cap( $cap )"
+    ],
     a: 0,
     t: "map_meta_cap() turns a meta capability into primitive capabilities, such as edit_others_posts or edit_published_posts, depending on the post and the user.",
     p: "'Can I edit this post?' depends on whose post it is and whether it's published. This function works out which actual permissions that question needs.",
@@ -755,8 +765,8 @@ window.QUESTION_BANK = [
     s: "WordPress Core", d: 1, level: "Contributor", stage: 2,
     q: "What is the key functional difference between an action callback and a filter callback?",
     o: [
-      "Filters only work in themes, while actions work in themes and plugins",
-      "Actions accept arguments from the hook, while filters receive none",
+      "Filters only work in themes, while actions work in both themes and plugins",
+      "Actions receive the hook's arguments, while filter callbacks receive no arguments",
       "On any hook, every action callback runs before the filter callbacks",
       "A filter must return the (changed) value; an action does work and its return value is ignored"
     ],
@@ -815,9 +825,9 @@ window.QUESTION_BANK = [
     s: "WordPress Core", d: 2, level: "Author", stage: 1,
     q: "You set a transient with a 12-hour expiration. What should your code assume when it calls get_transient()?",
     o: [
-      "It returns null after expiry",
+      "It returns null after expiry, so check for null before using it",
       "It throws an exception if the value is missing",
-      "The value is guaranteed to exist for the full 12 hours",
+      "The value is guaranteed to exist for the full 12 hours you set",
       "The value can disappear at any time, so always handle false and regenerate it"
     ],
     a: 3,
@@ -941,8 +951,8 @@ window.QUESTION_BANK = [
     s: "Security", d: 3, level: "Editor", stage: 1,
     q: "You need to pass a PHP array (including user-generated strings) to a front-end script. Which approach is safest?",
     o: [
-      "Output it with serialize()",
-      "Echo it inside a <script> tag using esc_html()",
+      "Output it with serialize() and parse it in JavaScript",
+      "Echo it inside a <script> tag after running each value through esc_html()",
       "Wrap it in esc_url()",
       "Use wp_add_inline_script() with the data encoded by wp_json_encode()"
     ],
@@ -1047,8 +1057,8 @@ window.QUESTION_BANK = [
     o: [
       "$wpdb->prepare( \"... LIKE %s\", '%' . $wpdb->esc_like( $term ) . '%' )",
       "\"... LIKE '%\" . $term . \"%'\"",
-      "\"... LIKE '%\" . esc_html( $term ) . \"%'\"",
-      "\"... LIKE '%\" . sanitize_text_field( $term ) . \"%'\""
+      "$wpdb->prepare( \"... LIKE %s\", '%' . esc_html( $term ) . '%' )",
+      "$wpdb->prepare( \"... LIKE %s\", '%' . sanitize_text_field( $term ) . '%' )"
     ],
     a: 0,
     t: "esc_like() escapes the wildcard characters % and _ inside the user's term, so they're treated as literal text. prepare() then quotes and escapes the whole value for SQL. You need both.",
@@ -1312,10 +1322,10 @@ window.QUESTION_BANK = [
     s: "Debugging", d: 2, level: "Author", stage: 3,
     q: "You need to capture PHP errors on a live production site. Which configuration is safest?",
     o: [
-      "WP_DEBUG true and WP_DEBUG_DISPLAY true",
+      "WP_DEBUG and WP_DEBUG_DISPLAY both true, so errors show on the page",
       "Leave the default wp-content/debug.log publicly reachable",
       "WP_DEBUG_LOG writing to a path outside the web root, with WP_DEBUG_DISPLAY false",
-      "display_errors = On in php.ini"
+      "display_errors = On in php.ini, with errors also written to the log"
     ],
     a: 2,
     t: "Showing errors leaks file paths and internals to visitors. WP_DEBUG_LOG accepts a file path (since 5.1), so the log can live somewhere the web server won't serve. The default wp-content/debug.log is often reachable by URL.",
@@ -1352,7 +1362,7 @@ window.QUESTION_BANK = [
     s: "Debugging", d: 2, level: "Author", stage: 3,
     q: "Users report ERR_TOO_MANY_REDIRECTS. Which command shows each hop and its Location header?",
     o: [
-      "ping -c 4 example.com",
+      "traceroute -T -p 443 example.com",
       "curl -sIL https://example.com/page",
       "wp rewrite flush --hard",
       "dig +trace www.example.com"
@@ -1404,8 +1414,8 @@ window.QUESTION_BANK = [
     o: [
       "Build in a new directory, then switch a 'current' symlink to it, keeping old releases",
       "Edit the files live with the theme editor during quiet hours",
-      "Run git pull on production while traffic is at its peak",
-      "Upload each changed file over FTP into the live directory"
+      "Run git pull on production during peak traffic, then clear the caches",
+      "Upload each changed file over FTP into the live directory, one by one"
     ],
     a: 0,
     t: "Switching the symlink is effectively instant, so no request ever sees half-updated code. Rolling back means pointing the symlink at the previous release. Shared directories such as uploads are linked into each release.",
@@ -1882,10 +1892,10 @@ window.QUESTION_BANK = [
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "What's the main structural difference between categories and tags?",
     o: [
-      "Tags are private and categories are public",
+      "Tags are private to editors, while categories show publicly",
       "Categories can have parent and child terms; tags are flat",
       "Categories are for pages only",
-      "Tags can have parents; categories can't"
+      "Tags can have parent tags, while categories are always flat"
     ],
     a: 1,
     t: "Categories are a hierarchical taxonomy and tags are non-hierarchical. register_taxonomy()'s hierarchical argument controls this for custom taxonomies.",
@@ -1915,9 +1925,9 @@ window.QUESTION_BANK = [
     s: "WordPress Core", d: 1, level: "Subscriber", stage: 1,
     q: "By default, where does WordPress store uploaded media files?",
     o: [
-      "In the theme folder",
+      "In the active theme's folder, under images/",
       "In wp-includes/media",
-      "In the database as binary data",
+      "In the database, as binary data in wp_posts",
       "In wp-content/uploads, in year/month folders"
     ],
     a: 3,
@@ -2073,9 +2083,9 @@ window.QUESTION_BANK = [
     q: "Who can see a post set to \"Private\" visibility?",
     o: [
       "Only the post's author; not even Administrators can open it",
-      "Everyone, but it's hidden from search engines and feeds",
+      "Everyone who visits, but it's hidden from search engines and feeds",
       "Logged-in users with the right capability, such as Editors and Administrators",
-      "Anyone who has the post's password, logged in or not"
+      "Anyone who has the post's password, whether or not they're logged in"
     ],
     a: 2,
     t: "Private posts are visible only to logged-in users who can read private posts (Editors and Administrators by default) and the author.",
@@ -2135,13 +2145,13 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "What's the difference between the_title() and get_the_title()?",
     o: [
-      "They're identical",
+      "They're identical; one is an alias kept for older themes",
       "the_title() prints the title; get_the_title() returns it as a value",
-      "get_the_title() prints; the_title() returns",
-      "the_title() works only in the admin"
+      "get_the_title() prints the title; the_title() returns it as a value",
+      "the_title() runs the 'the_title' filter; get_the_title() skips it"
     ],
     a: 1,
-    t: "Template tags starting with the_ usually echo. get_ versions return the value so you can store or change it.",
+    t: "Template tags starting with the_ usually echo. get_ versions return the value so you can store or change it. the_title() can also return instead of print if you pass false as its third argument ($display). Both run the the_title filter.",
     p: "One says it out loud, the other hands you a note with it written down.",
     refs: [
       "https://developer.wordpress.org/reference/functions/get_the_title/",
@@ -2229,8 +2239,8 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "Where should a classic theme call wp_footer()?",
     o: [
-      "Inside functions.php",
-      "At the top of header.php",
+      "Inside functions.php, on the init hook",
+      "At the top of header.php, after <head>",
       "Only on the home page",
       "Just before the closing </body> tag"
     ],
@@ -2284,10 +2294,10 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 1, level: "Subscriber", stage: 2,
     q: "Why should a plugin prefix its function names, such as myplugin_save()?",
     o: [
-      "It makes code run faster",
+      "Prefixed functions run faster because PHP caches them separately",
       "To avoid name collisions with other plugins, themes and core",
       "To translate the names",
-      "WordPress requires it to activate the plugin"
+      "WordPress requires prefixed names before it will activate the plugin"
     ],
     a: 1,
     t: "All plugins share one PHP namespace. Prefixes (or real PHP namespaces and classes) prevent fatal \"cannot redeclare\" errors.",
@@ -2383,10 +2393,10 @@ window.QUESTION_BANK = [
     s: "Debugging", d: 1, level: "Subscriber", stage: 3,
     q: "On a live site, what should WP_DEBUG_DISPLAY be while you're logging errors?",
     o: [
-      "It must be removed from wp-config.php",
+      "It must be removed from wp-config.php when logging is on",
       "false, so errors are logged but not shown to visitors",
       "It doesn't matter",
-      "true, so visitors can report errors"
+      "true, so visitors can see and report the errors they hit"
     ],
     a: 1,
     t: "Showing errors exposes paths and details to visitors. Log them with WP_DEBUG_LOG and keep display off.",
@@ -2522,7 +2532,7 @@ window.QUESTION_BANK = [
     q: "Which function cleans a single-line text input before saving it?",
     o: [
       "wp_kses_post( $value )",
-      "esc_html( $value )",
+      "esc_html( $value ) before saving",
       "sanitize_text_field( $value )",
       "esc_url( $value )"
     ],
@@ -2668,7 +2678,12 @@ window.QUESTION_BANK = [
     id: "q-0183",
     s: "Debugging", d: 1, level: "Subscriber", stage: 3,
     q: "Which WP-CLI command checks core files against the official checksums?",
-    o: ["wp core verify-checksums", "wp core scan", "wp check files", "wp security verify"],
+    o: [
+      "wp core verify-checksums",
+      "wp core scan --checksums",
+      "wp check files --core",
+      "wp security verify --core"
+    ],
     a: 0,
     t: "wp core verify-checksums compares core files with WordPress.org checksums and reports changed or extra files.",
     p: "It checks whether WordPress's own files have been tampered with.",
@@ -2719,10 +2734,10 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 1, level: "Contributor", stage: 1,
     q: "Your filter callback needs the hook's second and third arguments, but only gets the first. What's missing?",
     o: [
-      "A higher priority, so it runs after the others",
+      "A higher priority number, so it runs after the other callbacks",
       "A return statement at the end of the callback",
       "The accepted_args parameter of add_filter(), which defaults to 1",
-      "A global variable holding the extra arguments"
+      "A global variable holding the hook's extra arguments"
     ],
     a: 2,
     t: "add_filter( $hook, $cb, $priority, $accepted_args ) passes only one argument unless accepted_args is raised.",
@@ -2814,8 +2829,8 @@ window.QUESTION_BANK = [
     q: "A plugin settings page should only be usable by site administrators. Which check is the usual choice?",
     o: [
       "current_user_can( 'manage_options' )",
-      "is_admin()",
-      "current_user_can( 'read' )",
+      "is_admin(), which checks for an administrator",
+      "current_user_can( 'edit_posts' )",
       "is_user_logged_in()"
     ],
     a: 0,
@@ -2872,8 +2887,8 @@ window.QUESTION_BANK = [
     q: "What should a plugin's text domain be?",
     o: [
       "The plugin's slug, such as my-plugin",
-      "\"default\"",
-      "The author's name",
+      "\"default\", the same as WordPress core",
+      "The author's name, such as jane-doe",
       "The plugin's version number"
     ],
     a: 0,
@@ -2923,10 +2938,10 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 1, level: "Contributor", stage: 1,
     q: "Your script needs jQuery loaded first. How do you declare that?",
     o: [
-      "Load jQuery from a CDN with a script tag in header.php",
+      "Load jQuery yourself from a CDN with a script tag in header.php",
       "Name your file jquery-plugin.js so it loads after jQuery",
       "Pass array( 'jquery' ) as the dependencies argument of wp_enqueue_script()",
-      "Give your script a lower version number than jQuery's"
+      "Give your script a lower version number than jQuery's so it loads later"
     ],
     a: 2,
     t: "The deps argument lists handles that must load first. WordPress orders the output to match.",
@@ -2992,7 +3007,12 @@ window.QUESTION_BANK = [
     id: "q-0209",
     s: "WordPress Core", d: 1, level: "Contributor", stage: 2,
     q: "Where should you store a per-user setting, such as a preferred layout?",
-    o: ["A site option", "A cookie only", "User meta, with update_user_meta()", "Post meta on the home page"],
+    o: [
+      "A site option keyed by the user's ID",
+      "A cookie only, set when they choose a layout",
+      "User meta, with update_user_meta()",
+      "Post meta on the home page"
+    ],
     a: 2,
     t: "User meta (wp_usermeta) stores data per user. Options are site-wide.",
     p: "Save it on the person's own file, not on the noticeboard.",
@@ -3210,7 +3230,12 @@ window.QUESTION_BANK = [
     id: "q-0228",
     s: "Custom Development", d: 1, level: "Contributor", stage: 2,
     q: "Which hook do you use to register custom REST routes?",
-    o: ["admin_init", "init", "wp_loaded", "rest_api_init"],
+    o: [
+      "admin_init",
+      "template_redirect",
+      "wp_loaded",
+      "rest_api_init"
+    ],
     a: 3,
     t: "register_rest_route() should be called on rest_api_init.",
     p: "Register your API routes when the API is getting ready.",
@@ -3381,7 +3406,12 @@ window.QUESTION_BANK = [
     id: "q-0242",
     s: "Change Management", d: 1, level: "Contributor", stage: 3,
     q: "Which plugin header sets the minimum WordPress version the plugin needs?",
-    o: ["Requires at least", "Network", "Tested up to", "Requires PHP"],
+    o: [
+      "Requires at least",
+      "Minimum WordPress",
+      "Tested up to",
+      "Requires PHP"
+    ],
     a: 0,
     t: "Requires at least is checked against the installed WordPress version before activation.",
     p: "It says how new WordPress must be.",
@@ -3394,8 +3424,8 @@ window.QUESTION_BANK = [
     o: [
       "The version (tag) users should download",
       "The plugin author",
-      "The minimum PHP version",
-      "The newest WordPress tested"
+      "The minimum PHP version the plugin supports",
+      "The newest WordPress version it was tested with"
     ],
     a: 0,
     t: "Stable tag tells the directory which tagged version to serve. It should match the released version.",
@@ -3552,8 +3582,8 @@ window.QUESTION_BANK = [
     q: "In a block's edit component, what is useBlockProps() for?",
     o: [
       "Adding the classes, data attributes and events the editor needs to the wrapper",
-      "Registering the block with the editor's block registry",
-      "Saving the block's attributes to the database on publish",
+      "Registering the block and its attributes with the editor's registry",
+      "Saving the block's attributes to the database when the post is published",
       "Fetching the posts the block shows from the REST API"
     ],
     a: 0,
@@ -3616,10 +3646,10 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 2, level: "Author", stage: 1,
     q: "What does register_block_style() add to a block?",
     o: [
-      "A block variation with its own default attributes",
+      "A block variation with its own default attributes and icon",
       "A new attribute that stores the chosen colour",
       "An alternative style users can pick, applied as an is-style-{name} class",
-      "Inline styles applied to every instance of the block"
+      "Inline styles applied to every instance of the block on the site"
     ],
     a: 2,
     t: "Block styles add a CSS class option. Variations are different: they preset attributes and inner blocks.",
@@ -3691,8 +3721,8 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 2, level: "Author", stage: 1,
     q: "You call wp_insert_post( $args, true ). What do you check before using the result?",
     o: [
-      "The global $post",
-      "Whether it returned 1",
+      "The global $post, which now holds the new post",
+      "Whether it returned 1, which means success",
       "Nothing; it always works",
       "is_wp_error() on the return value"
     ],
@@ -3710,9 +3740,9 @@ window.QUESTION_BANK = [
     q: "What does the $capability argument of add_submenu_page() do?",
     o: [
       "Hides the page and blocks access for users without that capability",
-      "Sets where the page appears in the admin menu",
+      "Sets where the page appears in the admin menu, by position number",
       "Sets the dashicon shown next to the menu item",
-      "Nothing; it's only a label shown to screen readers"
+      "Nothing; it's only a label read out by screen readers"
     ],
     a: 0,
     t: "Only users with the capability see the menu item and can open the page.",
@@ -3949,7 +3979,7 @@ window.QUESTION_BANK = [
       "Wrap each call in a shortcode so it runs once per page",
       "Add an index to wp_options so meta lookups are faster",
       "Prime the meta cache with update_meta_cache() first (WP_Query does it by default)",
-      "Raise the PHP memory limit so all meta fits in one query"
+      "Raise the PHP memory limit so all the meta can load in one single query"
     ],
     a: 2,
     t: "Loading meta for all IDs in one query fills the cache, so later get_post_meta() calls hit memory.",
@@ -3962,9 +3992,9 @@ window.QUESTION_BANK = [
     q: "After wp_remote_get(), which function gives you the HTTP status code?",
     o: [
       "$response['status'] always",
-      "wp_remote_status()",
+      "wp_remote_status( $response )",
       "wp_remote_retrieve_response_code()",
-      "http_response_code()"
+      "http_response_code( $response )"
     ],
     a: 2,
     t: "Check is_wp_error() first, then read the code with wp_remote_retrieve_response_code() and the body with wp_remote_retrieve_body().",
@@ -3990,7 +4020,12 @@ window.QUESTION_BANK = [
     id: "q-0286",
     s: "Debugging", d: 2, level: "Author", stage: 3,
     q: "Which Query Monitor panel helps you see which callbacks are attached to each hook on a page?",
-    o: ["Environment", "Languages", "Hooks & Actions", "Transients"],
+    o: [
+      "Environment panel",
+      "Languages panel",
+      "Hooks & Actions panel",
+      "Transients panel"
+    ],
     a: 2,
     t: "Query Monitor's Hooks & Actions panel lists hooks fired during the request and their callbacks, with priorities.",
     p: "It shows which pieces of code reacted at each moment.",
@@ -4091,10 +4126,10 @@ window.QUESTION_BANK = [
     s: "Disaster Recovery", d: 2, level: "Author", stage: 3,
     q: "Why shouldn't you copy a staging database over production on a live shop?",
     o: [
-      "Staging databases are larger and slow the shop down",
+      "Staging databases are larger and would slow the live shop down",
       "It would erase orders, users and comments made on production since the copy",
       "Copying a database is slower than copying files",
-      "WordPress blocks imports from a different domain"
+      "WordPress blocks database imports that come from a different domain"
     ],
     a: 1,
     t: "Production keeps changing. Move code forward and apply schema or settings changes deliberately instead of overwriting live data.",
@@ -4153,8 +4188,8 @@ window.QUESTION_BANK = [
     s: "Scalability", d: 2, level: "Author", stage: 3,
     q: "How does a CDN help a WordPress site under load?",
     o: [
-      "It stores logged-in users' sessions across data centres",
-      "It speeds up database queries by caching them at the edge",
+      "It stores logged-in users' sessions so they stay signed in across regions",
+      "It speeds up database queries by caching their results at the edge",
       "Serves static files and cached pages near users, so fewer requests hit the origin",
       "It replaces PHP with pre-rendered pages for every user"
     ],
@@ -4169,9 +4204,9 @@ window.QUESTION_BANK = [
     q: "Why do full-page caches usually skip logged-in users?",
     o: [
       "Logged-in users rarely load the same page twice",
-      "Caches can't store pages for requests that send cookies",
+      "Caches can't store pages for any request that sends a cookie header",
       "Their pages are personalised (admin bar, carts), so a shared copy could be wrong",
-      "WordPress forbids caching for logged-in sessions"
+      "WordPress forbids caching pages for anyone with a logged-in session"
     ],
     a: 2,
     t: "Cookies signal personalised responses, so caches typically bypass them, which is why logged-in traffic costs more server time.",
@@ -4185,7 +4220,7 @@ window.QUESTION_BANK = [
     o: [
       "The monthly cost of storing and restoring backups for the site",
       "The point in time you must recover to, which sets how much data loss is acceptable",
-      "The number of backup copies you must keep, and where they live",
+      "The number of backup copies you must keep, and where each one lives",
       "How long the site may stay down before it must be back online"
     ],
     a: 1,
@@ -4198,7 +4233,7 @@ window.QUESTION_BANK = [
     s: "Disaster Recovery", d: 2, level: "Author", stage: 3,
     q: "Why should you test-restore backups regularly?",
     o: [
-      "Restoring clears caches and speeds the site up",
+      "Restoring clears old caches and speeds the site up for a while",
       "Most hosts require a monthly restore test",
       "A backup you've never restored may be incomplete or unusable",
       "Each restore deletes the oldest backups"
@@ -4243,10 +4278,10 @@ window.QUESTION_BANK = [
     s: "Security", d: 3, level: "Editor", stage: 1,
     q: "A \"Delete\" link in wp-admin performs the delete on a plain GET request. What makes it CSRF-safe?",
     o: [
-      "Serve wp-admin over HTTPS so the request can't be forged",
+      "Serve wp-admin over HTTPS so the request can't be forged by others",
       "Make the link open in a new tab with rel=\"noopener\"",
       "A nonce via wp_nonce_url(), checked with check_admin_referer(), plus a capability check",
-      "Switch to a POST form, which browsers won't send cross-site"
+      "Switch to a POST form, which browsers never send when the request comes from another site"
     ],
     a: 2,
     t: "Without a nonce, another site could trigger the link in a logged-in admin's browser. Nonce plus capability checks intent and permission.",
@@ -4350,9 +4385,9 @@ window.QUESTION_BANK = [
     s: "Security", d: 3, level: "Editor", stage: 1,
     q: "An integration's Application Password leaks. What's the right response?",
     o: [
-      "Delete the user account the password belongs to",
+      "Delete the user account the password belongs to, along with its content",
       "Disable the REST API for the whole site until it's fixed",
-      "Change the site URL so the leaked credentials stop matching",
+      "Change the site URL so the leaked credentials no longer match the site",
       "Revoke that application password only; the main password and other apps keep working"
     ],
     a: 3,
@@ -4399,7 +4434,7 @@ window.QUESTION_BANK = [
     q: "A custom profile form saves a \"role\" field from $_POST. What must happen first?",
     o: [
       "Sanitize it with sanitize_key() and then save it",
-      "Verify a nonce, which confirms the user may change roles",
+      "Verify a nonce, which confirms the user is allowed to change roles",
       "Nothing; WordPress validates roles when they're saved",
       "Check current_user_can( 'promote_users' ); never trust the submitted role"
     ],
@@ -4450,8 +4485,8 @@ window.QUESTION_BANK = [
     q: "A network has 5,000 sites. A task loops get_sites() and calls switch_to_blog() for each on a page load. What's the problem?",
     o: [
       "Thousands of context switches in one request is slow; batch it in WP-CLI or a background job",
-      "Nothing; switch_to_blog() is cheap enough for any number of sites",
-      "switch_to_blog() loads every plugin of each site it switches to",
+      "Nothing; switch_to_blog() is cheap enough for any number of sites in a request",
+      "switch_to_blog() loads every plugin and theme of each site it switches to",
       "get_sites() only returns sites created in the last year"
     ],
     a: 0,
@@ -4468,7 +4503,7 @@ window.QUESTION_BANK = [
     q: "You want /events/2026/ to load an events archive filtered by year. What do you need?",
     o: [
       "add_rewrite_rule() to a query, a registered query var, and a rewrite flush",
-      "A page called events with a template that reads the year",
+      "A page called events with a template that reads the year from the URL",
       "A redirect in .htaccess from /events/2026/ to ?year=2026",
       "A shortcode on an Events page that filters by the URL"
     ],
@@ -4487,8 +4522,8 @@ window.QUESTION_BANK = [
     o: [
       "Flushing the object cache after the rule is added",
       "Registering event_year with the query_vars filter (or add_rewrite_tag())",
-      "Calling wp_reset_query() before reading the variable",
-      "Adding the rule at a higher hook priority than core"
+      "Calling wp_reset_query() before reading the variable in the template",
+      "Adding the rule at a higher hook priority than core's own rules"
     ],
     a: 1,
     t: "WordPress discards unknown query vars. The query_vars filter or add_rewrite_tag() makes them public.",
@@ -4528,9 +4563,9 @@ window.QUESTION_BANK = [
     s: "Performance", d: 3, level: "Editor", stage: 1,
     q: "What does ?_embed do on a REST request?",
     o: [
-      "Removes every _links entry to make the response smaller",
+      "Removes every _links entry so the response is smaller and faster",
       "Caches the response on the server for later requests",
-      "Returns rendered HTML instead of JSON for the post",
+      "Returns the rendered HTML of the post instead of the usual JSON",
       "Includes linked resources (author, featured media, terms) in the same response"
     ],
     a: 3,
@@ -4554,8 +4589,8 @@ window.QUESTION_BANK = [
     q: "You must change post data (for example force a field) before it's written to the database. Which hook fits?",
     o: [
       "wp_insert_post_data (filter)",
-      "publish_post (action)",
-      "the_post (action)",
+      "transition_post_status (action)",
+      "pre_post_update (action)",
       "save_post (action)"
     ],
     a: 0,
@@ -4883,8 +4918,8 @@ window.QUESTION_BANK = [
     s: "Performance", d: 3, level: "Editor", stage: 2,
     q: "What does PHP's OPcache do?",
     o: [
-      "Caches full HTML pages so PHP doesn't run for repeat visits",
-      "Caches database query results between requests",
+      "Caches full HTML pages so PHP doesn't run again for repeat visits",
+      "Caches database query results in memory between separate requests",
       "Keeps compiled PHP bytecode in memory so scripts aren't recompiled each request",
       "Minifies and combines JavaScript files on the fly"
     ],
@@ -4900,8 +4935,8 @@ window.QUESTION_BANK = [
     o: [
       "Disable OPcache so workers spend less time on each script",
       "Stop page loads waiting on the API: short timeouts, caching, or a background call",
-      "Add a plugin that retries the API until it responds",
-      "Raise max_execution_time so workers can wait longer"
+      "Add a plugin that retries the API call until it finally responds",
+      "Raise max_execution_time so each worker can wait longer for the API"
     ],
     a: 1,
     t: "Each blocked request holds a worker. Once all are busy, new requests fail. Removing slow synchronous calls frees them.",
@@ -4951,7 +4986,7 @@ window.QUESTION_BANK = [
     o: [
       "The browser console, which shows the PHP error",
       "The web server and PHP-FPM error logs; it may fail before WordPress loads",
-      "The wp_options table, where WordPress stores errors",
+      "The wp_options table, where WordPress saves errors it couldn't log",
       "The Media Library, for a corrupted upload"
     ],
     a: 1,
@@ -5027,7 +5062,7 @@ window.QUESTION_BANK = [
     o: [
       "Two identical production setups; switch traffic to the new one, and back to roll back",
       "Deploying only on weekdays, with green days for releases",
-      "Running the test suite in two browsers before each release",
+      "Running the full test suite in two different browsers before each release",
       "Colour-coding branches so reviewers know which are ready"
     ],
     a: 0,
@@ -5091,7 +5126,7 @@ window.QUESTION_BANK = [
       "From environment variables or a secrets store, read with getenv(), never committed",
       "In a .env file in the public web root, committed with the code",
       "In the wp_options table, loaded before wp-config.php runs",
-      "Hard-coded in wp-config.php and committed to a private repo"
+      "Hard-coded in wp-config.php and committed, since the repo is private"
     ],
     a: 0,
     t: "Keeping secrets out of the repository prevents leaks and lets each environment have its own values.",
@@ -5104,8 +5139,8 @@ window.QUESTION_BANK = [
     q: "What's the main benefit of feature toggles?",
     o: [
       "Code can ship switched off and be turned on or off later without a redeploy",
-      "Faster PHP, because code behind an off switch is skipped",
-      "Less testing, since switched-off code doesn't need tests",
+      "Faster PHP, because code behind a switched-off toggle is skipped entirely",
+      "Less testing, since code that ships switched off doesn't need tests yet",
       "Smaller databases, because unused features store no data"
     ],
     a: 0,
@@ -5118,7 +5153,7 @@ window.QUESTION_BANK = [
     s: "Change Management", d: 3, level: "Editor", stage: 3,
     q: "What should a good changelog entry focus on?",
     o: [
-      "Internal ticket numbers, so developers can look up the details",
+      "Internal ticket numbers, so developers can look up the full details later",
       "Notable changes for users, grouped (Added, Changed, Fixed, Removed), with version and date",
       "Nothing; the Git history already records every change",
       "Every commit message since the last release, in order"
@@ -5149,7 +5184,7 @@ window.QUESTION_BANK = [
     q: "What's a limitation of wp plugin verify-checksums?",
     o: [
       "It needs a paid WP-CLI licence to download the checksums",
-      "It overwrites changed files instead of just reporting them",
+      "It overwrites any changed files instead of just reporting the differences",
       "It only checks plugins from WordPress.org; premium and custom ones have no checksums",
       "It checks themes too, so it's slow on sites with many themes"
     ],
@@ -5166,7 +5201,7 @@ window.QUESTION_BANK = [
       "Restore last night's backup and accept the lost changes",
       "Nothing; a dropped table can't be brought back",
       "Restore the full backup, then replay the binary logs to just before 14:05",
-      "Run wp db repair to rebuild the table from the logs"
+      "Run wp db repair, which rebuilds dropped tables from the binary logs"
     ],
     a: 2,
     t: "Binary logs record changes since the backup, so they can be replayed to a chosen moment.",
@@ -5193,7 +5228,7 @@ window.QUESTION_BANK = [
     s: "Disaster Recovery", d: 3, level: "Editor", stage: 3,
     q: "Why is a backup stored only on the same server as the site a weak backup?",
     o: [
-      "It's slower to restore than a backup kept off-site",
+      "It's slower to restore than a backup that's kept with another provider",
       "It doubles the disk space the site uses on the server",
       "WordPress can't read backups stored on its own server",
       "A server failure, hack or host problem can destroy site and backup together"
@@ -5397,7 +5432,7 @@ window.QUESTION_BANK = [
       "Set $_SERVER['HTTPS'] = 'on' when the trusted proxy sends X-Forwarded-Proto: https",
       "Change siteurl and home to http:// so the redirects stop",
       "Turn off HTTPS on the load balancer and serve plain HTTP",
-      "Remove FORCE_SSL_ADMIN from wp-config.php so admin uses HTTP"
+      "Remove FORCE_SSL_ADMIN from wp-config.php so the admin stops redirecting"
     ],
     a: 0,
     t: "WordPress checks $_SERVER['HTTPS']. The handbook shows mapping the proxy's header so is_ssl() is correct.",
@@ -5445,8 +5480,8 @@ window.QUESTION_BANK = [
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "Since WordPress 6.2, how do you safely insert a table or column name into a prepared query?",
     o: [
-      "esc_sql() around the name",
-      "Use %s",
+      "Wrap the name in esc_sql() before adding it to the query",
+      "Use %s, which quotes the name like any other value",
       "Concatenate it after sanitize_key()",
       "The %i identifier placeholder in $wpdb->prepare()"
     ],
@@ -5491,7 +5526,7 @@ window.QUESTION_BANK = [
     q: "After a suspected account takeover, how do you log the user out of every device from code?",
     o: [
       "Delete the session cookies in your own browser",
-      "Flush the object cache, which holds their sessions",
+      "Flush the object cache, which is where their sessions are kept",
       "Destroy their sessions with WP_Session_Tokens (e.g. destroy_all())",
       "Change the auth keys for that user's account only"
     ],
@@ -5638,8 +5673,8 @@ window.QUESTION_BANK = [
     s: "Security", d: 3, level: "Administrator", stage: 1,
     q: "What do the WordPress.org plugin guidelines say about obfuscated code?",
     o: [
-      "Only JavaScript may be obfuscated",
-      "Obfuscation is fine for premium features",
+      "Only JavaScript may be obfuscated, never the PHP files",
+      "Obfuscation is fine as long as it only covers premium features",
       "It's required for licence checks",
       "Code must be human-readable; obfuscation isn't allowed"
     ],
@@ -5716,8 +5751,8 @@ window.QUESTION_BANK = [
     s: "Performance", d: 3, level: "Administrator", stage: 2,
     q: "What does Time to First Byte (TTFB) mainly reflect?",
     o: [
-      "How long the page's JavaScript takes to execute",
-      "How long images take to download and decode",
+      "How long the page's JavaScript takes to download and execute",
+      "How long images take to download and decode on the device",
       "How long the server and network take before the first byte arrives",
       "How much the layout shifts while the page loads"
     ],
@@ -5856,8 +5891,8 @@ window.QUESTION_BANK = [
     s: "Performance", d: 3, level: "Administrator", stage: 2,
     q: "Which SQL finds how much data is autoloaded on every request (WordPress 6.6+ values)?",
     o: [
-      "SELECT COUNT(*) FROM wp_options WHERE autoload = 'yes'",
-      "SELECT SUM(LENGTH(option_value)) FROM wp_options WHERE autoload = 'no'",
+      "SELECT SUM(LENGTH(option_value)) FROM wp_options WHERE autoload = 'yes'",
+      "SELECT SUM(LENGTH(option_value)) FROM wp_options WHERE autoload IN ('no','off','auto-off')",
       "SELECT SUM(LENGTH(option_value)) FROM wp_options WHERE autoload IN ('yes','on','auto-on','auto')",
       "SHOW TABLE STATUS LIKE 'wp_options'"
     ],
@@ -5887,9 +5922,9 @@ window.QUESTION_BANK = [
     q: "With HTTP/2, why is bundling every CSS and JS file into one less important than it used to be?",
     o: [
       "Bundled files can't be cached by browsers or CDNs",
-      "Browsers block bundles larger than a few hundred KB",
+      "Browsers block bundled files that are larger than a few hundred KB",
       "HTTP/2 multiplexes many requests over one connection, cutting per-request cost",
-      "HTTP/2 compresses and minifies JavaScript automatically"
+      "HTTP/2 compresses and minifies JavaScript automatically in transit"
     ],
     a: 2,
     t: "Multiplexing lowers the cost of several files, so smaller, separately cached files can be better.",
@@ -6075,7 +6110,7 @@ window.QUESTION_BANK = [
       "Paying refunds to customers for the downtime allowed under the SLO",
       "Measuring how fast each developer ships changes in a given sprint",
       "Setting how much the team may spend on extra servers each month",
-      "Deciding risk: releases go on while budget remains; reliability comes first once it's spent"
+      "Deciding risk: ship while budget remains; reliability first once it's spent"
     ],
     a: 3,
     t: "The 0.1% allowed failure is a budget that balances shipping speed against reliability.",
@@ -6238,7 +6273,12 @@ window.QUESTION_BANK = [
     id: "q-0438",
     s: "Disaster Recovery", d: 3, level: "Administrator", stage: 3,
     q: "Which guidance covers writing an IT contingency (recovery) plan, including roles, procedures and testing?",
-    o: ["OWASP ASVS", "PSR-12", "RFC 5861", "NIST SP 800-34"],
+    o: [
+      "OWASP ASVS 4.0",
+      "PSR-12",
+      "RFC 5861",
+      "NIST SP 800-34"
+    ],
     a: 3,
     t: "NIST SP 800-34 is the contingency planning guide, which also defines RTO and RPO.",
     p: "It's a standard handbook for planning recovery.",
@@ -6262,7 +6302,7 @@ window.QUESTION_BANK = [
       "Edit wp-config.php to set the mysqldump options",
       "You can't; WP-CLI uses fixed mysqldump settings",
       "Add them to wp db export, e.g. wp db export --single-transaction",
-      "Use wp db optimize, which accepts mysqldump flags"
+      "Use wp db optimize, which passes any mysqldump flags straight through"
     ],
     a: 2,
     t: "wp db export passes extra arguments on to mysqldump.",
@@ -6277,7 +6317,7 @@ window.QUESTION_BANK = [
       "You need evidence to find the entry point and scope; cleaning first destroys it",
       "Having a copy makes the cleanup itself run faster afterwards",
       "Most hosts require a copy before they'll help with cleanup",
-      "It isn't needed as long as you have a recent clean backup"
+      "It isn't needed as long as you have a recent backup from before the attack"
     ],
     a: 0,
     t: "NIST incident response guidance includes evidence gathering and analysis as part of handling an incident.",
@@ -6397,7 +6437,7 @@ window.QUESTION_BANK = [
       "Naming who caused the incident in the summary",
       "Concrete action items with owners and due dates, tracked to completion",
       "Closing the incident ticket as quickly as possible",
-      "A long, detailed document shared with everyone"
+      "A long, detailed document shared with everyone in the company"
     ],
     a: 1,
     t: "Google's SRE guidance stresses follow-up actions; without them the same incident tends to recur.",
@@ -6409,7 +6449,7 @@ window.QUESTION_BANK = [
     s: "Debugging", d: 2, level: "Author", stage: 2,
     q: "On a client site, one-segment page URLs such as /contact/ and /donate/ return 404 while blog posts load fine. The stored rewrite rules show a broad catch-all rule from a custom post type sitting above the rule for pages. Why does that break the pages?",
     o: [
-      "WordPress uses the first rewrite rule whose pattern matches, so the earlier catch-all claims the URL and looks for a post that doesn't exist",
+      "WordPress uses the first rule that matches, so the catch-all claims the URL and finds no post",
       "WordPress compares all rules and picks the longest pattern, so the shorter page rule always loses",
       "Pages are looked up by ID only, so any rewrite rule placed above them stops pages from loading",
       "A catch-all rule makes the web server skip WordPress, so the 404 comes from the server"
@@ -6427,7 +6467,7 @@ window.QUESTION_BANK = [
     s: "Performance", d: 2, level: "Author", stage: 1,
     q: "A theme runs a function on every 404 that deletes and rebuilds the site's rewrite rules. What is the right fix?",
     o: [
-      "Rebuild rewrite rules only when they actually change, such as on plugin or theme activation or after editing a slug",
+      "Rebuild the rules only when they change, such as on activation or after editing a slug",
       "Keep it, but switch to a soft flush so .htaccess is not rewritten",
       "Move the flush to the init hook so it runs on every request instead of only on 404s",
       "Add a short sleep before the flush so simultaneous 404s don't collide"
@@ -6518,7 +6558,7 @@ window.QUESTION_BANK = [
     o: [
       "Use delete_option() with a sanitized name, or $wpdb->prepare() with a %s placeholder",
       "Run esc_html() on $name before it goes into the query",
-      "Wrap $name in double quotes instead of single quotes in the SQL",
+      "Wrap $name in double quotes instead of single quotes inside the SQL string",
       "Base64-encode $name before putting it in the query"
     ],
     a: 0,
@@ -6584,7 +6624,7 @@ window.QUESTION_BANK = [
     o: [
       "Return an auth error from rest_authentication_errors when the user isn't logged in",
       "Turn off the REST API completely for the whole site",
-      "Block /wp-json/ in robots.txt so it isn't crawled",
+      "Block /wp-json/ in robots.txt so the endpoints aren't crawled or listed",
       "Rename the post types so their endpoints are hard to guess"
     ],
     a: 0,
@@ -6775,7 +6815,7 @@ window.QUESTION_BANK = [
     q: "Weeks after a redesign launches, Search Console lists most pages as \"Excluded by 'noindex' tag\". robots.txt looks normal. The production database was copied from staging at launch. What's the most likely cause?",
     o: [
       "The \"Discourage search engines\" setting came over with the database, so every page outputs noindex",
-      "The XML sitemap wasn't resubmitted in Search Console after launch",
+      "The XML sitemap wasn't resubmitted in Search Console after the launch went live",
       "The permalinks changed, and Google treats new URLs as noindex for 30 days",
       "robots.txt needs an explicit Allow: / line before pages can be indexed"
     ],
@@ -6792,8 +6832,8 @@ window.QUESTION_BANK = [
     s: "Change Management", d: 2, level: "Author", stage: 2,
     q: "A redesign changes the URL structure of about 300 existing pages. Which redirect plan follows Google's site-move guidance?",
     o: [
-      "Map each old URL to its closest new equivalent with a server-side permanent (301) redirect, and keep the redirects for at least a year",
-      "Redirect every old URL to the new home page so no visitor sees a 404",
+      "Map each old URL to its closest new page with a server-side 301, and keep the redirects a year or more",
+      "Redirect every old URL to the new home page so no visitor ever sees a 404 error",
       "Use temporary (302) redirects for the first few months in case the structure changes again",
       "Leave the old URLs returning 404 and rely on the new XML sitemap"
     ],
@@ -6822,7 +6862,7 @@ window.QUESTION_BANK = [
     s: "Custom Development", d: 2, level: "Contributor", stage: 3,
     q: "You want wp_mail() to send through an authenticated SMTP server instead of PHP's mail(). Which hook lets your code reconfigure the mailer?",
     o: [
-      "phpmailer_init, which passes the PHPMailer object so you can call isSMTP() and set credentials",
+      "phpmailer_init, which passes the PHPMailer object to switch to SMTP",
       "wp_mail_failed, which runs when PHP's mail() can't send a message",
       "wp_mail_content_type, which sets how outgoing messages are encoded",
       "wp_mail_from, which sets the sending address and mail server"
@@ -6842,7 +6882,7 @@ window.QUESTION_BANK = [
     o: [
       "Remove their verification token (HTML file, meta tag or DNS TXT record), which could restore access",
       "Nothing; removing them in Users and permissions is permanent",
-      "Delete the Search Console property and create it again from scratch",
+      "Delete the Search Console property and create and verify it again from scratch",
       "Change the WordPress admin password and the hosting password"
     ],
     a: 0,

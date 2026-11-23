@@ -38,6 +38,7 @@ Every question has a stable `id` such as `q-0123`. The editor gives new question
 
 - [ ] The correct answer is right, checked against official documentation (developer.wordpress.org, php.net, the host's or tool's own docs).
 - [ ] Wrong answers are plausible, but clearly wrong to someone who knows the topic.
+- [ ] The correct option isn't the giveaway by length. The check warns when it's 1.3× longer than the longest wrong one; trim it or make the wrong options fuller.
 - [ ] Both explanations are accurate. The plain-English one makes sense to a non-developer.
 - [ ] Role level and stage fit the difficulty (Subscriber = junior … Administrator = expert).
 - [ ] Scenarios: at least one good outcome, at least one bad one, and ideal paths that make sense.
