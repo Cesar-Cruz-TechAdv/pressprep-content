@@ -1955,5 +1955,120 @@ window.SCENARIO_BANK = [
     ideal: {
       safest: ["s1:0", "s2:all", "s3:0"]
     }
+  },
+
+  {
+    id: "shared-theme-hotfix",
+    title: "Four o'clock, client on the phone",
+    s: "Change Management",
+    level: "Author",
+    stage: 2,
+    d: 2,
+    priorities: { speed: 2, security: 1, stability: 3, rootCause: 3, communication: 2 },
+    intro: "A shared parent theme runs on several client sites. It has been copied by hand between projects for years, so no two copies are identical and none is the agreed source of truth. At four in the afternoon a template error breaks the contact page on one site and the client is on the phone.",
+    timeNotes: "Minute ranges are judgment based on a small agency's typical turnaround, not vendor figures. The documented points are the parent theme update behaviour, where Additional CSS is stored, and the file editor constant.",
+    refs: [
+      "https://developer.wordpress.org/themes/advanced-topics/child-themes/",
+      "https://developer.wordpress.org/apis/wp-config-php/",
+      "https://developer.wordpress.org/reference/functions/wp_get_custom_css_post/"
+    ],
+    start: "s1",
+    steps: {
+      s1: {
+        type: "single",
+        prompt: "The contact page is down. What do you do first?",
+        options: [
+          {
+            text: "Fix it in the repository, get it reviewed, tag it and deploy",
+            m: { stability: 2, rootCause: 2, speed: -1 },
+            min: [60, 180],
+            t: "This is the correct steady-state path and it leaves a reviewable history, but on a broken production page it may be too slow to be the first move. The real signal here is that if the proper route is too slow for an outage, the deploy process is the thing to fix.",
+            p: "This is the right way to work normally. During an outage it may simply take too long, which tells you the deploy process needs to be quicker.",
+            next: "s2"
+          },
+          {
+            text: "Hotfix on the server to restore the page, then mirror the same change into the repository the same day",
+            m: { speed: 2, stability: 1, communication: 1 },
+            min: [15, 45],
+            t: "An acknowledged emergency path people actually follow beats a strict rule they quietly ignore. The load-bearing part is step two: a hotfix that never reaches the repository recreates the divergence this whole situation came from.",
+            p: "Get the page working, then put the same change into the shared code today. Skipping that second step is how the copies drifted apart in the first place.",
+            next: "s2"
+          },
+          {
+            text: "Patch it through Appearance then Theme File Editor in the dashboard",
+            m: { speed: 1, stability: -2, rootCause: -2 },
+            min: [5, 15],
+            t: "The change exists on one server, is recorded nowhere, and is invisible to the next person or tool that reads the codebase. Setting DISALLOW_FILE_EDIT in wp-config.php removes this route; DISALLOW_FILE_MODS also blocks dashboard installs and updates.",
+            p: "Editing code inside the dashboard leaves a change nobody can find later. Turn that editor off so it stops being an option.",
+            next: "o:drift"
+          },
+          {
+            text: "If the breakage is only visual, hide the broken element with Customizer then Additional CSS and fix it properly tomorrow",
+            m: { speed: 2, stability: 1, rootCause: -2 },
+            min: [5, 20],
+            t: "Additional CSS is stored as a custom_css post in the database rather than in a theme file, so it buys time without creating code drift. It is a bandage, not a fix, and on a broken contact form it hides a lead-capture failure rather than resolving it.",
+            p: "A styling patch stored in the database buys you the evening without touching any code. It does not fix the fault, and on a contact page the fault may be costing the client enquiries.",
+            next: "s2"
+          }
+        ]
+      },
+      s2: {
+        type: "multi",
+        prompt: "Before you call this done, which of these do you do? Select all that apply.",
+        missPenalty: { rootCause: -1 },
+        options: [
+          {
+            text: "Decide whether the fix is genuinely universal, or one client's need that belongs in that client's child theme",
+            good: true,
+            critical: true,
+            m: { stability: 2, rootCause: 2 },
+            t: "A shared parent theme accumulates client-specific hacks precisely because this question is skipped under time pressure. Universal logic and data shaping belong in the parent; anything naming one client, or any markup a designer would change per client, belongs in the child.",
+            p: "Work out whether every client needs this change or just this one. One client's fix goes in that client's own theme."
+          },
+          {
+            text: "Check whether the same fault exists in the other copies of the shared theme",
+            good: true,
+            critical: true,
+            m: { rootCause: 2, communication: 1 },
+            t: "With copies that have diverged, a bug fixed on one site is still live on the others, and you only learn that by looking. This is also the cheapest way to start building the inventory of differences that reconciliation will need.",
+            p: "The same bug is probably sitting on the other sites too. Check now rather than waiting for the next phone call."
+          },
+          {
+            text: "Record what was deployed and why, including the version or commit you put live",
+            good: true,
+            m: { communication: 2, stability: 1 },
+            t: "A recorded deploy reference is what makes a rollback a decision rather than an investigation. It also gives the next person the reasoning, which is the part that is never recoverable from the code itself.",
+            p: "Write down what you deployed and why. That record is what lets anyone undo it quickly later."
+          },
+          {
+            text: "Copy the patched file over to the other sites by SFTP while you are in there",
+            good: false,
+            m: { stability: -2, rootCause: -1 },
+            t: "This is the exact mechanism that produced the diverged copies: a change applied directly to several servers, recorded in none of them. Fixing other sites is right; the hand-copy is the part to stop doing.",
+            p: "Hand-copying files between servers is how the copies drifted apart. Fixing the other sites is right, but not this way."
+          }
+        ],
+        next: "o:canonical"
+      }
+    },
+    outcomes: {
+      canonical: {
+        title: "Page up, repository still true",
+        verdict: "good",
+        summary: "The site was restored quickly and the shared codebase still reflects what is actually running.",
+        t: "You kept the emergency path and closed it properly: the change is in the repository, scoped correctly between parent and child, checked against the other copies, and recorded. The structural follow-up is making deploys cheap enough that the dashboard editor stops being tempting at all.",
+        p: "The site is back and the shared code matches what is live. The longer-term job is making deploys quick enough that nobody is tempted to edit on the server."
+      },
+      drift: {
+        title: "One more undocumented difference",
+        verdict: "bad",
+        summary: "The page works and the shared theme now differs from every other copy in a way nobody has recorded.",
+        t: "This is how reconciliation becomes a multi-day archaeology exercise rather than a diff: a change that exists on exactly one server, with no record of what it was or why. Switch off the dashboard file editor and route shared changes through the repository.",
+        p: "The page works, but this site's code is now different from the others and nobody knows how. Enough of these and no one can tell which version is correct."
+      }
+    },
+    ideal: {
+      safest: ["s1:1", "s2:all"]
+    }
   }
 ];
