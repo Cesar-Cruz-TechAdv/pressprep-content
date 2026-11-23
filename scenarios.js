@@ -2369,5 +2369,933 @@ window.SCENARIO_BANK = [
     ideal: {
       safest: ["s1:0", "s2:0", "s3:all"]
     }
+  },
+  {
+    id: "theme-edits-lost-after-update",
+    title: "Custom theme edits vanished after an update",
+    s: "Custom Development",
+    level: "Subscriber",
+    stage: 2,
+    d: 1,
+    priorities: {
+      speed: 2,
+      security: 1,
+      stability: 2,
+      rootCause: 2,
+      communication: 1
+    },
+    intro: "A client's site lost its custom header text and colours overnight. The theme auto-updated, and a previous developer had made the changes directly in the theme's own functions.php and style.css.",
+    timeNotes: "Times are reviewer judgment for a small brochure site with a recent backup or a copy of the old theme files.",
+    refs: [
+      "https://developer.wordpress.org/themes/advanced-topics/child-themes/",
+      "https://developer.wordpress.org/themes/basics/theme-functions/"
+    ],
+    start: "s1",
+    steps: {
+      s1: {
+        type: "single",
+        prompt: "How do you bring the changes back?",
+        options: [
+          {
+            text: "Copy the old edits from a backup into a new child theme, then activate it",
+            next: "s2",
+            min: [
+              30,
+              90
+            ],
+            m: {
+              speed: 1,
+              security: 0,
+              stability: 2,
+              rootCause: 2,
+              communication: 0
+            },
+            t: "A child theme keeps your changes in its own folder, so the parent theme can update without wiping them.",
+            p: "Put your changes in your own box so the update can't throw them away."
+          },
+          {
+            text: "Paste the old edits back into the updated theme's files and carry on",
+            next: "o:will-happen-again",
+            min: [
+              15,
+              30
+            ],
+            m: {
+              speed: 2,
+              security: 0,
+              stability: -1,
+              rootCause: -1,
+              communication: 0
+            },
+            t: "The next theme update overwrites the same files again, so the fix only lasts until then.",
+            p: "Repainting a wall the landlord repaints every month."
+          },
+          {
+            text: "Roll the theme back to the old version and switch its updates off for good",
+            next: "o:frozen-theme",
+            min: [
+              10,
+              30
+            ],
+            m: {
+              speed: 1,
+              security: -2,
+              stability: 0,
+              rootCause: -1,
+              communication: 0
+            },
+            t: "Blocking theme updates leaves the site on an old version that won't get security fixes.",
+            p: "Keeping an old lock because the new one needs a new key."
+          }
+        ]
+      },
+      s2: {
+        type: "single",
+        prompt: "The site looks right again. What else do you do?",
+        options: [
+          {
+            text: "Tell the client what happened and note that edits now live in the child theme",
+            next: "o:good",
+            min: [
+              10,
+              20
+            ],
+            m: {
+              speed: 0,
+              security: 0,
+              stability: 1,
+              rootCause: 1,
+              communication: 2
+            },
+            t: "Recording where customisations live stops the next developer repeating the mistake.",
+            p: "Explain it once so it doesn't happen twice."
+          },
+          {
+            text: "Nothing more; the site looks right, so the job is done and the ticket can close",
+            next: "o:quiet-fix",
+            min: 0,
+            m: {
+              speed: 1,
+              security: 0,
+              stability: 0,
+              rootCause: 0,
+              communication: -2
+            },
+            t: "The client still doesn't know why the site changed or what was done about it.",
+            p: "Fixed, but nobody knows how or why."
+          }
+        ]
+      }
+    },
+    outcomes: {
+      "will-happen-again": {
+        title: "Fixed until the next update",
+        verdict: "bad",
+        summary: "The edits are back, but the next theme update will wipe them again.",
+        t: "Customisations belong in a child theme or plugin, never in a theme you don't control.",
+        p: "Same problem, booked for next month."
+      },
+      "frozen-theme": {
+        title: "Safe today, risky tomorrow",
+        verdict: "bad",
+        summary: "The site looks right, but its theme no longer gets security updates.",
+        t: "Keep themes updated and move custom code out of them instead.",
+        p: "You traded a cosmetic problem for a security one."
+      },
+      "quiet-fix": {
+        title: "Fixed quietly",
+        verdict: "ok",
+        summary: "The edits are safe in a child theme, but the client wasn't told what happened.",
+        t: "Close the loop with the client and record where customisations live.",
+        p: "Good fix, missing explanation."
+      },
+      good: {
+        title: "Fixed for good",
+        verdict: "good",
+        summary: "The edits live in a child theme that survives updates, and the client knows why.",
+        t: "Child theme, restored edits, and a clear note.",
+        p: "Done properly and explained."
+      }
+    },
+    ideal: {
+      fastestSafe: [
+        "s1:0",
+        "s2:0"
+      ]
+    }
+  },
+  {
+    id: "settings-form-without-nonce",
+    title: "A settings form with no nonce or capability check",
+    s: "Security",
+    level: "Contributor",
+    stage: 1,
+    d: 2,
+    priorities: {
+      speed: 1,
+      security: 3,
+      stability: 1,
+      rootCause: 2,
+      communication: 1
+    },
+    intro: "Reviewing a colleague's plugin before release, you find an admin settings form that saves $_POST['banner_text'] straight into an option and later prints it with echo, with no nonce and no capability check.",
+    timeNotes: "Times are reviewer judgment for a small change in one handler and one template.",
+    refs: [
+      "https://developer.wordpress.org/apis/security/nonces/",
+      "https://developer.wordpress.org/apis/security/sanitizing/",
+      "https://developer.wordpress.org/apis/security/escaping/"
+    ],
+    start: "s1",
+    steps: {
+      s1: {
+        type: "single",
+        prompt: "What should the save handler do?",
+        options: [
+          {
+            text: "Check a nonce and current_user_can(), then save the value with sanitize_text_field()",
+            next: "s2",
+            min: [
+              15,
+              30
+            ],
+            m: {
+              speed: 1,
+              security: 2,
+              stability: 1,
+              rootCause: 2,
+              communication: 0
+            },
+            t: "The nonce confirms intent, the capability check confirms permission, and sanitizing cleans the input.",
+            p: "Check who's asking, check they meant it, then clean what they sent."
+          },
+          {
+            text: "Add a nonce check only, since only logged-in admins can reach the settings screen",
+            next: "o:half-locked",
+            min: [
+              5,
+              15
+            ],
+            m: {
+              speed: 1,
+              security: 0,
+              stability: 0,
+              rootCause: 0,
+              communication: 0
+            },
+            t: "A nonce isn't permission: any logged-in user who can load a valid nonce may still submit the form.",
+            p: "A ticket proves you meant to come in, not that you're allowed in."
+          },
+          {
+            text: "Leave the handler as it is and run strip_tags() on the value when it's printed later",
+            next: "o:half-locked",
+            min: [
+              5,
+              10
+            ],
+            m: {
+              speed: 1,
+              security: -1,
+              stability: 0,
+              rootCause: -1,
+              communication: 0
+            },
+            t: "Without a nonce and capability check, other people can still change the setting through forged requests.",
+            p: "Cleaning the mess afterwards while leaving the door open."
+          }
+        ]
+      },
+      s2: {
+        type: "single",
+        prompt: "And where the value is printed on the front end?",
+        options: [
+          {
+            text: "Escape it at output with esc_html(), even though it was sanitized when saved",
+            next: "o:good",
+            min: [
+              5,
+              10
+            ],
+            m: {
+              speed: 0,
+              security: 2,
+              stability: 1,
+              rootCause: 1,
+              communication: 0
+            },
+            t: "Escape late: output escaping protects against anything that reached the database another way.",
+            p: "Lock the door on the way in and on the way out."
+          },
+          {
+            text: "Keep the plain echo, since the value is now sanitized when it's saved",
+            next: "o:no-escaping",
+            min: 0,
+            m: {
+              speed: 1,
+              security: -1,
+              stability: 0,
+              rootCause: -1,
+              communication: 0
+            },
+            t: "Data can reach the option by other routes, such as an import or another plugin, so output still needs escaping.",
+            p: "Trusting the front door when there's also a back door."
+          }
+        ]
+      }
+    },
+    outcomes: {
+      "half-locked": {
+        title: "Half locked",
+        verdict: "bad",
+        summary: "The form can still be abused because one of the checks is missing.",
+        t: "Saving settings needs a nonce, a capability check and sanitization together.",
+        p: "One lock isn't enough on this door."
+      },
+      "no-escaping": {
+        title: "Safe in, unsafe out",
+        verdict: "mixed",
+        summary: "Saving is protected, but the output isn't escaped.",
+        t: "Sanitize on input and escape on output, every time.",
+        p: "Good start, unfinished."
+      },
+      good: {
+        title: "Ready to ship",
+        verdict: "good",
+        summary: "The form checks intent and permission, cleans input and escapes output.",
+        t: "Nonce, capability, sanitize, escape.",
+        p: "All four locks in place."
+      }
+    },
+    ideal: {
+      safest: [
+        "s1:0",
+        "s2:0"
+      ]
+    }
+  },
+  {
+    id: "backup-wont-restore",
+    title: "The backup you need won't restore",
+    s: "Disaster Recovery",
+    level: "Author",
+    stage: 3,
+    d: 2,
+    priorities: {
+      speed: 2,
+      security: 1,
+      stability: 3,
+      rootCause: 1,
+      communication: 2
+    },
+    intro: "A failed update corrupted a client's shop database. You go to restore last night's backup from the backup plugin and find the database file in it is empty: the plugin has been saving files but failing on the database for weeks.",
+    timeNotes: "Times depend on the host. Host snapshot restores are often quick; rebuilding orders by hand can take a day. These are reviewer judgment.",
+    refs: [
+      "https://developer.wordpress.org/advanced-administration/security/backup/",
+      "https://developer.wordpress.org/cli/commands/db/export/"
+    ],
+    start: "s1",
+    steps: {
+      s1: {
+        type: "single",
+        prompt: "What do you check next?",
+        options: [
+          {
+            text: "Ask the host for its own server snapshots or database backups",
+            next: "s2",
+            min: [
+              20,
+              120
+            ],
+            m: {
+              speed: 1,
+              security: 0,
+              stability: 2,
+              rootCause: 0,
+              communication: 1
+            },
+            t: "Many hosts keep independent snapshots; a second, separate copy is exactly what the backup guidance recommends.",
+            p: "Check the spare key the landlord keeps."
+          },
+          {
+            text: "Restore the files from the plugin backup and rebuild the database from scratch by hand",
+            next: "o:lost-orders",
+            min: [
+              240,
+              600
+            ],
+            m: {
+              speed: -2,
+              security: 0,
+              stability: -1,
+              rootCause: 0,
+              communication: 0
+            },
+            t: "Files don't hold orders or customers, so a hand-built database loses real business data.",
+            p: "Rebuilding the shop from memory."
+          },
+          {
+            text: "Run the failed update again, since a second try often fixes a corrupted database",
+            next: "o:worse",
+            min: [
+              5,
+              15
+            ],
+            m: {
+              speed: 0,
+              security: 0,
+              stability: -2,
+              rootCause: -1,
+              communication: 0
+            },
+            t: "Repeating the action that corrupted the data can make it worse and overwrite what's left.",
+            p: "Pressing the button that broke it, again."
+          }
+        ]
+      },
+      s2: {
+        type: "single",
+        prompt: "The host's snapshot from last night restores the database. What now?",
+        options: [
+          {
+            text: "Tell the client about the lost hours, then schedule regular test restores of both files and database",
+            next: "o:good",
+            min: [
+              30,
+              60
+            ],
+            m: {
+              speed: 0,
+              security: 0,
+              stability: 2,
+              rootCause: 2,
+              communication: 2
+            },
+            t: "A backup you've never restored is a guess; regular test restores catch failures like this one.",
+            p: "Practise the fire drill before the fire."
+          },
+          {
+            text: "Leave the backup plugin as it is, since the host's snapshots turned out to be enough",
+            next: "o:same-trap",
+            min: 0,
+            m: {
+              speed: 1,
+              security: 0,
+              stability: -1,
+              rootCause: -1,
+              communication: -1
+            },
+            t: "The broken plugin is still failing, and nobody is checking whether any backup can be restored.",
+            p: "Lucky this time, same trap next time."
+          }
+        ]
+      }
+    },
+    outcomes: {
+      "lost-orders": {
+        title: "Orders lost",
+        verdict: "bad",
+        summary: "The site is back, but weeks of orders and customers are gone.",
+        t: "Look for every independent copy, such as host snapshots, before rebuilding.",
+        p: "Back online, but the till is empty."
+      },
+      worse: {
+        title: "Worse than before",
+        verdict: "bad",
+        summary: "Re-running the update damaged the database further.",
+        t: "Stop changes, preserve what's left, and find a clean copy.",
+        p: "Digging the hole deeper."
+      },
+      "same-trap": {
+        title: "Recovered, not protected",
+        verdict: "mixed",
+        summary: "Data is back, but the backups that failed are still failing.",
+        t: "Fix the backup job and test restores on a schedule.",
+        p: "Saved by luck."
+      },
+      good: {
+        title: "Recovered and protected",
+        verdict: "good",
+        summary: "You restored from a second copy, told the client and now test restores regularly.",
+        t: "Independent copies, honest communication, tested restores.",
+        p: "Back up, and ready for next time."
+      }
+    },
+    ideal: {
+      fastestSafe: [
+        "s1:0",
+        "s2:0"
+      ]
+    }
+  },
+  {
+    id: "unknown-admin-account",
+    title: "An administrator nobody recognises",
+    s: "Security",
+    level: "Editor",
+    stage: 1,
+    d: 2,
+    priorities: {
+      speed: 2,
+      security: 3,
+      stability: 1,
+      rootCause: 2,
+      communication: 1
+    },
+    intro: "During a routine user audit you find an administrator account called \"wpsupport\" that nobody on the team or the client side created.",
+    timeNotes: "Times are reviewer judgment for a single site with SFTP and WP-CLI access.",
+    refs: [
+      "https://wordpress.org/documentation/article/faq-my-site-was-hacked/",
+      "https://developer.wordpress.org/cli/commands/core/verify-checksums/",
+      "https://developer.wordpress.org/cli/commands/user/"
+    ],
+    start: "s1",
+    steps: {
+      s1: {
+        type: "single",
+        prompt: "What do you do first?",
+        options: [
+          {
+            text: "Note when it was created and what it did, back up, then remove it and reset every password and the salts",
+            next: "s2",
+            min: [
+              30,
+              60
+            ],
+            m: {
+              speed: 1,
+              security: 2,
+              stability: 1,
+              rootCause: 1,
+              communication: 0
+            },
+            t: "Recording the details and taking a snapshot before cleaning keeps the evidence you need to find the entry point; new salts log out anyone still signed in.",
+            p: "Photograph the break-in before you tidy up, then change every lock."
+          },
+          {
+            text: "Delete the account straight away and carry on, since the intruder has now lost access",
+            next: "o:back-again",
+            min: [
+              2,
+              5
+            ],
+            m: {
+              speed: 2,
+              security: -1,
+              stability: 0,
+              rootCause: -2,
+              communication: 0
+            },
+            t: "Whoever created it probably still has another way in, and deleting first loses the clues about how.",
+            p: "Throwing out the burglar's shoes and leaving the window open."
+          },
+          {
+            text: "Change only your own password, since the unknown account may belong to the host's support team",
+            next: "o:still-open",
+            min: [
+              5,
+              10
+            ],
+            m: {
+              speed: 1,
+              security: -2,
+              stability: 0,
+              rootCause: -1,
+              communication: 0
+            },
+            t: "An unexplained administrator is a compromise until proven otherwise; ask the host, but lock things down now.",
+            p: "Hoping the stranger in the house is the plumber."
+          }
+        ]
+      },
+      s2: {
+        type: "single",
+        prompt: "The account is gone and passwords are new. How do you find the way in?",
+        options: [
+          {
+            text: "Check core with wp core verify-checksums, review plugins and logs, and update the client",
+            next: "o:good",
+            min: [
+              60,
+              180
+            ],
+            m: {
+              speed: 0,
+              security: 2,
+              stability: 1,
+              rootCause: 2,
+              communication: 2
+            },
+            t: "Checksums reveal modified core files, and logs plus outdated plugins usually point to the entry point.",
+            p: "Check every door and window, then tell the owner."
+          },
+          {
+            text: "Install a security plugin and assume it will catch anything that's left",
+            next: "o:assumed-clean",
+            min: [
+              10,
+              20
+            ],
+            m: {
+              speed: 1,
+              security: 0,
+              stability: 0,
+              rootCause: -1,
+              communication: 0
+            },
+            t: "Scanners help, but without checking how the account appeared the hole may still be open.",
+            p: "A new alarm doesn't fix the broken window."
+          }
+        ]
+      }
+    },
+    outcomes: {
+      "back-again": {
+        title: "Back again next week",
+        verdict: "bad",
+        summary: "The account reappeared, because the way in was never found.",
+        t: "Preserve evidence, rotate every credential and find the entry point.",
+        p: "Same intruder, new name."
+      },
+      "still-open": {
+        title: "Door left open",
+        verdict: "bad",
+        summary: "The intruder still had full access while you waited.",
+        t: "Treat an unknown administrator as a compromise and contain it immediately.",
+        p: "Polite, and wrong."
+      },
+      "assumed-clean": {
+        title: "Probably clean",
+        verdict: "mixed",
+        summary: "Access is locked down, but nobody knows how the account got there.",
+        t: "Verify core files, review plugins and logs, and report to the client.",
+        p: "Tidy, but not finished."
+      },
+      good: {
+        title: "Contained and explained",
+        verdict: "good",
+        summary: "You kept evidence, locked everything down, found the cause and told the client.",
+        t: "Preserve, contain, investigate, communicate.",
+        p: "Handled like an incident."
+      }
+    },
+    ideal: {
+      safest: [
+        "s1:0",
+        "s2:0"
+      ]
+    }
+  },
+  {
+    id: "vulnerability-reported-in-your-plugin",
+    title: "A researcher reports a hole in your plugin",
+    s: "Security",
+    level: "Administrator",
+    stage: 1,
+    d: 3,
+    priorities: {
+      speed: 2,
+      security: 3,
+      stability: 1,
+      rootCause: 2,
+      communication: 3
+    },
+    intro: "A security researcher emails you privately: your plugin on WordPress.org, used on thousands of sites, has an SQL injection in a search parameter. They include a proof of concept.",
+    timeNotes: "Times are reviewer judgment for a single, well-understood bug with a small fix.",
+    refs: [
+      "https://developer.wordpress.org/plugins/wordpress-org/plugin-security/",
+      "https://developer.wordpress.org/reference/classes/wpdb/prepare/"
+    ],
+    start: "s1",
+    steps: {
+      s1: {
+        type: "single",
+        prompt: "How do you respond?",
+        options: [
+          {
+            text: "Thank them privately, reproduce it, and fix it with $wpdb->prepare()",
+            next: "s2",
+            min: [
+              60,
+              240
+            ],
+            m: {
+              speed: 1,
+              security: 2,
+              stability: 1,
+              rootCause: 2,
+              communication: 1
+            },
+            t: "Confirming the report and fixing the root cause with prepared statements closes the hole properly.",
+            p: "Thank the person who found the leak, then fix the pipe."
+          },
+          {
+            text: "Post about it in the support forum so users know to deactivate the plugin until there's a fix",
+            next: "o:public-too-soon",
+            min: [
+              10,
+              20
+            ],
+            m: {
+              speed: 1,
+              security: -2,
+              stability: 0,
+              rootCause: 0,
+              communication: -1
+            },
+            t: "Announcing an unfixed vulnerability publicly tells attackers exactly what to exploit on thousands of sites.",
+            p: "Shouting where the spare key is hidden."
+          },
+          {
+            text: "Add a filter that blocks the researcher's exact payload and release that as the fix",
+            next: "o:patched-symptom",
+            min: [
+              20,
+              40
+            ],
+            m: {
+              speed: 2,
+              security: -1,
+              stability: 0,
+              rootCause: -2,
+              communication: 0
+            },
+            t: "Blocking one payload leaves the injectable query in place; attackers simply vary the input.",
+            p: "Blocking one burglar's face instead of fixing the lock."
+          }
+        ]
+      },
+      s2: {
+        type: "single",
+        prompt: "The fix works. How do you release it?",
+        options: [
+          {
+            text: "Contact the Plugins team, ship a patch version crediting the researcher, and note a security fix in the changelog",
+            next: "o:good",
+            min: [
+              30,
+              90
+            ],
+            m: {
+              speed: 1,
+              security: 2,
+              stability: 1,
+              rootCause: 1,
+              communication: 2
+            },
+            t: "WordPress.org's plugin security guidance asks authors to involve the Plugins team, release a small versioned fix and credit the reporter.",
+            p: "Fix it, tell the right people, say thank you."
+          },
+          {
+            text: "Fold the fix quietly into the next feature release so nobody notices there was a problem",
+            next: "o:silent-fix",
+            min: [
+              0,
+              10
+            ],
+            m: {
+              speed: -1,
+              security: -1,
+              stability: 0,
+              rootCause: 0,
+              communication: -2
+            },
+            t: "Delaying the fix and hiding it leaves sites exposed and gives users no reason to update quickly.",
+            p: "Mending the brakes but not telling anyone to collect the car."
+          }
+        ]
+      }
+    },
+    outcomes: {
+      "public-too-soon": {
+        title: "Disclosed before the fix",
+        verdict: "bad",
+        summary: "Attackers saw the post before most sites had a fix.",
+        t: "Keep it private until a fixed version is available.",
+        p: "Good intentions, worst timing."
+      },
+      "patched-symptom": {
+        title: "Bypassed in a day",
+        verdict: "bad",
+        summary: "A slightly different payload got straight past the filter.",
+        t: "Fix the query itself with prepared statements.",
+        p: "The lock was never changed."
+      },
+      "silent-fix": {
+        title: "Fixed, slowly and silently",
+        verdict: "mixed",
+        summary: "The hole is closed eventually, but sites stayed exposed and nobody knew to update.",
+        t: "Release security fixes promptly and say so in the changelog.",
+        p: "Right fix, wrong release."
+      },
+      good: {
+        title: "Handled responsibly",
+        verdict: "good",
+        summary: "You fixed the root cause, coordinated the release and credited the researcher.",
+        t: "Private triage, real fix, coordinated release.",
+        p: "How it should be done."
+      }
+    },
+    ideal: {
+      safest: [
+        "s1:0",
+        "s2:0"
+      ]
+    }
+  },
+  {
+    id: "autoload-bloat-slows-every-page",
+    title: "Every page got slower overnight",
+    s: "Performance",
+    level: "Administrator",
+    stage: 2,
+    d: 3,
+    priorities: {
+      speed: 2,
+      security: 1,
+      stability: 2,
+      rootCause: 3,
+      communication: 1
+    },
+    intro: "After a plugin update, every page on a busy site, including wp-admin, is about half a second slower. There's no traffic spike, and the slowdown happens even on cached-out pages like the cart.",
+    timeNotes: "Times are reviewer judgment for a site with Query Monitor or WP-CLI access.",
+    refs: [
+      "https://make.wordpress.org/core/2024/06/18/options-api-disabling-autoload-for-large-options/",
+      "https://developer.wordpress.org/cli/commands/option/list/"
+    ],
+    start: "s1",
+    steps: {
+      s1: {
+        type: "single",
+        prompt: "Where do you look first?",
+        options: [
+          {
+            text: "Check how much data is autoloaded on every request, and which options are the largest",
+            next: "s2",
+            min: [
+              15,
+              30
+            ],
+            m: {
+              speed: 1,
+              security: 0,
+              stability: 1,
+              rootCause: 2,
+              communication: 0
+            },
+            t: "A slowdown on every request, admin included, points to work done on every load, such as a huge autoloaded option.",
+            p: "If every room is slow, check the hallway everyone walks through."
+          },
+          {
+            text: "Raise the PHP memory limit and add more PHP workers so each page gets more resources",
+            next: "o:bigger-server",
+            min: [
+              10,
+              60
+            ],
+            m: {
+              speed: 0,
+              security: 0,
+              stability: 0,
+              rootCause: -2,
+              communication: 0
+            },
+            t: "More resources hide the symptom; the oversized data is still loaded on every request.",
+            p: "Buying a bigger bag instead of emptying it."
+          },
+          {
+            text: "Purge every cache layer, since stale cached data usually explains a sitewide slowdown",
+            next: "o:cache-guess",
+            min: [
+              5,
+              10
+            ],
+            m: {
+              speed: 0,
+              security: 0,
+              stability: -1,
+              rootCause: -1,
+              communication: 0
+            },
+            t: "Purging makes things slower for a while and doesn't touch data loaded from the database on every request.",
+            p: "Repainting a car with an engine problem."
+          }
+        ]
+      },
+      s2: {
+        type: "single",
+        prompt: "A 9 MB option from the updated plugin is set to autoload. What do you do?",
+        options: [
+          {
+            text: "Set that option not to autoload, confirm the speed returns, and report it to the plugin's author",
+            next: "o:good",
+            min: [
+              15,
+              30
+            ],
+            m: {
+              speed: 1,
+              security: 0,
+              stability: 2,
+              rootCause: 2,
+              communication: 2
+            },
+            t: "Turning autoload off for a huge option stops it loading on every request; the vendor should fix the cause.",
+            p: "Stop carrying it everywhere, and tell whoever packed it."
+          },
+          {
+            text: "Delete the option, since anything that large must be leftover junk",
+            next: "o:broke-plugin",
+            min: [
+              2,
+              5
+            ],
+            m: {
+              speed: 1,
+              security: 0,
+              stability: -2,
+              rootCause: 0,
+              communication: 0
+            },
+            t: "The plugin may rely on that data, so deleting it can break features or lose settings.",
+            p: "Throwing out the box before checking what's in it."
+          }
+        ]
+      }
+    },
+    outcomes: {
+      "bigger-server": {
+        title: "Paid to stay slow",
+        verdict: "bad",
+        summary: "Hosting costs rose and pages are still slower than before.",
+        t: "Find what every request loads before adding resources.",
+        p: "More money, same problem."
+      },
+      "cache-guess": {
+        title: "Slower for a while",
+        verdict: "bad",
+        summary: "The purge made pages slower until caches warmed up, and the real cause remained.",
+        t: "Measure before acting: start with what loads on every request.",
+        p: "A guess that cost you."
+      },
+      "broke-plugin": {
+        title: "Fast, but broken",
+        verdict: "mixed",
+        summary: "Pages are fast again, but the plugin lost its data.",
+        t: "Change how the option loads instead of deleting data you don't own.",
+        p: "Fixed the speed, broke the feature."
+      },
+      good: {
+        title: "Fast again, cause reported",
+        verdict: "good",
+        summary: "You found the bloated option, stopped it autoloading and told the vendor.",
+        t: "Measure, fix the specific cause, report upstream.",
+        p: "Quick, precise and shared."
+      }
+    },
+    ideal: {
+      fastestSafe: [
+        "s1:0",
+        "s2:0"
+      ]
+    }
   }
 ];

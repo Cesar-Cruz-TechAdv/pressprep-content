@@ -48,7 +48,7 @@ Every question has a stable `id` such as `q-0123`. The editor gives new question
 
 ## Research rule for new content
 
-Before writing a new question or scenario, look the topic up in official documentation (developer.wordpress.org, wordpress.org/documentation, learn.wordpress.org, php.net, the host's or tool's own docs) and put the page links in `refs`. For scenario times, look for realistic ranges (host documentation, incident write-ups, published runbooks). If you can't find a source, say so in the pull request rather than guessing. All 450 questions and all 8 scenarios carry `refs`. Scenarios also have `timeNotes` saying which time estimates are sourced and which are reviewer judgment.
+Before writing a new question or scenario, look the topic up in official documentation (developer.wordpress.org, wordpress.org/documentation, learn.wordpress.org, php.net, the host's or tool's own docs) and put the page links in `refs`. For scenario times, look for realistic ranges (host documentation, incident write-ups, published runbooks). If you can't find a source, say so in the pull request rather than guessing. Every question and scenario carries `refs`. Scenarios also have `timeNotes` saying which time estimates are sourced and which are reviewer judgment.
 
 ## Running the check automatically (GitHub Actions)
 
