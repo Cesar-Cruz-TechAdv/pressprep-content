@@ -27,6 +27,10 @@
  *   type: "multi"   → "select all that apply"; options have `good` (true/false) and
  *                     optional `critical`. The step has one `next` and a `missPenalty`
  *                     (meter deltas applied once per missed critical option).
+ *   Any step can be a consequence step: `ifMissed: "s1:2"` shows it only when the player
+ *                     did NOT pick option 2 of multi step s1; otherwise play jumps to
+ *                     `skipTo` (a step id or "o:<outcomeId>"). Use it for "you didn't ask
+ *                     for X, so now Y breaks" forks. Ideal paths skip these steps.
  *   Every option: text, m (meter deltas), min (minutes or [from, to], single steps), t, p
  *                 (technical and plain-English feedback).
  *
@@ -4689,6 +4693,785 @@ window.SCENARIO_BANK = [
       fastestSafe: [
         "s1:0",
         "s2:0"
+      ]
+    }
+  },
+  {
+    id: "move-site-from-old-host",
+    title: "Moving a client's site from their old host",
+    s: "Change Management",
+    level: "Contributor",
+    stage: 2,
+    d: 2,
+    priorities: {
+      speed: 1,
+      security: 2,
+      stability: 2,
+      rootCause: 1,
+      communication: 3
+    },
+    intro: "A new client wants their WordPress site moved from their old host to yours. The previous developer has left, and the client says \"everything you need should be on the server\".",
+    timeNotes: "Times are reviewer judgment for a small site under 2 GB. Waiting for client replies, which often takes days, isn't counted.",
+    refs: [
+      "https://developer.wordpress.org/advanced-administration/upgrade/migrating/",
+      "https://developer.wordpress.org/cli/commands/user/create/",
+      "https://developer.wordpress.org/cli/commands/search-replace/"
+    ],
+    start: "s1",
+    steps: {
+      s1: {
+        type: "multi",
+        prompt: "Before you touch anything, what do you ask the client for? Select all that apply.",
+        next: "c1",
+        missPenalty: {
+          stability: -1,
+          communication: -1
+        },
+        options: [
+          {
+            text: "A WordPress administrator login, or who should be the admin on the new site",
+            good: true,
+            critical: true,
+            m: {
+              stability: 1
+            },
+            t: "Without an admin account you can't manage the site after the move, and the reset email may go to someone who has left.",
+            p: "You need the keys to the house, not just the house."
+          },
+          {
+            text: "Login for the old host's control panel or SFTP, so you can copy the files and database",
+            good: true,
+            critical: true,
+            m: {
+              speed: 1
+            },
+            t: "You need the files and a database export; host panel or SFTP access is the usual way to get both.",
+            p: "You need a way into the old building to carry things out."
+          },
+          {
+            text: "Licence keys and account logins for premium plugins and themes",
+            good: true,
+            critical: true,
+            m: {
+              stability: 1
+            },
+            t: "Many premium plugins tie their licence to a domain or site; without the account you can't move or reactivate it.",
+            p: "Some tools are rented, and you need the rental papers."
+          },
+          {
+            text: "Who manages the domain and its DNS, and a login for it",
+            good: true,
+            critical: true,
+            m: {
+              stability: 1
+            },
+            t: "You can't point the domain at the new host without access to its DNS or registrar.",
+            p: "You need to be able to change the address on the post box."
+          },
+          {
+            text: "Where the domain's email is hosted",
+            good: true,
+            m: {
+              stability: 1
+            },
+            t: "If email is hosted on the old server, moving DNS can cut it off.",
+            p: "Make sure moving house doesn't stop the post."
+          },
+          {
+            text: "A full redesign brief, so you can improve the site during the move",
+            good: false,
+            m: {
+              speed: -1
+            },
+            t: "Mixing a redesign into a move makes problems hard to trace; move first, change later.",
+            p: "Don't renovate while the removal van is still outside."
+          }
+        ]
+      },
+      c1: {
+        type: "single",
+        ifMissed: "s1:0",
+        skipTo: "c2",
+        prompt: "The copy is running on the new host, but you can't get into wp-admin: nobody gave you an account, and the only administrator is the developer who left.",
+        options: [
+          {
+            text: "Ask the client to confirm who should be admin, then create that account with wp user create",
+            next: "c2",
+            min: [
+              10,
+              30
+            ],
+            m: {
+              security: 1,
+              stability: 1,
+              communication: 1
+            },
+            t: "WP-CLI can add an administrator from the server, and getting the client's OK first keeps it authorised.",
+            p: "Ask the owner who gets a key, then cut one."
+          },
+          {
+            text: "Use Lost password on the old admin account and wait for the reset email",
+            next: "o:locked-out",
+            min: [
+              5,
+              10
+            ],
+            m: {
+              speed: -1,
+              communication: -1
+            },
+            t: "The reset goes to the former developer's address, so you never see it and they get a reset email they shouldn't.",
+            p: "Posting the new key to someone who moved out."
+          },
+          {
+            text: "Take over the old developer's account by changing its email address in the database",
+            next: "o:locked-out",
+            min: [
+              10,
+              20
+            ],
+            m: {
+              security: -2,
+              communication: -1
+            },
+            t: "Silently taking over a named person's account muddies the audit trail; create a new account the client approves.",
+            p: "Wearing someone else's badge instead of getting your own."
+          }
+        ]
+      },
+      c2: {
+        type: "single",
+        ifMissed: "s1:2",
+        skipTo: "c3",
+        prompt: "A day after testing starts, the booking plugin shows \"Licence not valid for this site\" and stops taking bookings on the copy.",
+        options: [
+          {
+            text: "Ask the client for the plugin account, move the licence to the new site, and reactivate it",
+            next: "c3",
+            min: [
+              15,
+              45
+            ],
+            m: {
+              stability: 2,
+              communication: 1
+            },
+            t: "Most vendors let you deactivate a licence on the old site and activate it on the new one from the account.",
+            p: "Get the rental papers and transfer them."
+          },
+          {
+            text: "Install a \"nulled\" copy from a download site that doesn't check licences",
+            next: "o:nulled",
+            min: [
+              10,
+              20
+            ],
+            m: {
+              security: -2,
+              stability: -1
+            },
+            t: "Nulled plugins commonly carry malware or backdoors and get no updates.",
+            p: "Free from a stranger, with a hidden cost."
+          },
+          {
+            text: "Carry on; the licence will sort itself out once the domain points at the new host",
+            next: "o:broken-bookings",
+            min: [
+              0,
+              5
+            ],
+            m: {
+              stability: -2,
+              communication: -1
+            },
+            t: "Licence checks don't fix themselves, so bookings fail after the cutover.",
+            p: "Hoping the alarm stops on its own."
+          }
+        ]
+      },
+      c3: {
+        type: "single",
+        ifMissed: "s1:3",
+        skipTo: "s2",
+        prompt: "Everything works on the new host, but nobody knows who holds the domain's registrar login.",
+        options: [
+          {
+            text: "Help the client recover the registrar account, and book the cutover once you have access",
+            next: "s2",
+            min: [
+              30,
+              120
+            ],
+            m: {
+              stability: 1,
+              communication: 2
+            },
+            t: "Registrars have recovery processes for the domain owner; the cutover waits until the owner controls the domain.",
+            p: "Find the post-box key before moving the post."
+          },
+          {
+            text: "Ask the old host to change the nameservers for you, without the client involved",
+            next: "o:wrong-hands",
+            min: [
+              10,
+              30
+            ],
+            m: {
+              security: -1,
+              communication: -2
+            },
+            t: "Domain changes should come from the domain owner; going around them causes disputes and lockouts.",
+            p: "Asking the old landlord to redirect someone else's post."
+          },
+          {
+            text: "Give the client the new host's temporary URL and tell them to share that",
+            next: "o:wrong-hands",
+            min: [
+              5,
+              10
+            ],
+            m: {
+              stability: -1,
+              communication: -1
+            },
+            t: "Customers, links and search engines still use the real domain, so the move isn't really done.",
+            p: "Telling everyone to use the back door."
+          }
+        ]
+      },
+      s2: {
+        type: "single",
+        prompt: "You have everything you need. In what order do you move it?",
+        options: [
+          {
+            text: "Copy files and database, import on the new host, update URLs with wp search-replace, test via your hosts file, then switch DNS",
+            next: "s3",
+            min: [
+              60,
+              180
+            ],
+            m: {
+              stability: 2,
+              rootCause: 1
+            },
+            t: "Testing the new copy before DNS changes means visitors only see the new host once it works.",
+            p: "Set up the new house fully before giving out the new address."
+          },
+          {
+            text: "Switch DNS first, then copy the site across while visitors arrive",
+            next: "o:downtime",
+            min: [
+              30,
+              90
+            ],
+            m: {
+              speed: 1,
+              stability: -2
+            },
+            t: "Visitors hit an empty or half-copied site until the copy finishes.",
+            p: "Giving out the new address before the furniture arrives."
+          },
+          {
+            text: "Replace the old URLs with find and replace in the SQL file in a text editor",
+            next: "o:broken-data",
+            min: [
+              20,
+              40
+            ],
+            m: {
+              stability: -2,
+              rootCause: -1
+            },
+            t: "A plain text replace breaks serialized data, which stores string lengths; use a tool that handles serialization.",
+            p: "Changing one word in a sealed letter and breaking the seal."
+          }
+        ]
+      },
+      s3: {
+        type: "multi",
+        prompt: "DNS has switched. What do you check? Select all that apply.",
+        next: "o:moved",
+        missPenalty: {
+          stability: -1,
+          communication: -1
+        },
+        options: [
+          {
+            text: "Forms and bookings send their emails from the new server",
+            good: true,
+            critical: true,
+            m: {
+              stability: 1
+            },
+            t: "Mail settings often differ between hosts, and form emails are the first thing clients notice.",
+            p: "Make sure messages still reach the client."
+          },
+          {
+            text: "The SSL certificate is active, and every page loads over https",
+            good: true,
+            critical: true,
+            m: {
+              security: 1
+            },
+            t: "The new host has to issue its own certificate once DNS points at it.",
+            p: "Check the padlock on the new door."
+          },
+          {
+            text: "You can log in, and scheduled tasks (cron) run",
+            good: true,
+            m: {
+              stability: 1
+            },
+            t: "Cron depends on traffic or a server job, which can differ on the new host.",
+            p: "Make sure the routine jobs still happen."
+          },
+          {
+            text: "Tell the client it's done, and keep the old hosting for a week as a fallback",
+            good: true,
+            m: {
+              communication: 2
+            },
+            t: "A short overlap gives you a way back if something was missed.",
+            p: "Keep the old keys for a week, just in case."
+          },
+          {
+            text: "Cancel the old hosting the same day to save the client money",
+            good: false,
+            m: {
+              stability: -2
+            },
+            t: "If anything was missed, the only other copy is gone.",
+            p: "Burning the old house the day you move out."
+          }
+        ]
+      }
+    },
+    outcomes: {
+      "locked-out": {
+        title: "Locked out of your own job",
+        verdict: "bad",
+        summary: "You can't manage the site without an approved administrator account.",
+        t: "Ask for an admin login, or who should be admin, before the move.",
+        p: "Ask for the keys before the move."
+      },
+      nulled: {
+        title: "Free plugin, hidden cost",
+        verdict: "bad",
+        summary: "The nulled plugin opened the site to malware and gets no updates.",
+        t: "Transfer real licences; never use nulled plugins.",
+        p: "Never use pirated plugins."
+      },
+      "broken-bookings": {
+        title: "Bookings stopped after the move",
+        verdict: "bad",
+        summary: "The licence check failed on the new domain and customers couldn't book.",
+        t: "Collect licence accounts up front and reactivate before the cutover.",
+        p: "Bring the rental papers with you."
+      },
+      "wrong-hands": {
+        title: "Domain still not yours to move",
+        verdict: "bad",
+        summary: "The cutover stalled or went around the domain's owner.",
+        t: "Get DNS or registrar access from the owner before you schedule the move.",
+        p: "Only the owner can redirect the post."
+      },
+      downtime: {
+        title: "Visitors saw a broken site",
+        verdict: "bad",
+        summary: "DNS pointed at the new host before the site was ready.",
+        t: "Copy and test first, using your hosts file, then switch DNS.",
+        p: "Move in before giving out the address."
+      },
+      "broken-data": {
+        title: "Settings scrambled",
+        verdict: "bad",
+        summary: "Widgets and plugin settings broke because serialized data was edited as plain text.",
+        t: "Use wp search-replace, which handles serialized data.",
+        p: "Use the right tool for the address change."
+      },
+      moved: {
+        title: "Moved",
+        verdict: "good",
+        summary: "The site is live on the new host and everything was checked.",
+        t: "Gather access first, test before DNS, check after, keep a fallback.",
+        p: "A smooth move."
+      }
+    },
+    ideal: {
+      safest: [
+        "s1:all",
+        "s2:0",
+        "s3:all"
+      ]
+    }
+  },
+  {
+    id: "migrate-shop-legacy-server",
+    title: "Migrating a busy shop off a legacy server",
+    s: "Scalability",
+    level: "Administrator",
+    stage: 2,
+    d: 3,
+    priorities: {
+      speed: 1,
+      security: 2,
+      stability: 3,
+      rootCause: 2,
+      communication: 2
+    },
+    intro: "You're moving a WooCommerce shop with a 6 GB database from an old VPS to a managed host. It takes orders around the clock, the client wants under 15 minutes of downtime, and the old server hasn't been updated in years.",
+    timeNotes: "Times are reviewer judgment for a 6 GB database; real import times depend heavily on the host.",
+    refs: [
+      "https://developer.wordpress.org/advanced-administration/upgrade/migrating/",
+      "https://wordpress.org/about/requirements/",
+      "https://support.cpanel.net/hc/en-us/articles/4406175692695-Unknown-collation-utf8mb4-0900-ai-ci-error-when-importing-database",
+      "https://developer.wordpress.org/cli/commands/db/export/",
+      "https://developer.wordpress.org/cli/commands/search-replace/"
+    ],
+    start: "s1",
+    steps: {
+      s1: {
+        type: "multi",
+        prompt: "Before planning the move, what do you record from the old server? Select all that apply.",
+        next: "c1",
+        missPenalty: {
+          stability: -1,
+          rootCause: -1
+        },
+        options: [
+          {
+            text: "The PHP version, and whether plugins and the theme run on the new host's PHP",
+            good: true,
+            critical: true,
+            m: {
+              stability: 1
+            },
+            t: "WordPress recommends PHP 8.3 or newer, and old plugins written for PHP 7 can fail on PHP 8.",
+            p: "Check the old machine's engine before you swap it."
+          },
+          {
+            text: "The database server and version, and the tables' collations",
+            good: true,
+            critical: true,
+            m: {
+              rootCause: 1
+            },
+            t: "MySQL 8 tags tables with utf8mb4_0900_ai_ci, which MariaDB doesn't support, so a dump can fail to import.",
+            p: "Make sure the new shelves fit the old boxes."
+          },
+          {
+            text: "Server-level redirects and rules in .htaccess or the Nginx config",
+            good: true,
+            critical: true,
+            m: {
+              stability: 1
+            },
+            t: "Redirects stored in server config don't travel with the WordPress files or database.",
+            p: "Some signposts are painted on the old building."
+          },
+          {
+            text: "Cron jobs, and the webhooks that payment and shipping services send to the site",
+            good: true,
+            m: {
+              stability: 1
+            },
+            t: "Server cron and webhook URLs live outside WordPress and need setting up again.",
+            p: "Note the deliveries that come to the old address."
+          },
+          {
+            text: "Nothing; the new host is newer in every way, so it will simply work",
+            good: false,
+            m: {
+              rootCause: -1
+            },
+            t: "Newer isn't the same as compatible, and the gaps only show up mid-move.",
+            p: "A bigger house doesn't mean the furniture fits."
+          }
+        ]
+      },
+      c1: {
+        type: "single",
+        ifMissed: "s1:1",
+        skipTo: "c2",
+        prompt: "The test import stops: ERROR 1273 Unknown collation: 'utf8mb4_0900_ai_ci'.",
+        options: [
+          {
+            text: "The old server is MySQL 8 and the new one MariaDB: convert those tables to a collation both support, such as utf8mb4_unicode_520_ci, then import again",
+            next: "c2",
+            min: [
+              30,
+              90
+            ],
+            m: {
+              stability: 1,
+              rootCause: 2
+            },
+            t: "MariaDB doesn't support utf8mb4_0900_ai_ci, so convert the affected tables to a collation both servers support, then re-import.",
+            p: "Relabel the boxes in a language the new shelves read."
+          },
+          {
+            text: "Skip the tables that fail and import the rest",
+            next: "o:data-loss",
+            min: [
+              10,
+              20
+            ],
+            m: {
+              speed: 1,
+              stability: -2
+            },
+            t: "The failing tables may hold orders or plugin data, so the shop is incomplete.",
+            p: "Leaving some boxes behind because they didn't fit."
+          },
+          {
+            text: "Ask the new host to install MySQL 5.7 so the dump imports as it is",
+            next: "o:stalled",
+            min: [
+              60,
+              240
+            ],
+            m: {
+              speed: -2,
+              security: -1
+            },
+            t: "MySQL 5.7 is end-of-life, and it doesn't support utf8mb4_0900_ai_ci either.",
+            p: "Asking for an older shelf that also doesn't fit."
+          }
+        ]
+      },
+      c2: {
+        type: "single",
+        ifMissed: "s1:0",
+        skipTo: "c3",
+        prompt: "The copy shows a critical error. The log says a payment add-on uses a function removed in PHP 8; the old server ran PHP 7.4.",
+        options: [
+          {
+            text: "Update or replace the add-on on the staging copy and test checkout on the new PHP version",
+            next: "c3",
+            min: [
+              60,
+              240
+            ],
+            m: {
+              stability: 2,
+              rootCause: 2
+            },
+            t: "Fixing the incompatibility before the cutover keeps the shop on a supported PHP version.",
+            p: "Swap the part that doesn't fit the new engine."
+          },
+          {
+            text: "Ask the new host to run PHP 7.4 for this site",
+            next: "o:eol-php",
+            min: [
+              10,
+              30
+            ],
+            m: {
+              security: -2,
+              stability: -1
+            },
+            t: "PHP 7.4 no longer gets security fixes, so you'd move the risk to the new host.",
+            p: "Bringing the old engine's problems with you."
+          },
+          {
+            text: "Silence the error with @ in the add-on's code",
+            next: "o:hidden-fault",
+            min: [
+              10,
+              20
+            ],
+            m: {
+              stability: -2,
+              rootCause: -2
+            },
+            t: "Hiding a fatal doesn't make the removed function exist; payments still fail.",
+            p: "Taping over the warning light."
+          }
+        ]
+      },
+      c3: {
+        type: "single",
+        ifMissed: "s1:2",
+        skipTo: "s2",
+        prompt: "On the copy, dozens of old product URLs return 404. The redirects lived in the old server's config, not in WordPress.",
+        options: [
+          {
+            text: "Recreate them from the old config as server rules or in a redirects plugin, and test the top URLs",
+            next: "s2",
+            min: [
+              30,
+              90
+            ],
+            m: {
+              stability: 1,
+              rootCause: 1
+            },
+            t: "Redirects in server config don't move with WordPress, so they have to be rebuilt and tested.",
+            p: "Repaint the signposts at the new building."
+          },
+          {
+            text: "Leave them; search engines will find the new pages eventually",
+            next: "o:lost-seo",
+            min: [
+              0,
+              0
+            ],
+            m: {
+              stability: -1,
+              communication: -1
+            },
+            t: "Old links and rankings point to URLs that now 404, which costs traffic and sales.",
+            p: "Removing the signposts and hoping people find the way."
+          }
+        ]
+      },
+      s2: {
+        type: "single",
+        prompt: "The copy passes testing. How do you cut over with under 15 minutes of downtime?",
+        options: [
+          {
+            text: "Lower the DNS TTL a day ahead, then in a quiet window pause checkout, export and import the database again, run wp search-replace, and switch DNS",
+            next: "s3",
+            min: [
+              30,
+              60
+            ],
+            m: {
+              stability: 2,
+              rootCause: 1
+            },
+            t: "A brief checkout pause and a final database sync mean no orders are lost between the old and new servers.",
+            p: "Close the till for a few minutes while you move the money."
+          },
+          {
+            text: "Switch DNS during the day and copy any orders from the old server by hand later",
+            next: "o:split-orders",
+            min: [
+              20,
+              40
+            ],
+            m: {
+              speed: 1,
+              stability: -2
+            },
+            t: "Orders land on both servers while DNS spreads, and merging them by hand loses some.",
+            p: "Two tills open in two shops, and one book."
+          }
+        ]
+      },
+      s3: {
+        type: "multi",
+        prompt: "The shop is live on the new host. What do you check? Select all that apply.",
+        next: "o:migrated",
+        missPenalty: {
+          stability: -2
+        },
+        options: [
+          {
+            text: "Payment and shipping webhooks reach the new server, and a test order completes",
+            good: true,
+            critical: true,
+            m: {
+              stability: 1
+            },
+            t: "Payment confirmations arrive by webhook; if they fail, orders stay unpaid.",
+            p: "Make sure payments still arrive at the new address."
+          },
+          {
+            text: "The PHP error log shows no new warnings on the new version",
+            good: true,
+            m: {
+              rootCause: 1
+            },
+            t: "New PHP versions surface notices and deprecations in code that ran quietly before.",
+            p: "Listen for new noises from the new engine."
+          },
+          {
+            text: "Scheduled tasks run, through a real server cron if WP-Cron is off",
+            good: true,
+            m: {
+              stability: 1
+            },
+            t: "Stock syncs, emails and cleanup depend on cron.",
+            p: "Check the routine jobs still happen."
+          },
+          {
+            text: "Tell the client it's done, and keep the old server read-only for a week",
+            good: true,
+            m: {
+              communication: 2
+            },
+            t: "A short overlap gives you something to compare against and a way back.",
+            p: "Keep the old shop locked but intact for a week."
+          },
+          {
+            text: "Shut down the old server straight away to save money",
+            good: false,
+            m: {
+              stability: -2
+            },
+            t: "If anything was missed, the only other copy is gone.",
+            p: "Selling the old shop the day you move."
+          }
+        ]
+      }
+    },
+    outcomes: {
+      "data-loss": {
+        title: "Data left behind",
+        verdict: "bad",
+        summary: "Tables that failed to import were dropped, and orders or settings went missing.",
+        t: "Fix the collation and import everything.",
+        p: "Never leave boxes behind."
+      },
+      stalled: {
+        title: "Stuck waiting on the host",
+        verdict: "bad",
+        summary: "The move stalled on a request for an end-of-life database version.",
+        t: "Convert the collation instead of downgrading the server.",
+        p: "Change the labels, not the shelves."
+      },
+      "eol-php": {
+        title: "Moved the old risk",
+        verdict: "bad",
+        summary: "The shop runs on a PHP version without security fixes.",
+        t: "Fix plugin compatibility and stay on supported PHP.",
+        p: "Don't move old problems into a new home."
+      },
+      "hidden-fault": {
+        title: "Silent failure",
+        verdict: "bad",
+        summary: "Payments fail without showing an error.",
+        t: "Fix or replace incompatible code; never suppress fatals.",
+        p: "The warning light was right."
+      },
+      "lost-seo": {
+        title: "Traffic dropped",
+        verdict: "mixed",
+        summary: "The shop works, but old links and search rankings hit 404s.",
+        t: "Rebuild server-level redirects before the cutover.",
+        p: "Repaint the signposts."
+      },
+      "split-orders": {
+        title: "Orders split across servers",
+        verdict: "bad",
+        summary: "Some orders landed on the old server during the switch and were lost or duplicated.",
+        t: "Pause checkout and do a final sync before DNS switches.",
+        p: "Close the old till before opening the new one."
+      },
+      migrated: {
+        title: "Migrated cleanly",
+        verdict: "good",
+        summary: "The shop moved with minutes of downtime and no lost orders.",
+        t: "Audit first, test on a copy, final sync in a short window, verify after.",
+        p: "A careful, quiet move."
+      }
+    },
+    ideal: {
+      safest: [
+        "s1:all",
+        "s2:0",
+        "s3:all"
       ]
     }
   }

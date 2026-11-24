@@ -94,8 +94,9 @@
 
   function nextsOf(step) {
     if (!step) return [];
-    if (step.type === 'multi') return [step.next];
-    return (step.options || []).map(o => o.next);
+    const skip = step.ifMissed ? [step.skipTo] : [];
+    if (step.type === 'multi') return [step.next, ...skip];
+    return [...(step.options || []).map(o => o.next), ...skip];
   }
 
   function validateScenarios(list) {
@@ -128,6 +129,12 @@
         if (!st || (st.type !== 'single' && st.type !== 'multi')) { r.err(w, 'type must be "single" or "multi"'); return; }
         if (!isStr(st.prompt)) r.err(w, 'prompt is empty');
         if (!Array.isArray(st.options) || st.options.length < 2) { r.err(w, 'needs at least 2 options'); return; }
+        if (st.ifMissed !== undefined) {
+          const [ms, mk] = String(st.ifMissed).split(':');
+          const m = steps[ms];
+          if (!m || m.type !== 'multi' || !m.options?.[Number(mk)]) r.err(w, `ifMissed "${st.ifMissed}" must be "<multi step id>:<option index>"`);
+          if (!targetOf(sc, st.skipTo)) r.err(w, `skipTo "${st.skipTo}" doesn't point to a step or "o:<outcome>"`);
+        }
         if (st.type === 'multi') {
           if (!targetOf(sc, st.next)) r.err(w, `next "${st.next}" doesn't point to a step or "o:<outcome>"`);
           if (st.missPenalty) checkMeters(r, w, st.missPenalty, 'missPenalty');
@@ -196,7 +203,14 @@
           let ref;
           if (st.type === 'multi') { if (pick !== 'all') r.warn(w, `"${entry}": use "${sid}:all" for multi-select steps`); ref = st.next; }
           else { const o = st.options[Number(pick)]; if (!o) { r.err(w, `"${entry}" picks an option that doesn't exist`); return; } ref = o.next; }
-          const t = targetOf(sc, ref); if (!t) return;
+          let t = targetOf(sc, ref); if (!t) return;
+          // Ideal paths pick every good option, so consequence steps for those options are skipped.
+          while (t && t.kind === 'step' && steps[t.id].ifMissed) {
+            const [ms, mk] = String(steps[t.id].ifMissed).split(':');
+            if (!steps[ms]?.options?.[Number(mk)]?.good) break;
+            t = targetOf(sc, steps[t.id].skipTo);
+          }
+          if (!t) return;
           if (t.kind === 'outcome') { endRef = t.id; break; }
           expected = t.id;
         }
