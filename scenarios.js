@@ -56,7 +56,13 @@ window.SCENARIO_BANK = [
     level: "Author",
     stage: 2,
     d: 3,
-    priorities: { speed: 1, security: 3, stability: 1, rootCause: 3, communication: 2 },
+    priorities: {
+      speed: 1,
+      security: 3,
+      stability: 1,
+      rootCause: 3,
+      communication: 2
+    },
     intro: "Three days ago you cleaned malware off a client's site. Today the client says mobile visitors are being redirected to a spam site again.",
     timeNotes: "Restore times follow host documentation (a restore takes a few minutes to a few hours depending on site size). The full fix (remove the backdoor, patch, rotate, clean) follows professional cleanup guides: most infections take under 3 hours, and about 6 hours per site is a common planning figure. Other times are reviewer judgment.",
     refs: [
@@ -74,24 +80,51 @@ window.SCENARIO_BANK = [
           {
             text: "Restore last week's backup and tell the client it's fixed",
             next: "o:reinfected",
-            min: [15, 120],
-            m: { speed: 2, security: -2, stability: 1, rootCause: -2, communication: -1 },
+            min: [
+              15,
+              120
+            ],
+            m: {
+              speed: 2,
+              security: -2,
+              stability: 1,
+              rootCause: -2,
+              communication: -1
+            },
             t: "A backup restores files and data, but not the way in. If the entry point is still open, the site gets reinfected. The backup may even predate the cleanup and contain the infection.",
             p: "Rewinding the clock doesn't fix the broken lock, so the burglar walks back in."
           },
           {
-            text: "Turn on maintenance mode, take a copy of files and database for investigation, and tell the client you're on it",
+            text: "Turn on maintenance mode and take a copy of the files and database for investigation",
             next: "s2",
-            min: [15, 45],
-            m: { speed: -1, security: 1, stability: -1, rootCause: 2, communication: 2 },
+            min: [
+              15,
+              45
+            ],
+            m: {
+              speed: -1,
+              security: 1,
+              stability: -1,
+              rootCause: 2,
+              communication: 2
+            },
             t: "Containment first: visitors stop seeing the redirect, and the copy preserves evidence (modified files, rogue users, injected options) before anything is changed.",
             p: "Close the shop door, take photos of the mess, and let the owner know before you start cleaning."
           },
           {
             text: "Run a security plugin scan and delete everything it flags",
             next: "s2b",
-            min: [20, 60],
-            m: { speed: 1, security: 0, stability: -1, rootCause: -1, communication: 0 },
+            min: [
+              20,
+              60
+            ],
+            m: {
+              speed: 1,
+              security: 0,
+              stability: -1,
+              rootCause: -1,
+              communication: 0
+            },
             t: "Scanners catch known signatures but miss custom backdoors, rogue admins and database injections, and blind deletion can remove legitimate files.",
             p: "A metal detector finds some things, but not everything, and you might throw away something you needed."
           }
@@ -104,16 +137,34 @@ window.SCENARIO_BANK = [
           {
             text: "Close the ticket",
             next: "o:reinfected",
-            min: [1, 5],
-            m: { speed: 2, security: -1, stability: 0, rootCause: -2, communication: 0 },
+            min: [
+              1,
+              5
+            ],
+            m: {
+              speed: 2,
+              security: -1,
+              stability: 0,
+              rootCause: -2,
+              communication: 0
+            },
             t: "The symptom is gone but nothing explains how the attacker got back in, so the same hole is still there.",
             p: "The smoke cleared, but nobody found the fire."
           },
           {
             text: "Go back and find how they got in",
             next: "s2",
-            min: [5, 10],
-            m: { speed: -1, security: 1, stability: 0, rootCause: 2, communication: 1 },
+            min: [
+              5,
+              10
+            ],
+            m: {
+              speed: -1,
+              security: 1,
+              stability: 0,
+              rootCause: 2,
+              communication: 1
+            },
             t: "Good recovery: a reinfection means the entry point or a backdoor survived the first cleanup.",
             p: "If it happened twice, something let them back in. Find it."
           }
@@ -123,13 +174,19 @@ window.SCENARIO_BANK = [
         type: "multi",
         prompt: "Which of these do you check to find how they got back in?",
         next: "s3",
-        missPenalty: { security: -1, rootCause: -2 },
+        missPenalty: {
+          security: -1,
+          rootCause: -2
+        },
         options: [
           {
             text: "Administrator accounts and application passwords created recently",
             good: true,
             critical: true,
-            m: { security: 1, rootCause: 1 },
+            m: {
+              security: 1,
+              rootCause: 1
+            },
             t: "Attackers often leave a hidden admin or an application password so they can log back in after a cleanup.",
             p: "Check for spare keys someone cut for themselves."
           },
@@ -137,7 +194,9 @@ window.SCENARIO_BANK = [
             text: "The mu-plugins folder and drop-ins like object-cache.php",
             good: true,
             critical: true,
-            m: { rootCause: 2 },
+            m: {
+              rootCause: 2
+            },
             t: "Must-use plugins and drop-ins load automatically and don't appear in the normal plugins list, which makes them a favourite hiding place.",
             p: "Look in the cupboard that most people forget exists."
           },
@@ -145,7 +204,9 @@ window.SCENARIO_BANK = [
             text: "Files changed since the cleanup, checked with wp core verify-checksums and wp plugin verify-checksums",
             good: true,
             critical: true,
-            m: { rootCause: 2 },
+            m: {
+              rootCause: 2
+            },
             t: "Checksums compare core and WordPress.org plugin files with the official versions, so injected code stands out.",
             p: "Compare every page with the original printout to spot what was changed."
           },
@@ -153,21 +214,28 @@ window.SCENARIO_BANK = [
             text: "Installed plugin and theme versions against known vulnerabilities",
             good: true,
             critical: true,
-            m: { security: 2, rootCause: 1 },
+            m: {
+              security: 2,
+              rootCause: 1
+            },
             t: "An outdated plugin with a known vulnerability is the most common way in. Finding it tells you what to patch.",
             p: "Find the window with the broken latch."
           },
           {
             text: "wp_options for injected scripts or strange autoloaded values",
             good: true,
-            m: { rootCause: 1 },
+            m: {
+              rootCause: 1
+            },
             t: "Malware often stores payloads in options (widgets, theme mods, custom options) that load on every request.",
             p: "Some of the mess hides in the settings, not the files."
           },
           {
             text: "The theme's colour settings",
             good: false,
-            m: { speed: -1 },
+            m: {
+              speed: -1
+            },
             t: "Cosmetic settings don't help find the entry point.",
             p: "Repainting the walls won't show you how they got in."
           }
@@ -178,28 +246,86 @@ window.SCENARIO_BANK = [
         prompt: "You find an outdated form plugin with a known file-upload vulnerability, and a hidden administrator account. How do you fix it?",
         options: [
           {
-            text: "Remove the hidden admin, update or replace the plugin, rotate salts and every password (WordPress, application passwords, SFTP, database), then clean the files",
-            next: "s4",
-            min: [60, 360],
-            m: { speed: -1, security: 2, stability: 0, rootCause: 2, communication: 0 },
-            t: "Closes the entry point and invalidates everything the attacker may have stolen. New salts log every session out.",
-            p: "Fix the lock, change every key, and only then tidy up."
+            text: "Remove the hidden admin and update or replace the vulnerable plugin",
+            next: "s3b",
+            min: [
+              20,
+              40
+            ],
+            m: {
+              security: 2,
+              rootCause: 1
+            },
+            t: "Closing both ways in comes first: the account they left and the plugin they used.",
+            p: "Shut the door they used and take back their key."
           },
           {
             text: "Clean the files now and update the plugin in next week's maintenance window",
             next: "o:reinfected",
-            min: [30, 60],
-            m: { speed: 1, security: -2, stability: 1, rootCause: -1, communication: 0 },
+            min: [
+              30,
+              60
+            ],
+            m: {
+              speed: 1,
+              security: -2,
+              stability: 1,
+              rootCause: -1,
+              communication: 0
+            },
             t: "The vulnerable plugin stays exploitable for a week, which is plenty of time to get back in.",
             p: "You know the window is broken and you leave it open for a week."
           },
           {
             text: "Delete the hidden admin account only",
             next: "o:door-open",
-            min: [5, 10],
-            m: { speed: 1, security: -1, stability: 0, rootCause: -1, communication: 0 },
+            min: [
+              5,
+              10
+            ],
+            m: {
+              speed: 1,
+              security: -1,
+              stability: 0,
+              rootCause: -1,
+              communication: 0
+            },
             t: "Removes one way back in, but the vulnerable plugin can be used to create a new admin at any time.",
             p: "You took back one spare key, but the lock is still broken."
+          }
+        ]
+      },
+      s3b: {
+        type: "single",
+        prompt: "Both ways in are closed. What next?",
+        options: [
+          {
+            text: "Rotate the salts and every password (WordPress, application passwords, SFTP, database), then clean the files",
+            next: "s4",
+            min: [
+              30,
+              60
+            ],
+            m: {
+              security: 2,
+              stability: 1
+            },
+            t: "Anything they read while inside, such as wp-config.php, may hold credentials, so rotate them all before cleaning.",
+            p: "Assume they copied the keys."
+          },
+          {
+            text: "Clean the files and keep the current passwords, since the holes are now closed",
+            next: "o:door-open",
+            min: [
+              20,
+              40
+            ],
+            m: {
+              speed: 1,
+              security: -2
+            },
+            t: "Stolen credentials still work after the holes are closed, so they can log straight back in.",
+            p: "New locks on the doors, old keys still in their pocket."
           }
         ]
       },
@@ -208,20 +334,69 @@ window.SCENARIO_BANK = [
         prompt: "Everything is patched and cleaned. Before taking the site out of maintenance mode:",
         options: [
           {
-            text: "Verify checksums again, test as a mobile visitor in a private window, set up file-change monitoring, and send the client a short incident report",
-            next: "o:secure",
-            min: [30, 60],
-            m: { speed: -1, security: 1, stability: 1, rootCause: 1, communication: 2 },
-            t: "Many redirect injections only fire for mobile user agents or logged-out visitors, so test as one. Monitoring catches a repeat early, and the report builds trust.",
-            p: "Double-check like a stranger would see it, set an alarm, and tell the owner what happened."
+            text: "Verify checksums again and test the site as a mobile visitor in a private window",
+            next: "s4b",
+            min: [
+              15,
+              30
+            ],
+            m: {
+              stability: 1,
+              rootCause: 1
+            },
+            t: "Some infections only show to logged-out or mobile visitors, so test the way they see the site.",
+            p: "Check it the way the visitors who saw the redirect did."
           },
           {
             text: "Take it out of maintenance mode straight away",
             next: "o:unverified",
-            min: [1, 2],
-            m: { speed: 1, security: 0, stability: 0, rootCause: 0, communication: -1 },
+            min: [
+              1,
+              2
+            ],
+            m: {
+              speed: 1,
+              security: 0,
+              stability: 0,
+              rootCause: 0,
+              communication: -1
+            },
             t: "Probably fixed, but unverified. Redirects that only target mobile or logged-out users can still be active.",
             p: "You think it's fixed, but you never looked from the visitor's side."
+          }
+        ]
+      },
+      s4b: {
+        type: "single",
+        prompt: "The checks pass. Before you hand back?",
+        options: [
+          {
+            text: "Set up file-change monitoring and send the client a short incident report",
+            next: "o:secure",
+            min: [
+              20,
+              40
+            ],
+            m: {
+              rootCause: 1,
+              communication: 2
+            },
+            t: "Monitoring catches a repeat early, and the report tells the client what happened and what changed.",
+            p: "Install an alarm and tell the owner what you found."
+          },
+          {
+            text: "Take it out of maintenance mode and close the ticket",
+            next: "o:unverified",
+            min: [
+              0,
+              5
+            ],
+            m: {
+              speed: 1,
+              communication: -1
+            },
+            t: "Without monitoring or a report, nobody will notice a repeat until visitors do.",
+            p: "Done, but nobody's watching."
           }
         ]
       }
@@ -257,11 +432,25 @@ window.SCENARIO_BANK = [
       }
     },
     ideal: {
-      mostSecure: ["s1:1", "s2:all", "s3:0", "s4:0"],
-      fastestSafe: ["s1:2", "s2b:1", "s2:all", "s3:0", "s4:1"]
+      mostSecure: [
+        "s1:1",
+        "s2:all",
+        "s3:0",
+        "s3b:0",
+        "s4:0",
+        "s4b:0"
+      ],
+      fastestSafe: [
+        "s1:2",
+        "s2b:1",
+        "s2:all",
+        "s3:0",
+        "s3b:0",
+        "s4:0",
+        "s4b:0"
+      ]
     }
   },
-
   {
     id: "slow-after-plugin-updates",
     title: "Slow site after this morning's updates",
@@ -269,10 +458,18 @@ window.SCENARIO_BANK = [
     level: "Author",
     stage: 1,
     d: 3,
-    priorities: { speed: 2, security: 1, stability: 3, rootCause: 2, communication: 1 },
+    priorities: {
+      speed: 2,
+      security: 1,
+      stability: 3,
+      rootCause: 2,
+      communication: 1
+    },
     intro: "You updated 12 plugins on a busy news site this morning. Since then, uncached pages take around 4 seconds to start loading instead of under half a second, and editors are complaining.",
     timeNotes: "Reviewer judgment for a typical small to mid-size site; no published benchmark found. Re-applying updates one at a time scales with the number of plugins.",
-    refs: ["https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/"],
+    refs: [
+      "https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/"
+    ],
     start: "s1",
     steps: {
       s1: {
@@ -282,24 +479,51 @@ window.SCENARIO_BANK = [
           {
             text: "Roll back all 12 plugins at once",
             next: "s2r",
-            min: [20, 60],
-            m: { speed: 2, security: -1, stability: 2, rootCause: -1, communication: 0 },
+            min: [
+              20,
+              60
+            ],
+            m: {
+              speed: 2,
+              security: -1,
+              stability: 2,
+              rootCause: -1,
+              communication: 0
+            },
             t: "Fast relief, but you've also undone any security fixes in those updates, and you still don't know which plugin caused it.",
             p: "Undo everything to make the pain stop, including the good changes."
           },
           {
             text: "Profile a slow request with Query Monitor or your APM to see where the time goes",
             next: "s2",
-            min: [15, 30],
-            m: { speed: 0, security: 0, stability: 0, rootCause: 2, communication: 0 },
+            min: [
+              15,
+              30
+            ],
+            m: {
+              speed: 0,
+              security: 0,
+              stability: 0,
+              rootCause: 2,
+              communication: 0
+            },
             t: "Measuring first tells you whether the time is spent in database queries, remote HTTP calls, or PHP, and which component is responsible.",
             p: "Find out what's slow before you start changing things."
           },
           {
             text: "Add more PHP workers or upgrade the hosting plan",
             next: "o:paying-for-it",
-            min: [30, 120],
-            m: { speed: 1, security: 0, stability: 1, rootCause: -2, communication: -1 },
+            min: [
+              30,
+              120
+            ],
+            m: {
+              speed: 1,
+              security: 0,
+              stability: 1,
+              rootCause: -2,
+              communication: -1
+            },
             t: "More capacity can hide a slow request, but each page is still slow, and the cost goes up.",
             p: "Buying a bigger engine because the handbrake is on."
           }
@@ -312,16 +536,34 @@ window.SCENARIO_BANK = [
           {
             text: "On staging, re-apply the updates one at a time until you find the culprit",
             next: "s2",
-            min: [30, 90],
-            m: { speed: -1, security: 1, stability: 1, rootCause: 2, communication: 0 },
+            min: [
+              30,
+              90
+            ],
+            m: {
+              speed: -1,
+              security: 1,
+              stability: 1,
+              rootCause: 2,
+              communication: 0
+            },
             t: "Bisecting on staging isolates the problem without risking production, and gets the security fixes back.",
             p: "Test the changes one by one in a safe copy until you find the bad one."
           },
           {
             text: "Leave everything rolled back until next month's maintenance",
             next: "o:fast-but-exposed",
-            min: [1, 2],
-            m: { speed: 1, security: -2, stability: 0, rootCause: -2, communication: 0 },
+            min: [
+              1,
+              2
+            ],
+            m: {
+              speed: 1,
+              security: -2,
+              stability: 0,
+              rootCause: -2,
+              communication: 0
+            },
             t: "Known vulnerabilities stay unpatched for a month on a busy site.",
             p: "Fast again, but with the doors unlocked."
           }
@@ -331,13 +573,17 @@ window.SCENARIO_BANK = [
         type: "multi",
         prompt: "Which signals do you look at?",
         next: "s3",
-        missPenalty: { rootCause: -2 },
+        missPenalty: {
+          rootCause: -2
+        },
         options: [
           {
             text: "Slow or duplicated database queries, grouped by plugin",
             good: true,
             critical: true,
-            m: { rootCause: 2 },
+            m: {
+              rootCause: 2
+            },
             t: "A new query without an index, or one running on every page, is a classic regression after an update.",
             p: "See which add-on is making the database work hardest."
           },
@@ -345,28 +591,36 @@ window.SCENARIO_BANK = [
             text: "Outbound HTTP calls made during the page load and how long they take",
             good: true,
             critical: true,
-            m: { rootCause: 2 },
+            m: {
+              rootCause: 2
+            },
             t: "A remote call to a slow or unreachable API blocks the whole page until it times out.",
             p: "Check whether the site is waiting on someone else's server."
           },
           {
             text: "Object cache hit rate, and whether the cache was flushed by the update",
             good: true,
-            m: { rootCause: 1 },
+            m: {
+              rootCause: 1
+            },
             t: "A flushed or bypassed cache makes everything slower until it warms up again.",
             p: "Check whether the site's short-term memory was wiped."
           },
           {
             text: "Size of autoloaded options after the update",
             good: true,
-            m: { rootCause: 1 },
+            m: {
+              rootCause: 1
+            },
             t: "An update that adds large autoloaded options slows every single request.",
             p: "Check whether something is now carried around on every page."
           },
           {
             text: "The admin colour scheme",
             good: false,
-            m: { speed: -1 },
+            m: {
+              speed: -1
+            },
             t: "Not related to performance.",
             p: "Doesn't affect speed."
           }
@@ -379,24 +633,51 @@ window.SCENARIO_BANK = [
           {
             text: "Roll back just that plugin, tell the editors, and report it to the vendor",
             next: "s4",
-            min: [15, 30],
-            m: { speed: 1, security: 0, stability: 2, rootCause: 1, communication: 2 },
+            min: [
+              15,
+              30
+            ],
+            m: {
+              speed: 1,
+              security: 0,
+              stability: 2,
+              rootCause: 1,
+              communication: 2
+            },
             t: "A targeted rollback fixes the symptom without losing the other updates, and the vendor report gets it fixed upstream.",
             p: "Undo only the bad change and tell the people who need to know."
           },
           {
             text: "Add a small mu-plugin that caches the licence response with pre_http_request, and report it to the vendor",
             next: "s4",
-            min: [30, 60],
-            m: { speed: 1, security: 0, stability: 1, rootCause: 2, communication: 1 },
+            min: [
+              30,
+              60
+            ],
+            m: {
+              speed: 1,
+              security: 0,
+              stability: 1,
+              rootCause: 2,
+              communication: 1
+            },
             t: "Short-circuiting or caching that specific request keeps the update while removing the per-page call. Version-control the mu-plugin so it isn't lost.",
             p: "Keep the new version, but stop it phoning home on every page."
           },
           {
             text: "Edit the plugin's code on production to delete the call",
             next: "o:until-next-update",
-            min: [10, 20],
-            m: { speed: 2, security: -1, stability: -1, rootCause: 0, communication: -1 },
+            min: [
+              10,
+              20
+            ],
+            m: {
+              speed: 2,
+              security: -1,
+              stability: -1,
+              rootCause: 0,
+              communication: -1
+            },
             t: "The next plugin update overwrites your edit, and editing code on production is untracked and risky.",
             p: "A quick patch that disappears the next time the plugin updates."
           }
@@ -409,8 +690,17 @@ window.SCENARIO_BANK = [
           {
             text: "Add an alert for slow responses and test plugin updates on staging before production",
             next: "o:solid",
-            min: [30, 60],
-            m: { speed: 0, security: 0, stability: 1, rootCause: 1, communication: 1 },
+            min: [
+              30,
+              60
+            ],
+            m: {
+              speed: 0,
+              security: 0,
+              stability: 1,
+              rootCause: 1,
+              communication: 1
+            },
             t: "Prevents the same incident: regressions get caught on staging, and alerts catch anything that slips through.",
             p: "Fix it, then make sure it can't sneak up on you again."
           },
@@ -418,7 +708,13 @@ window.SCENARIO_BANK = [
             text: "Move on to the next ticket",
             next: "o:fixed-fragile",
             min: 0,
-            m: { speed: 1, security: 0, stability: 0, rootCause: 0, communication: 0 },
+            m: {
+              speed: 1,
+              security: 0,
+              stability: 0,
+              rootCause: 0,
+              communication: 0
+            },
             t: "Fixed for now, but the update process that caused it hasn't changed.",
             p: "Solved today, same risk next month."
           }
@@ -463,11 +759,20 @@ window.SCENARIO_BANK = [
       }
     },
     ideal: {
-      mostSecure: ["s1:1", "s2:all", "s3:1", "s4:0"],
-      fastestSafe: ["s1:1", "s2:all", "s3:0", "s4:0"]
+      mostSecure: [
+        "s1:1",
+        "s2:all",
+        "s3:1",
+        "s4:0"
+      ],
+      fastestSafe: [
+        "s1:1",
+        "s2:all",
+        "s3:0",
+        "s4:0"
+      ]
     }
   },
-
   {
     id: "critical-error-after-deploy",
     title: "Critical error right after a deploy",
@@ -475,10 +780,18 @@ window.SCENARIO_BANK = [
     level: "Contributor",
     stage: 3,
     d: 2,
-    priorities: { speed: 3, security: 1, stability: 3, rootCause: 2, communication: 2 },
+    priorities: {
+      speed: 3,
+      security: 1,
+      stability: 3,
+      rootCause: 2,
+      communication: 2
+    },
     intro: "You deployed a release at 17:00. Five minutes later the client calls: the site shows \"There has been a critical error on this website.\"",
     timeNotes: "Reviewer judgment, assuming a deploy pipeline that can roll back to the previous release. Real times depend on the pipeline and host.",
-    refs: ["https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/"],
+    refs: [
+      "https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/"
+    ],
     start: "s1",
     steps: {
       s1: {
@@ -488,24 +801,51 @@ window.SCENARIO_BANK = [
           {
             text: "Roll back to the previous release",
             next: "s2",
-            min: [2, 10],
-            m: { speed: 2, security: 0, stability: 2, rootCause: 0, communication: 0 },
+            min: [
+              2,
+              10
+            ],
+            m: {
+              speed: 2,
+              security: 0,
+              stability: 2,
+              rootCause: 0,
+              communication: 0
+            },
             t: "With atomic deploys, switching back to the previous release takes seconds and restores the site while you investigate.",
             p: "Put the old version back up so visitors are fine, then figure it out."
           },
           {
             text: "Check the PHP error log for the fatal error message",
             next: "s1c",
-            min: [5, 10],
-            m: { speed: 1, security: 0, stability: 0, rootCause: 2, communication: 0 },
+            min: [
+              5,
+              10
+            ],
+            m: {
+              speed: 1,
+              security: 0,
+              stability: 0,
+              rootCause: 2,
+              communication: 0
+            },
             t: "The log usually names the exact file, line and missing function, which tells you whether a rollback or a one-line fix is right.",
             p: "Read the error message before you choose a fix."
           },
           {
             text: "Turn on WP_DEBUG_DISPLAY on production to see the error on screen",
             next: "s1b",
-            min: [2, 5],
-            m: { speed: -1, security: -2, stability: -1, rootCause: 1, communication: -1 },
+            min: [
+              2,
+              5
+            ],
+            m: {
+              speed: -1,
+              security: -2,
+              stability: -1,
+              rootCause: 1,
+              communication: -1
+            },
             t: "Showing errors leaks file paths and internals to every visitor, and the site stays down while you debug.",
             p: "You'd be shouting your debugging notes at every visitor."
           }
@@ -518,16 +858,34 @@ window.SCENARIO_BANK = [
           {
             text: "Turn error display off and roll back",
             next: "s2",
-            min: [2, 10],
-            m: { speed: 1, security: 1, stability: 1, rootCause: 0, communication: 0 },
+            min: [
+              2,
+              10
+            ],
+            m: {
+              speed: 1,
+              security: 1,
+              stability: 1,
+              rootCause: 0,
+              communication: 0
+            },
             t: "Good recovery: stop the leak, restore service, and debug somewhere safe.",
             p: "Stop shouting and put the old version back."
           },
           {
             text: "Keep debugging live until it's fixed",
             next: "o:exposed",
-            min: [30, 120],
-            m: { speed: -2, security: -2, stability: -1, rootCause: 1, communication: -2 },
+            min: [
+              30,
+              120
+            ],
+            m: {
+              speed: -2,
+              security: -2,
+              stability: -1,
+              rootCause: 1,
+              communication: -2
+            },
             t: "Prolonged downtime with internals exposed, and no communication.",
             p: "Down for longer, and showing everyone the mess."
           }
@@ -540,16 +898,34 @@ window.SCENARIO_BANK = [
           {
             text: "Roll back now, then fix it on staging",
             next: "s2",
-            min: [5, 15],
-            m: { speed: 2, security: 0, stability: 2, rootCause: 1, communication: 0 },
+            min: [
+              5,
+              15
+            ],
+            m: {
+              speed: 2,
+              security: 0,
+              stability: 2,
+              rootCause: 1,
+              communication: 0
+            },
             t: "You know the cause (a function from a plugin that isn't active, or not deployed), and you restore service before fixing it properly.",
             p: "Know what broke, put the old version back, and fix it safely."
           },
           {
             text: "Hotfix it live over SFTP with a function_exists() check",
             next: "o:drift",
-            min: [10, 30],
-            m: { speed: 2, security: 0, stability: 1, rootCause: -1, communication: -1 },
+            min: [
+              10,
+              30
+            ],
+            m: {
+              speed: 2,
+              security: 0,
+              stability: 1,
+              rootCause: -1,
+              communication: -1
+            },
             t: "The site comes back, but production no longer matches Git, and the missing dependency is hidden rather than fixed.",
             p: "A quick patch only the server knows about."
           }
@@ -559,13 +935,19 @@ window.SCENARIO_BANK = [
         type: "multi",
         prompt: "The previous release is live again. What do you do now?",
         next: "s3",
-        missPenalty: { stability: -1, rootCause: -1, communication: -1 },
+        missPenalty: {
+          stability: -1,
+          rootCause: -1,
+          communication: -1
+        },
         options: [
           {
             text: "Tell the client the site is back and you're investigating",
             good: true,
             critical: true,
-            m: { communication: 2 },
+            m: {
+              communication: 2
+            },
             t: "A short status update stops panic and repeat calls.",
             p: "Let them know it's fixed before they call again."
           },
@@ -573,7 +955,9 @@ window.SCENARIO_BANK = [
             text: "Reproduce the error on staging with the same release",
             good: true,
             critical: true,
-            m: { rootCause: 2 },
+            m: {
+              rootCause: 2
+            },
             t: "Reproducing it proves the cause and lets you test the fix.",
             p: "Break it again somewhere safe, so you can fix it for sure."
           },
@@ -581,21 +965,29 @@ window.SCENARIO_BANK = [
             text: "Check whether database migrations ran and need reversing",
             good: true,
             critical: true,
-            m: { stability: 2, rootCause: 1 },
+            m: {
+              stability: 2,
+              rootCause: 1
+            },
             t: "Rolling back code doesn't roll back schema or data changes. Old code on a new schema can break subtly.",
             p: "Putting the old version back doesn't undo changes to the data."
           },
           {
             text: "Add a smoke test to the deploy pipeline that loads the home page",
             good: true,
-            m: { stability: 1, rootCause: 1 },
+            m: {
+              stability: 1,
+              rootCause: 1
+            },
             t: "A simple post-deploy check would have caught this before the client did.",
             p: "Make the pipeline check the site actually loads."
           },
           {
             text: "Delete the failed release from the server right away",
             good: false,
-            m: { rootCause: -1 },
+            m: {
+              rootCause: -1
+            },
             t: "You lose the exact build you need to reproduce and inspect.",
             p: "Throwing away the evidence."
           }
@@ -608,16 +1000,34 @@ window.SCENARIO_BANK = [
           {
             text: "Through the pipeline after testing on staging, at a quiet time, with rollback ready",
             next: "o:clean",
-            min: [20, 60],
-            m: { speed: -1, security: 0, stability: 2, rootCause: 1, communication: 1 },
+            min: [
+              20,
+              60
+            ],
+            m: {
+              speed: -1,
+              security: 0,
+              stability: 2,
+              rootCause: 1,
+              communication: 1
+            },
             t: "Tested, tracked, low-risk, and reversible.",
             p: "Careful, tested, and easy to undo."
           },
           {
             text: "Straight away, at 17:30, without testing",
             next: "o:second-outage",
-            min: [5, 10],
-            m: { speed: 1, security: 0, stability: -2, rootCause: -1, communication: -1 },
+            min: [
+              5,
+              10
+            ],
+            m: {
+              speed: 1,
+              security: 0,
+              stability: -2,
+              rootCause: -1,
+              communication: -1
+            },
             t: "An untested fix at peak time risks a second outage.",
             p: "Rushing the fix could break it again."
           }
@@ -655,11 +1065,19 @@ window.SCENARIO_BANK = [
       }
     },
     ideal: {
-      fastestSafe: ["s1:0", "s2:all", "s3:0"],
-      mostSecure: ["s1:1", "s1c:0", "s2:all", "s3:0"]
+      fastestSafe: [
+        "s1:0",
+        "s2:all",
+        "s3:0"
+      ],
+      mostSecure: [
+        "s1:1",
+        "s1c:0",
+        "s2:all",
+        "s3:0"
+      ]
     }
   },
-
   {
     id: "critical-error-after-plugin-install",
     title: "Critical error after installing a plugin",
@@ -667,7 +1085,13 @@ window.SCENARIO_BANK = [
     level: "Subscriber",
     stage: 1,
     d: 1,
-    priorities: { speed: 3, security: 1, stability: 2, rootCause: 1, communication: 1 },
+    priorities: {
+      speed: 3,
+      security: 1,
+      stability: 2,
+      rootCause: 1,
+      communication: 1
+    },
     intro: "You installed and activated a plugin a client asked for. Now both the site and wp-admin show \"There has been a critical error on this website.\"",
     timeNotes: "Recovery mode depends on the email reaching the admin address, so allow for delivery time. Renaming the plugin folder is the documented fallback. Other times are reviewer judgment.",
     refs: [
@@ -683,24 +1107,51 @@ window.SCENARIO_BANK = [
           {
             text: "Use the recovery mode link WordPress emailed to the site's admin address, and deactivate the plugin",
             next: "s2",
-            min: [5, 15],
-            m: { speed: 2, security: 0, stability: 1, rootCause: 1, communication: 0 },
+            min: [
+              5,
+              15
+            ],
+            m: {
+              speed: 2,
+              security: 0,
+              stability: 1,
+              rootCause: 1,
+              communication: 0
+            },
             t: "Since WordPress 5.2, a fatal error triggers an email to the admin address with a recovery mode link. It lets you log in with the broken plugin paused and deactivate it.",
             p: "WordPress sends you a spare key for exactly this situation."
           },
           {
             text: "Rename the plugin's folder in wp-content/plugins using SFTP or the host's file manager",
             next: "s2",
-            min: [5, 15],
-            m: { speed: 2, security: 0, stability: 1, rootCause: 0, communication: 0 },
+            min: [
+              5,
+              15
+            ],
+            m: {
+              speed: 2,
+              security: 0,
+              stability: 1,
+              rootCause: 0,
+              communication: 0
+            },
             t: "WordPress can't find a renamed plugin folder, so it deactivates the plugin and the site loads again.",
             p: "Hide the broken plugin from WordPress, and the site comes back."
           },
           {
             text: "Reinstall WordPress from scratch",
             next: "o:overkill",
-            min: [60, 240],
-            m: { speed: -2, security: 0, stability: -1, rootCause: -1, communication: 0 },
+            min: [
+              60,
+              240
+            ],
+            m: {
+              speed: -2,
+              security: 0,
+              stability: -1,
+              rootCause: -1,
+              communication: 0
+            },
             t: "Reinstalling core doesn't touch plugins, so the fatal error stays, and you risk losing customisations.",
             p: "Rebuilding the house because one light switch is broken."
           }
@@ -711,18 +1162,32 @@ window.SCENARIO_BANK = [
         prompt: "The site is back. What next?",
         options: [
           {
-            text: "Check the error log for the exact error, note which plugin it was, and tell the client you'll test it on staging or find an alternative",
-            next: "o:good",
-            min: [10, 20],
-            m: { speed: 0, security: 0, stability: 1, rootCause: 2, communication: 2 },
-            t: "The log tells you why it failed (often a PHP version mismatch or a conflict), so you can fix it properly.",
-            p: "Find out why it broke, and keep the client in the loop."
+            text: "Check the error log for the exact error and which plugin caused it",
+            next: "s2b",
+            min: [
+              5,
+              10
+            ],
+            m: {
+              rootCause: 2
+            },
+            t: "The log names the file and line, so you know for sure which plugin broke the site.",
+            p: "Read the note the crash left behind."
           },
           {
             text: "Activate the plugin again to see if it was a one-off",
             next: "o:down-again",
-            min: [1, 2],
-            m: { speed: -1, security: 0, stability: -2, rootCause: 0, communication: 0 },
+            min: [
+              1,
+              2
+            ],
+            m: {
+              speed: -1,
+              security: 0,
+              stability: -2,
+              rootCause: 0,
+              communication: 0
+            },
             t: "A fatal error is almost never random. Reactivating it on production takes the site down again.",
             p: "Touching the hot stove again to check it's still hot."
           },
@@ -730,9 +1195,49 @@ window.SCENARIO_BANK = [
             text: "Leave the renamed folder there and move on",
             next: "o:loose-ends",
             min: 0,
-            m: { speed: 1, security: 0, stability: 0, rootCause: -1, communication: -1 },
+            m: {
+              speed: 1,
+              security: 0,
+              stability: 0,
+              rootCause: -1,
+              communication: -1
+            },
             t: "The site works, but a broken plugin sits on the server and the client still thinks the feature is coming.",
             p: "Fixed, but you left the mess and didn't tell anyone."
+          }
+        ]
+      },
+      s2b: {
+        type: "single",
+        prompt: "It's a fatal error in the new plugin. What do you tell the client?",
+        options: [
+          {
+            text: "Which plugin it was, and that you'll test it on staging or find an alternative",
+            next: "o:good",
+            min: [
+              5,
+              10
+            ],
+            m: {
+              communication: 2,
+              stability: 1
+            },
+            t: "The client knows what happened and that the plugin won't go back on live untested.",
+            p: "Explain what broke and what happens next."
+          },
+          {
+            text: "Nothing; leave the plugin deactivated and move on",
+            next: "o:loose-ends",
+            min: [
+              0,
+              2
+            ],
+            m: {
+              speed: 1,
+              communication: -1
+            },
+            t: "The client may reactivate it, not knowing it took the site down.",
+            p: "The fuse is out, and nobody knows why."
           }
         ]
       }
@@ -768,11 +1273,18 @@ window.SCENARIO_BANK = [
       }
     },
     ideal: {
-      fastestSafe: ["s1:1", "s2:0"],
-      mostSecure: ["s1:0", "s2:0"]
+      fastestSafe: [
+        "s1:1",
+        "s2:0",
+        "s2b:0"
+      ],
+      mostSecure: [
+        "s1:0",
+        "s2:0",
+        "s2b:0"
+      ]
     }
   },
-
   {
     id: "404s-after-moving-site",
     title: "Every page shows 404 after a move",
@@ -780,7 +1292,13 @@ window.SCENARIO_BANK = [
     level: "Subscriber",
     stage: 3,
     d: 1,
-    priorities: { speed: 2, security: 1, stability: 3, rootCause: 2, communication: 1 },
+    priorities: {
+      speed: 2,
+      security: 1,
+      stability: 3,
+      rootCause: 2,
+      communication: 1
+    },
     intro: "You moved a client's site to a new server. The home page loads, but every other page and post returns \"404 Not Found\".",
     timeNotes: "Reviewer judgment. Re-importing the database scales with its size.",
     refs: [
@@ -796,24 +1314,51 @@ window.SCENARIO_BANK = [
           {
             text: "The rewrite rules: save Settings → Permalinks, and check that .htaccess (Apache) or the server's rewrite rules (Nginx) came across",
             next: "s2",
-            min: [5, 15],
-            m: { speed: 2, security: 0, stability: 1, rootCause: 2, communication: 0 },
+            min: [
+              5,
+              15
+            ],
+            m: {
+              speed: 2,
+              security: 0,
+              stability: 1,
+              rootCause: 2,
+              communication: 0
+            },
             t: "Pretty permalinks need server rewrites. A missing .htaccess or Nginx rule means only the home page works. Saving permalinks regenerates WordPress's rules and, on Apache, tries to rewrite .htaccess.",
             p: "The site's signposts didn't make the move. Put them back up."
           },
           {
             text: "Import the database again from the old server",
             next: "o:still-404",
-            min: [30, 120],
-            m: { speed: -2, security: 0, stability: 0, rootCause: -1, communication: 0 },
+            min: [
+              30,
+              120
+            ],
+            m: {
+              speed: -2,
+              security: 0,
+              stability: 0,
+              rootCause: -1,
+              communication: 0
+            },
             t: "The content is fine. The 404s come from URL rewriting on the server, which the database doesn't control.",
             p: "Moving the same boxes again won't fix the missing signposts."
           },
           {
             text: "Switch permalinks to \"Plain\" for good, so links work",
             next: "o:broken-links",
-            min: [1, 5],
-            m: { speed: 1, security: 0, stability: -2, rootCause: -1, communication: 0 },
+            min: [
+              1,
+              5
+            ],
+            m: {
+              speed: 1,
+              security: 0,
+              stability: -2,
+              rootCause: -1,
+              communication: 0
+            },
             t: "Plain permalinks (?p=123) work without rewrites, but every existing link, bookmark and search result now points to a 404.",
             p: "Changing every address in town so the post still arrives."
           }
@@ -823,13 +1368,17 @@ window.SCENARIO_BANK = [
         type: "multi",
         prompt: "Pages load again. What else do you check after a move?",
         next: "o:moved",
-        missPenalty: { stability: -1 },
+        missPenalty: {
+          stability: -1
+        },
         options: [
           {
             text: "siteurl and home point to the new domain and protocol",
             good: true,
             critical: true,
-            m: { stability: 1 },
+            m: {
+              stability: 1
+            },
             t: "Wrong values cause redirects to the old server or login loops.",
             p: "Make sure the site knows its new address."
           },
@@ -837,28 +1386,37 @@ window.SCENARIO_BANK = [
             text: "Old-domain links in content, replaced with wp search-replace rather than a raw SQL replace",
             good: true,
             critical: true,
-            m: { stability: 1, rootCause: 1 },
+            m: {
+              stability: 1,
+              rootCause: 1
+            },
             t: "wp search-replace handles serialized data. A raw replace can corrupt it.",
             p: "Update old addresses safely, without breaking stored settings."
           },
           {
             text: "The uploads folder came across and images load",
             good: true,
-            m: { stability: 1 },
+            m: {
+              stability: 1
+            },
             t: "Media files live outside the database and are easy to forget.",
             p: "Check the pictures came with the furniture."
           },
           {
             text: "Scheduled tasks (cron) run on the new server",
             good: true,
-            m: { stability: 1 },
+            m: {
+              stability: 1
+            },
             t: "If WP-Cron is replaced by a system cron, that cron job has to be set up again.",
             p: "Check the site's alarm clock still works."
           },
           {
             text: "Delete the old server straight away",
             good: false,
-            m: { stability: -2 },
+            m: {
+              stability: -2
+            },
             t: "Keep the old server for a while as a fallback and for anything you missed.",
             p: "Don't burn the old house until you've checked the new one."
           }
@@ -889,11 +1447,16 @@ window.SCENARIO_BANK = [
       }
     },
     ideal: {
-      fastestSafe: ["s1:0", "s2:all"],
-      mostSecure: ["s1:0", "s2:all"]
+      fastestSafe: [
+        "s1:0",
+        "s2:all"
+      ],
+      mostSecure: [
+        "s1:0",
+        "s2:all"
+      ]
     }
   },
-
   {
     id: "padlock-missing-after-https",
     title: "No padlock after switching to HTTPS",
@@ -901,10 +1464,18 @@ window.SCENARIO_BANK = [
     level: "Contributor",
     stage: 2,
     d: 2,
-    priorities: { speed: 1, security: 2, stability: 2, rootCause: 3, communication: 1 },
+    priorities: {
+      speed: 1,
+      security: 2,
+      stability: 2,
+      rootCause: 3,
+      communication: 1
+    },
     intro: "The client's site now has an SSL certificate and loads over https://, but browsers show \"Not secure\" or no padlock on many pages.",
     timeNotes: "Reviewer judgment. A certificate reissue depends on the host's queue and validation, so it varies widely.",
-    refs: ["https://developer.wordpress.org/advanced-administration/security/https/"],
+    refs: [
+      "https://developer.wordpress.org/advanced-administration/security/https/"
+    ],
     start: "s1",
     steps: {
       s1: {
@@ -914,24 +1485,51 @@ window.SCENARIO_BANK = [
           {
             text: "Open the browser's developer tools on an affected page and look for mixed content warnings in the Console",
             next: "s2",
-            min: [5, 15],
-            m: { speed: 1, security: 0, stability: 0, rootCause: 2, communication: 0 },
+            min: [
+              5,
+              15
+            ],
+            m: {
+              speed: 1,
+              security: 0,
+              stability: 0,
+              rootCause: 2,
+              communication: 0
+            },
             t: "A valid certificate plus a missing padlock usually means mixed content: images, scripts or fonts still loaded over http://.",
             p: "Find out which bits of the page are still coming in the insecure way."
           },
           {
             text: "Install a plugin that rewrites http:// to https:// on every page load",
             next: "o:band-aid",
-            min: [5, 15],
-            m: { speed: 2, security: 1, stability: -1, rootCause: -1, communication: 0 },
+            min: [
+              5,
+              15
+            ],
+            m: {
+              speed: 2,
+              security: 1,
+              stability: -1,
+              rootCause: -1,
+              communication: 0
+            },
             t: "It hides the problem by rewriting output on every request, adds overhead, and leaves the old URLs in the database.",
             p: "Painting over the crack instead of fixing it."
           },
           {
             text: "Ask the host to reissue the SSL certificate",
             next: "o:wrong-tree",
-            min: [30, 240],
-            m: { speed: -2, security: 0, stability: 0, rootCause: -1, communication: 0 },
+            min: [
+              30,
+              240
+            ],
+            m: {
+              speed: -2,
+              security: 0,
+              stability: 0,
+              rootCause: -1,
+              communication: 0
+            },
             t: "The certificate works, since the site loads over HTTPS. The problem is insecure resources on the page.",
             p: "The lock is fine. It's the open windows."
           }
@@ -941,13 +1539,18 @@ window.SCENARIO_BANK = [
         type: "multi",
         prompt: "The Console shows http:// images, a script set in a theme option, and a web font. Which fixes do you apply?",
         next: "s3",
-        missPenalty: { rootCause: -2 },
+        missPenalty: {
+          rootCause: -2
+        },
         options: [
           {
             text: "Run wp search-replace from http:// to https:// for the domain, with --dry-run first and a backup",
             good: true,
             critical: true,
-            m: { stability: 1, rootCause: 2 },
+            m: {
+              stability: 1,
+              rootCause: 2
+            },
             t: "Updates URLs in content and settings, including serialized data, safely.",
             p: "Update every old address safely in one go."
           },
@@ -955,7 +1558,9 @@ window.SCENARIO_BANK = [
             text: "Set siteurl and home to https://",
             good: true,
             critical: true,
-            m: { rootCause: 1 },
+            m: {
+              rootCause: 1
+            },
             t: "WordPress builds many URLs from these settings.",
             p: "Tell WordPress its address starts with https."
           },
@@ -963,21 +1568,28 @@ window.SCENARIO_BANK = [
             text: "Fix hard-coded http:// URLs in the theme and its options",
             good: true,
             critical: true,
-            m: { rootCause: 1 },
+            m: {
+              rootCause: 1
+            },
             t: "Hard-coded URLs in theme files or options aren't always caught by a search-replace of the domain.",
             p: "Some addresses are written into the theme itself."
           },
           {
             text: "Add a 301 redirect from http to https on the server",
             good: true,
-            m: { security: 1, stability: 1 },
+            m: {
+              security: 1,
+              stability: 1
+            },
             t: "Sends old links and bookmarks to the secure version.",
             p: "Anyone using the old address gets sent to the new one."
           },
           {
             text: "Find and replace in the SQL dump with a text editor",
             good: false,
-            m: { stability: -2 },
+            m: {
+              stability: -2
+            },
             t: "Changing string lengths corrupts serialized data.",
             p: "This can quietly break stored settings."
           }
@@ -990,16 +1602,34 @@ window.SCENARIO_BANK = [
           {
             text: "Recheck key pages in a private window, then consider HSTS once everything, subdomains included, is HTTPS-only",
             next: "o:secure",
-            min: [10, 30],
-            m: { speed: 0, security: 2, stability: 1, rootCause: 0, communication: 0 },
+            min: [
+              10,
+              30
+            ],
+            m: {
+              speed: 0,
+              security: 2,
+              stability: 1,
+              rootCause: 0,
+              communication: 0
+            },
             t: "HSTS tells browsers to always use HTTPS. Enable it only when you're sure every page and subdomain works over HTTPS.",
             p: "Double-check, then lock the door for good."
           },
           {
             text: "Turn on HSTS with preload straight away",
             next: "o:hsts-risk",
-            min: [2, 5],
-            m: { speed: 1, security: 1, stability: -2, rootCause: 0, communication: 0 },
+            min: [
+              2,
+              5
+            ],
+            m: {
+              speed: 1,
+              security: 1,
+              stability: -2,
+              rootCause: 0,
+              communication: 0
+            },
             t: "Preload is very hard to undo. Any subdomain that isn't ready for HTTPS becomes unreachable in browsers.",
             p: "Welding the door shut before checking every room."
           }
@@ -1037,11 +1667,18 @@ window.SCENARIO_BANK = [
       }
     },
     ideal: {
-      fastestSafe: ["s1:0", "s2:all", "s3:0"],
-      mostSecure: ["s1:0", "s2:all", "s3:0"]
+      fastestSafe: [
+        "s1:0",
+        "s2:all",
+        "s3:0"
+      ],
+      mostSecure: [
+        "s1:0",
+        "s2:all",
+        "s3:0"
+      ]
     }
   },
-
   {
     id: "viral-traffic-spike",
     title: "A viral article and a traffic spike",
@@ -1049,10 +1686,18 @@ window.SCENARIO_BANK = [
     level: "Editor",
     stage: 2,
     d: 3,
-    priorities: { speed: 3, security: 1, stability: 3, rootCause: 1, communication: 2 },
+    priorities: {
+      speed: 3,
+      security: 1,
+      stability: 3,
+      rootCause: 1,
+      communication: 2
+    },
     intro: "A client's article is trending. Traffic is around 20 times normal, pages are slowing down, and the server is returning some 502 errors.",
     timeNotes: "Reviewer judgment; a host plan change depends on the host.",
-    refs: ["https://developer.wordpress.org/advanced-administration/performance/cache/"],
+    refs: [
+      "https://developer.wordpress.org/advanced-administration/performance/cache/"
+    ],
     start: "s1",
     steps: {
       s1: {
@@ -1062,24 +1707,51 @@ window.SCENARIO_BANK = [
           {
             text: "Check what's getting past the cache: are logged-out visitors getting full-page cache hits, and what is hitting PHP?",
             next: "s2",
-            min: [5, 15],
-            m: { speed: 1, security: 0, stability: 1, rootCause: 2, communication: 0 },
+            min: [
+              5,
+              15
+            ],
+            m: {
+              speed: 1,
+              security: 0,
+              stability: 1,
+              rootCause: 2,
+              communication: 0
+            },
             t: "Under a spike, the cache hit rate decides everything. A few uncached requests per page view can overload PHP.",
             p: "Find out which visitors are getting past the fast lane."
           },
           {
             text: "Restart PHP and the web server",
             next: "s1r",
-            min: [2, 10],
-            m: { speed: 1, security: 0, stability: 0, rootCause: -1, communication: 0 },
+            min: [
+              2,
+              10
+            ],
+            m: {
+              speed: 1,
+              security: 0,
+              stability: 0,
+              rootCause: -1,
+              communication: 0
+            },
             t: "Clears stuck workers for a moment, but the same load fills them up again.",
             p: "Turning it off and on again, under the same pressure."
           },
           {
             text: "Put the site in maintenance mode until traffic drops",
             next: "o:lost-moment",
-            min: [1, 5],
-            m: { speed: -2, security: 0, stability: -1, rootCause: 0, communication: -1 },
+            min: [
+              1,
+              5
+            ],
+            m: {
+              speed: -2,
+              security: 0,
+              stability: -1,
+              rootCause: 0,
+              communication: -1
+            },
             t: "Stops the errors by turning away every visitor, at the moment the client wants them most.",
             p: "Closing the shop on its busiest day."
           }
@@ -1092,16 +1764,34 @@ window.SCENARIO_BANK = [
           {
             text: "Check what's getting past the cache",
             next: "s2",
-            min: [5, 15],
-            m: { speed: 0, security: 0, stability: 1, rootCause: 2, communication: 0 },
+            min: [
+              5,
+              15
+            ],
+            m: {
+              speed: 0,
+              security: 0,
+              stability: 1,
+              rootCause: 2,
+              communication: 0
+            },
             t: "Good recovery: the restart proved it's a capacity problem caused by uncached work.",
             p: "Stop rebooting and find what's using everything up."
           },
           {
             text: "Keep restarting every few minutes",
             next: "o:firefighting",
-            min: [30, 120],
-            m: { speed: -1, security: 0, stability: -2, rootCause: -2, communication: -1 },
+            min: [
+              30,
+              120
+            ],
+            m: {
+              speed: -1,
+              security: 0,
+              stability: -2,
+              rootCause: -2,
+              communication: -1
+            },
             t: "Each restart drops in-flight requests and fixes nothing.",
             p: "Running in circles."
           }
@@ -1111,13 +1801,18 @@ window.SCENARIO_BANK = [
         type: "multi",
         prompt: "The article page is cached, but these are hitting PHP on every view. Which do you fix right now?",
         next: "s3",
-        missPenalty: { stability: -2 },
+        missPenalty: {
+          stability: -2
+        },
         options: [
           {
             text: "A related-posts widget running a heavy query: cache its output in the object cache",
             good: true,
             critical: true,
-            m: { speed: 1, stability: 1 },
+            m: {
+              speed: 1,
+              stability: 1
+            },
             t: "Fragment caching removes the query from every uncached render.",
             p: "Make the widget once and reuse it."
           },
@@ -1125,7 +1820,9 @@ window.SCENARIO_BANK = [
             text: "A view counter calling admin-ajax.php on every page view: sample it, batch it, or pause it for now",
             good: true,
             critical: true,
-            m: { stability: 2 },
+            m: {
+              stability: 2
+            },
             t: "admin-ajax.php is never page-cached and loads WordPress fully, so one call per view multiplies PHP load by the traffic.",
             p: "A counter that knocks on the server's door for every single visitor."
           },
@@ -1133,21 +1830,29 @@ window.SCENARIO_BANK = [
             text: "Share links with ?utm_source= and similar parameters bypassing the cache: ignore those in the cache key",
             good: true,
             critical: true,
-            m: { speed: 2 },
+            m: {
+              speed: 2
+            },
             t: "Many caches treat each query string as a different page, so every shared link becomes a cache miss.",
             p: "Tell the cache that tracking tags don't make it a different page."
           },
           {
             text: "Lengthen the article's cache time, for example with stale-while-revalidate",
             good: true,
-            m: { speed: 1, stability: 1 },
+            m: {
+              speed: 1,
+              stability: 1
+            },
             t: "Fewer trips to the server for the most visited page.",
             p: "Keep the popular page ready for longer."
           },
           {
             text: "Purge the whole cache so everyone gets the latest version",
             good: false,
-            m: { speed: -1, stability: -2 },
+            m: {
+              speed: -1,
+              stability: -2
+            },
             t: "A full purge mid-spike sends every visitor to PHP at once.",
             p: "Opening the floodgates."
           }
@@ -1160,16 +1865,34 @@ window.SCENARIO_BANK = [
           {
             text: "Tell the client what happened and what you changed, and add alerts for cache hit rate and 5xx errors",
             next: "o:held",
-            min: [20, 45],
-            m: { speed: 0, security: 0, stability: 1, rootCause: 1, communication: 2 },
+            min: [
+              20,
+              45
+            ],
+            m: {
+              speed: 0,
+              security: 0,
+              stability: 1,
+              rootCause: 1,
+              communication: 2
+            },
             t: "The client learns why it happened, and alerts catch the next spike early.",
             p: "Explain, then set an alarm."
           },
           {
             text: "Ask the host to double the server size permanently",
             next: "o:costly",
-            min: [15, 60],
-            m: { speed: 1, security: 0, stability: 1, rootCause: -1, communication: 0 },
+            min: [
+              15,
+              60
+            ],
+            m: {
+              speed: 1,
+              security: 0,
+              stability: 1,
+              rootCause: -1,
+              communication: 0
+            },
             t: "More headroom helps, but the uncached patterns cost money on every visit.",
             p: "A bigger bill instead of a lighter site."
           }
@@ -1207,11 +1930,18 @@ window.SCENARIO_BANK = [
       }
     },
     ideal: {
-      fastestSafe: ["s1:0", "s2:all", "s3:0"],
-      mostSecure: ["s1:0", "s2:all", "s3:0"]
+      fastestSafe: [
+        "s1:0",
+        "s2:all",
+        "s3:0"
+      ],
+      mostSecure: [
+        "s1:0",
+        "s2:all",
+        "s3:0"
+      ]
     }
   },
-
   {
     id: "secrets-pushed-to-public-repo",
     title: "Production secrets pushed to a public repository",
@@ -1219,7 +1949,13 @@ window.SCENARIO_BANK = [
     level: "Administrator",
     stage: 3,
     d: 3,
-    priorities: { speed: 3, security: 3, stability: 1, rootCause: 2, communication: 2 },
+    priorities: {
+      speed: 3,
+      security: 3,
+      stability: 1,
+      rootCause: 2,
+      communication: 2
+    },
     intro: "A developer on your team accidentally pushed wp-config.php, with the production database password and a payment gateway API key, to a public GitHub repository an hour ago.",
     timeNotes: "Rotation times are reviewer judgment. What makes speed critical is researched: honeypot studies saw leaked keys on public GitHub found and abused within minutes, so hiding the file is not enough. GitHub's guidance is to revoke or rotate the secret first.",
     refs: [
@@ -1236,24 +1972,51 @@ window.SCENARIO_BANK = [
           {
             text: "Revoke and replace the payment API key, change the database password, and update the site's config",
             next: "s2",
-            min: [20, 60],
-            m: { speed: 2, security: 2, stability: -1, rootCause: 0, communication: 0 },
+            min: [
+              20,
+              60
+            ],
+            m: {
+              speed: 2,
+              security: 2,
+              stability: -1,
+              rootCause: 0,
+              communication: 0
+            },
             t: "Public repositories are scanned for secrets by automated bots, often within minutes. Treat anything pushed as compromised and rotate it first.",
             p: "Assume the keys are already copied. Change the locks first."
           },
           {
             text: "Delete the file and force-push to remove it from the repository",
             next: "s1b",
-            min: [10, 30],
-            m: { speed: 1, security: -1, stability: 0, rootCause: 0, communication: 0 },
+            min: [
+              10,
+              30
+            ],
+            m: {
+              speed: 1,
+              security: -1,
+              stability: 0,
+              rootCause: 0,
+              communication: 0
+            },
             t: "Removing it doesn't un-leak it. Forks, clones and secret-scanning bots may already have it.",
             p: "Taking the note off the noticeboard after everyone photographed it."
           },
           {
             text: "Make the repository private",
             next: "s1b",
-            min: [1, 5],
-            m: { speed: 1, security: -1, stability: 0, rootCause: 0, communication: 0 },
+            min: [
+              1,
+              5
+            ],
+            m: {
+              speed: 1,
+              security: -1,
+              stability: 0,
+              rootCause: 0,
+              communication: 0
+            },
             t: "Limits further exposure, but anyone who copied the secrets in the last hour still has them.",
             p: "Closing the door after the keys were taken."
           }
@@ -1266,8 +2029,17 @@ window.SCENARIO_BANK = [
           {
             text: "No. Rotate everything now",
             next: "s2",
-            min: [20, 60],
-            m: { speed: -1, security: 1, stability: -1, rootCause: 0, communication: 0 },
+            min: [
+              20,
+              60
+            ],
+            m: {
+              speed: -1,
+              security: 1,
+              stability: -1,
+              rootCause: 0,
+              communication: 0
+            },
             t: "Correct: visibility now says nothing about who copied it before.",
             p: "Change the locks anyway."
           },
@@ -1275,7 +2047,13 @@ window.SCENARIO_BANK = [
             text: "Yes. It was only public for an hour",
             next: "o:compromised",
             min: 0,
-            m: { speed: 1, security: -2, stability: 0, rootCause: -1, communication: -1 },
+            m: {
+              speed: 1,
+              security: -2,
+              stability: 0,
+              rootCause: -1,
+              communication: -1
+            },
             t: "An hour is plenty of time for automated scanners. The keys must be considered stolen.",
             p: "Hoping nobody noticed isn't a plan."
           }
@@ -1285,13 +2063,18 @@ window.SCENARIO_BANK = [
         type: "multi",
         prompt: "The keys are rotated. What else do you do?",
         next: "s3",
-        missPenalty: { security: -2 },
+        missPenalty: {
+          security: -2
+        },
         options: [
           {
             text: "Check the payment gateway and database logs for activity since the push",
             good: true,
             critical: true,
-            m: { security: 1, rootCause: 2 },
+            m: {
+              security: 1,
+              rootCause: 2
+            },
             t: "Tells you whether the secrets were actually used, which decides who you need to notify.",
             p: "Check whether anyone used the stolen keys."
           },
@@ -1299,7 +2082,9 @@ window.SCENARIO_BANK = [
             text: "Change the WordPress salts and any other secrets that were in the file",
             good: true,
             critical: true,
-            m: { security: 2 },
+            m: {
+              security: 2
+            },
             t: "Salts were in the same file. New salts invalidate every login session.",
             p: "Change every key that was on that keyring."
           },
@@ -1307,21 +2092,27 @@ window.SCENARIO_BANK = [
             text: "Add wp-config.php to .gitignore and a secret-scanning check to CI",
             good: true,
             critical: true,
-            m: { rootCause: 2 },
+            m: {
+              rootCause: 2
+            },
             t: "Stops the same mistake reaching a repository again.",
             p: "Make sure it can't happen again."
           },
           {
             text: "Remove the file from Git history, for example with git filter-repo, and have the team re-clone",
             good: true,
-            m: { security: 1 },
+            m: {
+              security: 1
+            },
             t: "Cleans up the history, but only after rotation, since copies may already exist.",
             p: "Tidy up the record, after changing the locks."
           },
           {
             text: "Call out the developer in the team chat",
             good: false,
-            m: { communication: -2 },
+            m: {
+              communication: -2
+            },
             t: "Blame discourages people from reporting mistakes quickly. Fix the process instead.",
             p: "Shaming people makes the next mistake get hidden."
           }
@@ -1334,8 +2125,17 @@ window.SCENARIO_BANK = [
           {
             text: "Tell the client now: what was exposed, for how long, and what you've done. Follow your incident and data-breach process if personal data may have been accessed",
             next: "o:handled",
-            min: [20, 60],
-            m: { speed: 0, security: 1, stability: 0, rootCause: 0, communication: 2 },
+            min: [
+              20,
+              60
+            ],
+            m: {
+              speed: 0,
+              security: 1,
+              stability: 0,
+              rootCause: 0,
+              communication: 2
+            },
             t: "Prompt disclosure builds trust, and data-protection laws such as GDPR can set strict reporting deadlines when personal data is involved.",
             p: "Be upfront, and follow the rules for reporting."
           },
@@ -1343,7 +2143,13 @@ window.SCENARIO_BANK = [
             text: "Say nothing, since nothing bad seems to have happened",
             next: "o:quiet",
             min: 0,
-            m: { speed: 1, security: 0, stability: 0, rootCause: 0, communication: -2 },
+            m: {
+              speed: 1,
+              security: 0,
+              stability: 0,
+              rootCause: 0,
+              communication: -2
+            },
             t: "The client owns the risk and may have legal duties. Hiding an incident usually makes things worse.",
             p: "Keeping quiet about a risk that isn't yours to hide."
           }
@@ -1374,11 +2180,18 @@ window.SCENARIO_BANK = [
       }
     },
     ideal: {
-      fastestSafe: ["s1:0", "s2:all", "s3:0"],
-      mostSecure: ["s1:0", "s2:all", "s3:0"]
+      fastestSafe: [
+        "s1:0",
+        "s2:all",
+        "s3:0"
+      ],
+      mostSecure: [
+        "s1:0",
+        "s2:all",
+        "s3:0"
+      ]
     }
   },
-
   {
     id: "staging-gate-after-sync",
     title: "Staging left open after a sync",
@@ -1386,10 +2199,18 @@ window.SCENARIO_BANK = [
     level: "Editor",
     stage: 2,
     d: 2,
-    priorities: { speed: 1, security: 3, stability: 1, rootCause: 2, communication: 2 },
+    priorities: {
+      speed: 1,
+      security: 3,
+      stability: 1,
+      rootCause: 2,
+      communication: 2
+    },
     intro: "You refreshed a password-protected staging site by copying the live site over it. Staging now holds a full copy of a member directory. The sync finished without errors.",
     timeNotes: "All time estimates are judgment based on typical agency work; none come from host documentation.",
-    refs: ["https://wordpress.org/documentation/article/settings-reading-screen/"],
+    refs: [
+      "https://wordpress.org/documentation/article/settings-reading-screen/"
+    ],
     start: "s1",
     steps: {
       s1: {
@@ -1398,15 +2219,24 @@ window.SCENARIO_BANK = [
         options: [
           {
             text: "Request the home page, /wp-admin/ and /wp-json/ without credentials and confirm each returns 401",
-            m: { security: 2, stability: 1 },
-            min: [5, 10],
+            m: {
+              security: 2,
+              stability: 1
+            },
+            min: [
+              5,
+              10
+            ],
             t: "A sync can replace the files and database that hold the protection setting. Only an anonymous request proves the gate is up; configuration alone doesn't.",
             p: "Test it the way a stranger would. If you can get in without a password, so can anyone.",
             next: "s2"
           },
           {
             text: "Check that the hosting dashboard shows password protection as enabled, then move on",
-            m: { speed: 1, security: -2 },
+            m: {
+              speed: 1,
+              security: -2
+            },
             min: 2,
             t: "A dashboard shows stored configuration, not what the server actually enforces. They can disagree after an overwrite.",
             p: "The control panel saying it's locked isn't the same as the door being locked.",
@@ -1414,7 +2244,10 @@ window.SCENARIO_BANK = [
           },
           {
             text: "Tick 'Discourage search engines' to be safe, then move on",
-            m: { speed: 1, security: -1 },
+            m: {
+              speed: 1,
+              security: -1
+            },
             min: 2,
             t: "That setting adds a noindex request and still allows normal visitors. It isn't access control.",
             p: "It asks search engines to stay away but doesn't stop anyone else.",
@@ -1428,15 +2261,23 @@ window.SCENARIO_BANK = [
         options: [
           {
             text: "Turn protection off and on again, then repeat the anonymous requests until they return 401",
-            m: { security: 2, rootCause: 1 },
-            min: [5, 15],
+            m: {
+              security: 2,
+              rootCause: 1
+            },
+            min: [
+              5,
+              15
+            ],
             t: "When the stored setting and actual enforcement disagree, re-applying the setting brings them back in line. The anonymous re-test is the proof.",
             p: "Reset the lock and check it again from outside.",
             next: "s3"
           },
           {
             text: "Trust the dashboard; the 200s are probably a cached response",
-            m: { security: -2 },
+            m: {
+              security: -2
+            },
             min: 1,
             t: "Guessing it's the cache without checking leaves the member data public. A cached 200 for anonymous users is an exposure too.",
             p: "Assuming it's fine while the test says otherwise leaves private data on show.",
@@ -1444,8 +2285,15 @@ window.SCENARIO_BANK = [
           },
           {
             text: "Delete the staging site now and rebuild it later",
-            m: { security: 1, stability: -1, speed: -1 },
-            min: [10, 20],
+            m: {
+              security: 1,
+              stability: -1,
+              speed: -1
+            },
+            min: [
+              10,
+              20
+            ],
             t: "This ends the exposure but throws away the test environment and any work in progress on it, and it doesn't explain why the gate dropped.",
             p: "It stops the leak, but at the cost of the whole test site and without learning anything.",
             next: "s3"
@@ -1455,13 +2303,18 @@ window.SCENARIO_BANK = [
       s3: {
         type: "multi",
         prompt: "The gate is back. Which follow-ups do you do? Select all that apply.",
-        missPenalty: { rootCause: -1, communication: -1 },
+        missPenalty: {
+          rootCause: -1,
+          communication: -1
+        },
         options: [
           {
             text: "Tell the lead how long the copy was exposed and what data it held",
             good: true,
             critical: true,
-            m: { communication: 2 },
+            m: {
+              communication: 2
+            },
             t: "An exposure of personal data needs a timeline and scope so the people responsible can decide what to do next.",
             p: "The people in charge need to know what was visible and for how long."
           },
@@ -1469,28 +2322,37 @@ window.SCENARIO_BANK = [
             text: "Add a standing rule: after every sync onto staging, re-test the gate anonymously",
             good: true,
             critical: true,
-            m: { rootCause: 2 },
+            m: {
+              rootCause: 2
+            },
             t: "The cause is a process gap: the gate was never re-checked after an overwrite. A standing post-sync check closes it.",
             p: "Make re-checking the lock a fixed step every time the copy is refreshed."
           },
           {
             text: "Keep 'Discourage search engines' on for staging as a second signal, knowing it isn't access control",
             good: true,
-            m: { security: 1 },
+            m: {
+              security: 1
+            },
             t: "A noindex setting reduces the chance of a stray copy being indexed, but it never replaces authentication.",
             p: "A useful extra, as long as nobody mistakes it for a lock."
           },
           {
             text: "Rotate the temporary password you shared in chat",
             good: true,
-            m: { security: 1 },
+            m: {
+              security: 1
+            },
             t: "A credential that passed through chat should be treated as exposed and replaced.",
             p: "A password sent over chat isn't secret any more, so change it."
           },
           {
             text: "Delete the access logs so the exposure isn't on record",
             good: false,
-            m: { security: -1, communication: -2 },
+            m: {
+              security: -1,
+              communication: -2
+            },
             t: "Destroying logs removes the only evidence of who accessed the data and undermines trust.",
             p: "Hiding the evidence makes things worse, not better."
           }
@@ -1515,10 +2377,13 @@ window.SCENARIO_BANK = [
       }
     },
     ideal: {
-      safest: ["s1:0", "s2:0", "s3:all"]
+      safest: [
+        "s1:0",
+        "s2:0",
+        "s3:all"
+      ]
     }
   },
-
   {
     id: "php-upgrade-fatal-on-clone",
     title: "Fatal error found on an upgrade clone",
@@ -1526,7 +2391,13 @@ window.SCENARIO_BANK = [
     level: "Author",
     stage: 2,
     d: 2,
-    priorities: { speed: 2, security: 1, stability: 3, rootCause: 3, communication: 2 },
+    priorities: {
+      speed: 2,
+      security: 1,
+      stability: 3,
+      rootCause: 3,
+      communication: 2
+    },
     intro: "During a PHP upgrade programme, you clone a client site to staging and switch it to the new PHP version. A crawl shows two landing pages returning 500, with a count() TypeError in the footer template.",
     timeNotes: "All time estimates are judgment; none come from official or host documentation.",
     refs: [
@@ -1542,15 +2413,24 @@ window.SCENARIO_BANK = [
         options: [
           {
             text: "Check the live site's error log and PHP version for the same fatal",
-            m: { rootCause: 2, stability: 1 },
-            min: [5, 10],
+            m: {
+              rootCause: 2,
+              stability: 1
+            },
+            min: [
+              5,
+              10
+            ],
             t: "count() has thrown TypeError since PHP 8.0, so a live site on any 8.x release can already be failing. The live logs tell you whether this is new.",
             p: "First find out whether the real site already has this problem.",
             next: "s2"
           },
           {
             text: "Mark the site 'blocked by upgrade' and move on to the next one",
-            m: { speed: 1, rootCause: -2 },
+            m: {
+              speed: 1,
+              rootCause: -2
+            },
             min: 2,
             t: "This blames the upgrade without evidence and leaves a possible live outage unexamined.",
             p: "It assumes the upgrade is at fault and skips the real check.",
@@ -1558,8 +2438,14 @@ window.SCENARIO_BANK = [
           },
           {
             text: "Switch staging back to the old PHP version to see if the error clears",
-            m: { speed: -1, rootCause: -1 },
-            min: [5, 10],
+            m: {
+              speed: -1,
+              rootCause: -1
+            },
+            min: [
+              5,
+              10
+            ],
             t: "The error would persist on any PHP 8.x, so this costs time and proves little that the live log wouldn't show directly.",
             p: "A slower way to learn what the live site's log already says.",
             next: "s2"
@@ -1571,16 +2457,25 @@ window.SCENARIO_BANK = [
         prompt: "Live, on an older PHP 8.x, has been logging the same fatal hundreds of times a week. Both pages are down for visitors. What now?",
         options: [
           {
-            text: "Add an is_countable() guard on staging, lint it, then apply the same one-line edit to live with a backup and rollback note, and tell the client",
-            m: { speed: 1, stability: 1, communication: 2 },
-            min: [20, 40],
-            t: "A minimal guard stops the TypeError without changing behaviour for real arrays. Staging first, plus a backup and a lint check, keeps the live change safe and reversible.",
-            p: "Make the smallest safe fix, test it on the copy, apply it to the real site with a way back, and tell the client.",
-            next: "s3"
+            text: "Add an is_countable() guard on staging and lint it",
+            next: "s2b",
+            min: [
+              15,
+              30
+            ],
+            m: {
+              stability: 1,
+              rootCause: 1
+            },
+            t: "Fixing and checking it on staging first proves the one-line change works on the new PHP version.",
+            p: "Try the fix where it can't hurt anyone."
           },
           {
             text: "Turn on WP_DEBUG with on-screen display on live to read the full error",
-            m: { security: -2, stability: -1 },
+            m: {
+              security: -2,
+              stability: -1
+            },
             min: 5,
             t: "The error is already in the log. Showing debug output on production leaks internal paths to visitors and isn't recommended.",
             p: "That shows technical details to the public and tells you nothing new.",
@@ -1588,7 +2483,10 @@ window.SCENARIO_BANK = [
           },
           {
             text: "Leave it for next week's upgrade batch",
-            m: { speed: -2, communication: -1 },
+            m: {
+              speed: -2,
+              communication: -1
+            },
             min: 0,
             t: "Two revenue pages stay broken for a week for no technical reason.",
             p: "Important pages stay broken while you wait.",
@@ -1599,20 +2497,26 @@ window.SCENARIO_BANK = [
       s3: {
         type: "multi",
         prompt: "Before closing the task, which checks do you run? Select all that apply.",
-        missPenalty: { rootCause: -1 },
+        missPenalty: {
+          rootCause: -1
+        },
         options: [
           {
             text: "Purge the page cache, then fetch both pages with a cache-busting query string",
             good: true,
             critical: true,
-            m: { stability: 1 },
+            m: {
+              stability: 1
+            },
             t: "A cached copy can hide whether PHP actually ran. A cache-busted fetch proves the fix live.",
             p: "Make sure you're seeing a fresh page, not an old saved one."
           },
           {
             text: "Fetch a few unaffected pages that use the same template, as a control",
             good: true,
-            m: { stability: 1 },
+            m: {
+              stability: 1
+            },
             t: "One template feeds many pages, so check that the edit didn't break the ones that worked.",
             p: "Check the fix didn't break pages that were fine."
           },
@@ -1620,19 +2524,58 @@ window.SCENARIO_BANK = [
             text: "Open a follow-up to find out why the data being counted is empty on just those two pages",
             good: true,
             critical: true,
-            m: { rootCause: 2 },
+            m: {
+              rootCause: 2
+            },
             t: "The guard stops the crash, but the missing data is the real cause and may leave parts of those pages incomplete.",
             p: "The fix stops the crash; you still need to find out why those pages are missing information."
           },
           {
             text: "Treat 'zero deprecation notices' in the log as proof the site is clean",
             good: false,
-            m: { rootCause: -1 },
+            m: {
+              rootCause: -1
+            },
             t: "Deprecation notices only appear if the error-reporting level includes them. Zero can mean they were never logged.",
             p: "An empty list can just mean nobody was writing that kind of note down."
           }
         ],
         next: "o:fixed"
+      },
+      s2b: {
+        type: "single",
+        prompt: "The guard works on staging. What now?",
+        options: [
+          {
+            text: "Apply the same edit to live with a backup and rollback note, and tell the client",
+            next: "s3",
+            min: [
+              15,
+              30
+            ],
+            m: {
+              speed: 2,
+              stability: 1,
+              communication: 2
+            },
+            t: "Live has been down for visitors for a while, so ship the proven fix now, with a way back.",
+            p: "The patient is still bleeding: apply the tested fix."
+          },
+          {
+            text: "Hold it for next week's upgrade batch, since live is on the older PHP anyway",
+            next: "o:late-fix",
+            min: [
+              0,
+              0
+            ],
+            m: {
+              speed: -2,
+              communication: -1
+            },
+            t: "Live is already logging the same fatal, so both pages stay down for another week.",
+            p: "A ready fix sitting in a drawer."
+          }
+        ]
       }
     },
     outcomes: {
@@ -1659,10 +2602,14 @@ window.SCENARIO_BANK = [
       }
     },
     ideal: {
-      safest: ["s1:0", "s2:0", "s3:all"]
+      safest: [
+        "s1:0",
+        "s2:0",
+        "s2b:0",
+        "s3:all"
+      ]
     }
   },
-
   {
     id: "fleet-robots-sitemap-cleanup",
     title: "Cleaning up robots.txt across many sites",
@@ -1670,7 +2617,13 @@ window.SCENARIO_BANK = [
     level: "Editor",
     stage: 3,
     d: 3,
-    priorities: { speed: 1, security: 1, stability: 3, rootCause: 2, communication: 1 },
+    priorities: {
+      speed: 1,
+      security: 1,
+      stability: 3,
+      rootCause: 2,
+      communication: 1
+    },
     intro: "Over twenty client sites list three Sitemap lines in robots.txt: core's /wp-sitemap.xml, an SEO plugin's /sitemap.xml and an HTML sitemap page. You have a small must-use plugin that keeps only one line, and a tool that can deploy it to every site at once.",
     timeNotes: "All time estimates are judgment; none come from official or host documentation.",
     refs: [
@@ -1685,15 +2638,25 @@ window.SCENARIO_BANK = [
         options: [
           {
             text: "Survey every site's robots.txt first and group the sites by pattern before choosing targets",
-            m: { stability: 2, rootCause: 1, speed: -1 },
-            min: [30, 60],
+            m: {
+              stability: 2,
+              rootCause: 1,
+              speed: -1
+            },
+            min: [
+              30,
+              60
+            ],
             t: "A read-only survey shows which sites have the core-plus-plugin collision and which list several sitemaps on purpose.",
             p: "Look before you change anything, so you only touch the sites that actually have the problem.",
             next: "s2"
           },
           {
             text: "Deploy to every live site in one run; more than one Sitemap line is always a mistake",
-            m: { speed: 2, stability: -2 },
+            m: {
+              speed: 2,
+              stability: -2
+            },
             min: 10,
             t: "Several Sitemap lines can be legitimate: paginated sets or a separate news sitemap. A blanket rule removes real sitemaps.",
             p: "Some sites need more than one line, and this would delete theirs.",
@@ -1701,8 +2664,14 @@ window.SCENARIO_BANK = [
           },
           {
             text: "Deploy to one site, check it, then deploy to all the rest",
-            m: { speed: 1, stability: -1 },
-            min: [15, 25],
+            m: {
+              speed: 1,
+              stability: -1
+            },
+            min: [
+              15,
+              25
+            ],
             t: "A single test site can't reveal the sites whose extra lines are intentional.",
             p: "One test site doesn't tell you about the sites that are different.",
             next: "o:broke-sitemaps"
@@ -1712,34 +2681,45 @@ window.SCENARIO_BANK = [
       s2: {
         type: "multi",
         prompt: "The survey finds several patterns. Which sites should get the plugin? Select all that apply.",
-        missPenalty: { stability: -1 },
+        missPenalty: {
+          stability: -1
+        },
         options: [
           {
             text: "Sites listing core's sitemap plus a plugin's sitemap covering the same content",
             good: true,
             critical: true,
-            m: { rootCause: 1 },
+            m: {
+              rootCause: 1
+            },
             t: "This is the duplicate the plugin exists to fix: core's /wp-sitemap.xml alongside a plugin sitemap.",
             p: "These are the sites with the actual duplicate."
           },
           {
             text: "A site listing /sitemap-1.xml to /sitemap-5.xml as one paginated set",
             good: false,
-            m: { stability: -2 },
+            m: {
+              stability: -2
+            },
             t: "Keeping one line would hide four real sitemaps.",
             p: "Those five lines are all needed."
           },
           {
             text: "A site listing a main sitemap plus a separate news sitemap",
             good: false,
-            m: { stability: -2 },
+            m: {
+              stability: -2
+            },
             t: "The news sitemap is a distinct, intentional entry.",
             p: "The second line is there on purpose."
           },
           {
             text: "A site your team doesn't host",
             good: false,
-            m: { stability: -1, communication: -1 },
+            m: {
+              stability: -1,
+              communication: -1
+            },
             t: "Out of scope: you shouldn't change infrastructure you don't manage.",
             p: "That site isn't yours to change."
           }
@@ -1749,34 +2729,44 @@ window.SCENARIO_BANK = [
       s3: {
         type: "multi",
         prompt: "After deploying, how do you verify? Select all that apply.",
-        missPenalty: { rootCause: -1 },
+        missPenalty: {
+          rootCause: -1
+        },
         options: [
           {
             text: "Fetch robots.txt both compressed and uncompressed and count the Sitemap lines",
             good: true,
             critical: true,
-            m: { stability: 1 },
+            m: {
+              stability: 1
+            },
             t: "Caches can hold separate copies per Accept-Encoding. Browsers and crawlers ask for compressed responses, so check that copy too.",
             p: "Check the version real visitors get, not just the easiest one to test."
           },
           {
             text: "Confirm the remaining Sitemap URL uses the site's canonical host (www or not)",
             good: true,
-            m: { rootCause: 1 },
+            m: {
+              rootCause: 1
+            },
             t: "A sitemap advertised on the wrong host variant points crawlers at redirects.",
             p: "Make sure the address matches the site's real address."
           },
           {
             text: "Confirm /sitemap.xml still returns 200",
             good: true,
-            m: { stability: 1 },
+            m: {
+              stability: 1
+            },
             t: "The plugin changes robots.txt only. The kept sitemap must still resolve.",
             p: "Make sure the sitemap itself still works."
           },
           {
             text: "Check each site once with a plain uncompressed request and call it done",
             good: false,
-            m: { rootCause: -2 },
+            m: {
+              rootCause: -2
+            },
             t: "An uncompressed copy can be fresh while the compressed copy stays stale, so a plain request can show a false pass.",
             p: "The quick check can say it worked when visitors still see the old file."
           }
@@ -1801,10 +2791,13 @@ window.SCENARIO_BANK = [
       }
     },
     ideal: {
-      safest: ["s1:0", "s2:all", "s3:all"]
+      safest: [
+        "s1:0",
+        "s2:all",
+        "s3:all"
+      ]
     }
   },
-
   {
     id: "password-reset-sweep",
     title: "Password resets nobody asked for",
@@ -1812,7 +2805,13 @@ window.SCENARIO_BANK = [
     level: "Editor",
     stage: 2,
     d: 3,
-    priorities: { speed: 2, security: 3, stability: 2, rootCause: 3, communication: 2 },
+    priorities: {
+      speed: 2,
+      security: 3,
+      stability: 2,
+      rootCause: 3,
+      communication: 2
+    },
     intro: "A client site you manage sends a burst of password reset emails in under a minute. Several real staff accounts are affected; the client's office manager is already asking whether they have been hacked. Nothing on the site appears broken.",
     timeNotes: "Minute estimates are judgment calls based on typical agency incident handling, not figures from any vendor documentation. The technical behaviours in the feedback are documented: the must-use plugin loading rules, the default roles, and the enumeration remediation.",
     refs: [
@@ -1828,23 +2827,42 @@ window.SCENARIO_BANK = [
         options: [
           {
             text: "Pull the web server access logs filtered to that time window and work out what was actually requested, from where",
-            m: { speed: 1, rootCause: 2, communication: 1 },
-            min: [15, 45],
+            m: {
+              speed: 1,
+              rootCause: 2,
+              communication: 1
+            },
+            min: [
+              15,
+              45
+            ],
             t: "The request pattern tells you whether this was one confused user, a credential-stuffing run or an enumeration sweep, and which accounts returned a different response. Every later decision depends on that distinction.",
             p: "Look at the site's visitor records for that minute first. What you do next depends entirely on what actually happened.",
             next: "s2"
           },
           {
             text: "Force a password reset on every user and log everyone out immediately",
-            m: { security: 1, stability: -1, rootCause: -1, communication: -1 },
-            min: [30, 60],
+            m: {
+              security: 1,
+              stability: -1,
+              rootCause: -1,
+              communication: -1
+            },
+            min: [
+              30,
+              60
+            ],
             t: "This locks out the whole client team mid-working-day on an unverified assumption and removes none of the attacker's actual advantage if the issue is enumeration rather than a compromise. It also burns the trust you need for the real hardening conversation.",
             p: "Big, disruptive, and aimed at a problem you have not confirmed yet. It interrupts the whole team without fixing the cause.",
             next: "s2"
           },
           {
             text: "Assume the host's firewall already stopped it and tell the office manager there is nothing to worry about",
-            m: { security: -2, rootCause: -2, communication: -1 },
+            m: {
+              security: -2,
+              rootCause: -2,
+              communication: -1
+            },
             min: 5,
             t: "You have asserted a control you have not verified and closed the incident without evidence. If the reset links reached real inboxes, the client's team needed to be told not to click them.",
             p: "You told the client it was fine without checking. If those emails reached real people, they needed a warning today.",
@@ -1852,8 +2870,15 @@ window.SCENARIO_BANK = [
           },
           {
             text: "Email every user telling them to change their password straight away",
-            m: { communication: 1, speed: -1, rootCause: -1 },
-            min: [20, 40],
+            m: {
+              communication: 1,
+              speed: -1,
+              rootCause: -1
+            },
+            min: [
+              20,
+              40
+            ],
             t: "Warning people is reasonable, but sent before you know what happened it reads as a breach notice and invites exactly the panicked clicking you want to avoid. Telling the affected users not to click the unexpected links is the more precise message.",
             p: "Warning people is fair, but sending it before you know the facts sounds like a breach and can make things worse.",
             next: "s2"
@@ -1863,13 +2888,18 @@ window.SCENARIO_BANK = [
       s2: {
         type: "multi",
         prompt: "The logs show one source sweeping a list of guessed usernames at the lost-password form, with real accounts answering differently from invalid ones. Which measures do you put in place? Select all that apply.",
-        missPenalty: { rootCause: -1 },
+        missPenalty: {
+          rootCause: -1
+        },
         options: [
           {
             text: "Make the lost-password response identical whether or not the account exists",
             good: true,
             critical: true,
-            m: { security: 2, rootCause: 2 },
+            m: {
+              security: 2,
+              rootCause: 2
+            },
             t: "This closes the enumeration oracle itself, which is the remediation OWASP gives for WSTG-IDNT-04: consistent generic responses regardless of account validity. Accept the cost that a legitimate user who asks twice sees the same confirmation and gets no second email.",
             p: "Make the form give the same answer either way, so it stops confirming which names are real."
           },
@@ -1877,21 +2907,30 @@ window.SCENARIO_BANK = [
             text: "Cut the number of Administrator accounts and move content staff to the Editor role",
             good: true,
             critical: true,
-            m: { security: 2, stability: 1 },
+            m: {
+              security: 2,
+              stability: 1
+            },
             t: "Editor can publish and manage everyone's posts and pages without install_plugins or edit_themes, so it covers what content staff actually do. Nine administrators, several at outside vendors, is the blast radius regardless of how this particular bot did.",
             p: "Fewer people with full control means less damage if any one account is taken over, and content staff lose nothing they need."
           },
           {
             text: "Enable two-factor authentication on the accounts that stay privileged",
             good: true,
-            m: { security: 2, speed: -1 },
+            m: {
+              security: 2,
+              speed: -1
+            },
             t: "Enumeration plus a stolen or reused password is the realistic path to compromise here; a second factor breaks that chain even when the username is known. Do the privileged accounts first rather than waiting for a fleet-wide rollout.",
             p: "A second login step means knowing the username and password is no longer enough."
           },
           {
             text: "Move the login page to a secret URL so the bot cannot find it",
             good: false,
-            m: { speed: -1, rootCause: -1 },
+            m: {
+              speed: -1,
+              rootCause: -1
+            },
             t: "The address is discoverable and the oracle survives the move, so this hides the symptom while leaving the differing responses intact. It also tends to break legitimate integrations that post to the standard endpoint.",
             p: "Hiding the door does not stop the form telling an attacker which names are real, and it often breaks other things."
           }
@@ -1904,24 +2943,44 @@ window.SCENARIO_BANK = [
         options: [
           {
             text: "A single PHP file placed directly in wp-content/mu-plugins",
-            m: { security: 2, stability: 1, rootCause: 1 },
-            min: [20, 40],
+            m: {
+              security: 2,
+              stability: 1,
+              rootCause: 1
+            },
+            min: [
+              20,
+              40
+            ],
             t: "Must-use plugins load automatically and cannot be deactivated from wp-admin, so the control survives a compromised administrator account. Keep the file at the top level of that directory, since subdirectories are not scanned without a loader file.",
             p: "Put it in the must-use plugins folder, as a file directly in that folder. It runs automatically and nobody can switch it off from the dashboard.",
             next: "o:closed"
           },
           {
             text: "Included from the child theme's functions.php with require_once",
-            m: { security: 1, stability: 0 },
-            min: [20, 40],
+            m: {
+              security: 1,
+              stability: 0
+            },
+            min: [
+              20,
+              40
+            ],
             t: "This works and survives parent theme updates, but it ties a security control to the active theme and to one site. A theme switch or a redesign silently removes the protection.",
             p: "It works for now, but the protection disappears the day the site changes theme.",
             next: "o:partial"
           },
           {
             text: "Added to the shared parent theme's functions.php on the server so every client site gets it at once",
-            m: { security: 1, stability: -2, rootCause: -1 },
-            min: [15, 30],
+            m: {
+              security: 1,
+              stability: -2,
+              rootCause: -1
+            },
+            min: [
+              15,
+              30
+            ],
             t: "Patching a shared parent theme in place on a server is how copies diverge in the first place: the change exists nowhere else and is invisible to whoever touches the site next. Enforce the boundary with DISALLOW_FILE_EDIT and ship shared changes through the repository.",
             p: "Editing the shared theme directly on a server is exactly how different sites end up with different code and nobody knowing which is right.",
             next: "o:partial"
@@ -1953,10 +3012,13 @@ window.SCENARIO_BANK = [
       }
     },
     ideal: {
-      safest: ["s1:0", "s2:all", "s3:0"]
+      safest: [
+        "s1:0",
+        "s2:all",
+        "s3:0"
+      ]
     }
   },
-
   {
     id: "shared-theme-hotfix",
     title: "Four o'clock, client on the phone",
@@ -1964,7 +3026,13 @@ window.SCENARIO_BANK = [
     level: "Author",
     stage: 2,
     d: 2,
-    priorities: { speed: 2, security: 1, stability: 3, rootCause: 3, communication: 2 },
+    priorities: {
+      speed: 2,
+      security: 1,
+      stability: 3,
+      rootCause: 3,
+      communication: 2
+    },
     intro: "A shared parent theme runs on several client sites. It has been copied by hand between projects for years, so no two copies are identical and none is the agreed source of truth. At four in the afternoon a template error breaks the contact page on one site and the client is on the phone.",
     timeNotes: "Minute ranges are judgment based on a small agency's typical turnaround, not vendor figures. The documented points are the parent theme update behaviour, where Additional CSS is stored, and the file editor constant.",
     refs: [
@@ -1980,32 +3048,60 @@ window.SCENARIO_BANK = [
         options: [
           {
             text: "Fix it in the repository, get it reviewed, tag it and deploy",
-            m: { stability: 2, rootCause: 2, speed: -1 },
-            min: [60, 180],
+            m: {
+              stability: 2,
+              rootCause: 2,
+              speed: -1
+            },
+            min: [
+              60,
+              180
+            ],
             t: "This is the correct steady-state path and it leaves a reviewable history, but on a broken production page it may be too slow to be the first move. The real signal here is that if the proper route is too slow for an outage, the deploy process is the thing to fix.",
             p: "This is the right way to work normally. During an outage it may simply take too long, which tells you the deploy process needs to be quicker.",
             next: "s2"
           },
           {
             text: "Hotfix on the server to restore the page, then mirror the same change into the repository the same day",
-            m: { speed: 2, stability: 1, communication: 1 },
-            min: [15, 45],
+            m: {
+              speed: 2,
+              stability: 1,
+              communication: 1
+            },
+            min: [
+              15,
+              45
+            ],
             t: "An acknowledged emergency path people actually follow beats a strict rule they quietly ignore. The load-bearing part is step two: a hotfix that never reaches the repository recreates the divergence this whole situation came from.",
             p: "Get the page working, then put the same change into the shared code today. Skipping that second step is how the copies drifted apart in the first place.",
             next: "s2"
           },
           {
             text: "Patch it through Appearance then Theme File Editor in the dashboard",
-            m: { speed: 1, stability: -2, rootCause: -2 },
-            min: [5, 15],
+            m: {
+              speed: 1,
+              stability: -2,
+              rootCause: -2
+            },
+            min: [
+              5,
+              15
+            ],
             t: "The change exists on one server, is recorded nowhere, and is invisible to the next person or tool that reads the codebase. Setting DISALLOW_FILE_EDIT in wp-config.php removes this route; DISALLOW_FILE_MODS also blocks dashboard installs and updates.",
             p: "Editing code inside the dashboard leaves a change nobody can find later. Turn that editor off so it stops being an option.",
             next: "o:drift"
           },
           {
             text: "If the breakage is only visual, hide the broken element with Customizer then Additional CSS and fix it properly tomorrow",
-            m: { speed: 2, stability: 1, rootCause: -2 },
-            min: [5, 20],
+            m: {
+              speed: 2,
+              stability: 1,
+              rootCause: -2
+            },
+            min: [
+              5,
+              20
+            ],
             t: "Additional CSS is stored as a custom_css post in the database rather than in a theme file, so it buys time without creating code drift. It is a bandage, not a fix, and on a broken contact form it hides a lead-capture failure rather than resolving it.",
             p: "A styling patch stored in the database buys you the evening without touching any code. It does not fix the fault, and on a contact page the fault may be costing the client enquiries.",
             next: "s2"
@@ -2015,13 +3111,18 @@ window.SCENARIO_BANK = [
       s2: {
         type: "multi",
         prompt: "Before you call this done, which of these do you do? Select all that apply.",
-        missPenalty: { rootCause: -1 },
+        missPenalty: {
+          rootCause: -1
+        },
         options: [
           {
             text: "Decide whether the fix is genuinely universal, or one client's need that belongs in that client's child theme",
             good: true,
             critical: true,
-            m: { stability: 2, rootCause: 2 },
+            m: {
+              stability: 2,
+              rootCause: 2
+            },
             t: "A shared parent theme accumulates client-specific hacks precisely because this question is skipped under time pressure. Universal logic and data shaping belong in the parent; anything naming one client, or any markup a designer would change per client, belongs in the child.",
             p: "Work out whether every client needs this change or just this one. One client's fix goes in that client's own theme."
           },
@@ -2029,21 +3130,30 @@ window.SCENARIO_BANK = [
             text: "Check whether the same fault exists in the other copies of the shared theme",
             good: true,
             critical: true,
-            m: { rootCause: 2, communication: 1 },
+            m: {
+              rootCause: 2,
+              communication: 1
+            },
             t: "With copies that have diverged, a bug fixed on one site is still live on the others, and you only learn that by looking. This is also the cheapest way to start building the inventory of differences that reconciliation will need.",
             p: "The same bug is probably sitting on the other sites too. Check now rather than waiting for the next phone call."
           },
           {
             text: "Record what was deployed and why, including the version or commit you put live",
             good: true,
-            m: { communication: 2, stability: 1 },
+            m: {
+              communication: 2,
+              stability: 1
+            },
             t: "A recorded deploy reference is what makes a rollback a decision rather than an investigation. It also gives the next person the reasoning, which is the part that is never recoverable from the code itself.",
             p: "Write down what you deployed and why. That record is what lets anyone undo it quickly later."
           },
           {
             text: "Copy the patched file over to the other sites by SFTP while you are in there",
             good: false,
-            m: { stability: -2, rootCause: -1 },
+            m: {
+              stability: -2,
+              rootCause: -1
+            },
             t: "This is the exact mechanism that produced the diverged copies: a change applied directly to several servers, recorded in none of them. Fixing other sites is right; the hand-copy is the part to stop doing.",
             p: "Hand-copying files between servers is how the copies drifted apart. Fixing the other sites is right, but not this way."
           }
@@ -2068,10 +3178,12 @@ window.SCENARIO_BANK = [
       }
     },
     ideal: {
-      safest: ["s1:1", "s2:all"]
+      safest: [
+        "s1:1",
+        "s2:all"
+      ]
     }
   },
-
   {
     id: "email-down-after-dns-cutover",
     title: "No email since this morning's launch",
@@ -2079,7 +3191,13 @@ window.SCENARIO_BANK = [
     level: "Author",
     stage: 2,
     d: 2,
-    priorities: { speed: 2, security: 1, stability: 3, rootCause: 3, communication: 2 },
+    priorities: {
+      speed: 2,
+      security: 1,
+      stability: 3,
+      rootCause: 3,
+      communication: 2
+    },
     intro: "This morning you launched a client site by switching the domain's nameservers to a new DNS host. Two hours later the client's team says nobody has received outside email since. Before launch you exported the old zone's records, but you only recreated the web records at the new host.",
     timeNotes: "The up-to-72-hours figure for MX changes to take effect comes from Google Workspace's MX documentation. Minutes for editing records are judgment.",
     refs: [
@@ -2095,23 +3213,41 @@ window.SCENARIO_BANK = [
         options: [
           {
             text: "Recreate the MX records from the pre-launch export at the new DNS host, then confirm with a DNS lookup",
-            m: { speed: 1, rootCause: 2, stability: 1 },
-            min: [10, 20],
+            m: {
+              speed: 1,
+              rootCause: 2,
+              stability: 1
+            },
+            min: [
+              10,
+              20
+            ],
             t: "The new zone is authoritative now, so the missing MX records are the direct cause. Restoring them from the export fixes routing without touching the new website records.",
             p: "Email has no forwarding address any more. Put the address back.",
             next: "s2"
           },
           {
             text: "Switch the nameservers back to the old DNS host",
-            m: { speed: -1, stability: 1, rootCause: -1 },
-            min: [5, 10],
+            m: {
+              speed: -1,
+              stability: 1,
+              rootCause: -1
+            },
+            min: [
+              5,
+              10
+            ],
             t: "The old zone still has the mail records, but it also points the website back at the old server. And a nameserver change has to propagate again, so the launch is undone and email still waits.",
             p: "It undoes the whole launch to fix one missing setting, and it takes a while to take effect.",
             next: "o:rolled-back"
           },
           {
             text: "Tell the client DNS changes take up to 48 hours and email will catch up on its own",
-            m: { speed: -2, rootCause: -2, communication: -1 },
+            m: {
+              speed: -2,
+              rootCause: -2,
+              communication: -1
+            },
             min: 5,
             t: "Propagation won't create records that don't exist in the new zone. Mail stays broken however long you wait.",
             p: "Waiting doesn't help when the setting was never copied.",
@@ -2122,13 +3258,19 @@ window.SCENARIO_BANK = [
       s2: {
         type: "multi",
         prompt: "Mail is flowing again. Which other records do you check came across from the export? Select all that apply.",
-        missPenalty: { rootCause: -1, stability: -1 },
+        missPenalty: {
+          rootCause: -1,
+          stability: -1
+        },
         options: [
           {
             text: "The SPF TXT record (exactly one v=spf1 record)",
             good: true,
             critical: true,
-            m: { rootCause: 1, security: 1 },
+            m: {
+              rootCause: 1,
+              security: 1
+            },
             t: "Without SPF, or with two SPF records, receivers may reject or junk outgoing mail. RFC 7208 allows only one SPF record per domain.",
             p: "This record tells other mail servers who may send email for the domain."
           },
@@ -2136,28 +3278,38 @@ window.SCENARIO_BANK = [
             text: "DKIM records (TXT or CNAME at the selector name)",
             good: true,
             critical: true,
-            m: { rootCause: 1, security: 1 },
+            m: {
+              rootCause: 1,
+              security: 1
+            },
             t: "A missing DKIM key makes signatures fail verification, which hurts deliverability and DMARC alignment.",
             p: "This is the email signature check. Without it, mail looks less trustworthy."
           },
           {
             text: "The DMARC TXT record at _dmarc",
             good: true,
-            m: { security: 1 },
+            m: {
+              security: 1
+            },
             t: "DMARC tells receivers how to handle mail that fails SPF and DKIM and where to send reports; losing it removes that policy.",
             p: "This is the domain's rule for what to do with fake-looking email."
           },
           {
             text: "Other CNAMEs and verification TXT records for mail clients and third-party services",
             good: true,
-            m: { rootCause: 1, stability: 1 },
+            m: {
+              rootCause: 1,
+              stability: 1
+            },
             t: "Autodiscover, service verification and similar records also lived in the old zone and fail quietly when missing.",
             p: "Other tools connected to the domain depend on these too."
           },
           {
             text: "The WordPress siteurl and home options",
             good: false,
-            m: { speed: -1 },
+            m: {
+              speed: -1
+            },
             t: "These control the website's URLs, not email routing or authentication.",
             p: "Website settings have nothing to do with email."
           }
@@ -2169,20 +3321,59 @@ window.SCENARIO_BANK = [
         prompt: "How do you close this out?",
         options: [
           {
-            text: "Explain to the client what happened and when it was fixed, ask staff to have key contacts resend anything that bounced, and add 'recreate every exported record before switching nameservers' to the launch checklist",
-            m: { communication: 2, rootCause: 1 },
-            min: [15, 30],
-            t: "Some senders may have had bounces during the outage. Google's guidance for mail-routing changes is to tell contacts to resend bounced messages. The checklist change stops it happening again.",
-            p: "Be honest about the gap, help them recover missed mail, and change the process.",
-            next: "o:fixed-for-good"
+            text: "Explain to the client what happened and when it was fixed, and ask staff to have key contacts resend anything that bounced",
+            next: "s3b",
+            min: [
+              15,
+              30
+            ],
+            m: {
+              communication: 2
+            },
+            t: "Mail that bounced during the outage won't arrive by itself, so senders need to resend.",
+            p: "Tell them, and get the lost letters sent again."
           },
           {
             text: "Say nothing more, since mail is working again",
-            m: { communication: -2 },
+            m: {
+              communication: -2
+            },
             min: 0,
             t: "Bounced messages during the outage go unnoticed, and the process gap remains for the next launch.",
             p: "The client may never learn some emails didn't arrive.",
             next: "o:fixed-quietly"
+          }
+        ]
+      },
+      s3b: {
+        type: "single",
+        prompt: "The client is up to date. Anything else?",
+        options: [
+          {
+            text: "Add 'recreate every exported record before switching nameservers' to the launch checklist",
+            next: "o:fixed-for-good",
+            min: [
+              5,
+              10
+            ],
+            m: {
+              rootCause: 2
+            },
+            t: "The checklist stops the next launch losing mail the same way.",
+            p: "Write it down so it can't happen again."
+          },
+          {
+            text: "Nothing; it was a one-off mistake",
+            next: "o:told-not-prevented",
+            min: [
+              0,
+              0
+            ],
+            m: {
+              rootCause: -1
+            },
+            t: "Without a checklist step, the next nameserver switch can drop mail records again.",
+            p: "Same trap, next launch."
           }
         ]
       }
@@ -2215,13 +3406,24 @@ window.SCENARIO_BANK = [
         summary: "Mail works, but bounced messages from the outage are lost and the same gap waits for the next launch.",
         t: "The technical cause is fixed but not the process cause, and the client can't act on what they missed.",
         p: "It works now, but the client is in the dark and it will happen again."
+      },
+      "told-not-prevented": {
+        title: "Explained, not prevented",
+        verdict: "mixed",
+        summary: "The client knows what happened, but the launch process hasn't changed.",
+        t: "Add the missing step to the launch checklist.",
+        p: "Good apology, same risk."
       }
     },
     ideal: {
-      safest: ["s1:0", "s2:all", "s3:0"]
+      safest: [
+        "s1:0",
+        "s2:all",
+        "s3:0",
+        "s3b:0"
+      ]
     }
   },
-
   {
     id: "noindex-left-on-after-launch",
     title: "Search traffic vanished after launch",
@@ -2229,7 +3431,13 @@ window.SCENARIO_BANK = [
     level: "Author",
     stage: 1,
     d: 2,
-    priorities: { speed: 2, security: 1, stability: 2, rootCause: 3, communication: 2 },
+    priorities: {
+      speed: 2,
+      security: 1,
+      stability: 2,
+      rootCause: 3,
+      communication: 2
+    },
     intro: "Three weeks after a redesign launched, the client says leads from search have dropped sharply. Search Console shows most pages as \"Excluded by 'noindex' tag\". The production database was copied from the password-protected staging site at launch.",
     timeNotes: "Recrawl time (days to weeks) comes from Google's recrawl documentation. Minutes for checks and setting changes are judgment.",
     refs: [
@@ -2245,15 +3453,24 @@ window.SCENARIO_BANK = [
         options: [
           {
             text: "View the source of a live page for a robots meta tag, and check Settings > Reading on production",
-            m: { speed: 1, rootCause: 2 },
-            min: [5, 10],
+            m: {
+              speed: 1,
+              rootCause: 2
+            },
+            min: [
+              5,
+              10
+            ],
             t: "Since WordPress 5.3, 'Discourage search engines' outputs a noindex robots meta tag, and the blog_public option travels with a copied database. Checking the HTML confirms what crawlers actually see.",
             p: "Look at what Google sees on the page, then at the setting that usually causes it.",
             next: "s2"
           },
           {
             text: "Add Allow: / to robots.txt",
-            m: { speed: -1, rootCause: -2 },
+            m: {
+              speed: -1,
+              rootCause: -2
+            },
             min: 5,
             t: "robots.txt controls crawling, and the pages are already being crawled; the noindex comes from the page itself.",
             p: "That's the wrong file. The block is on the pages.",
@@ -2261,8 +3478,14 @@ window.SCENARIO_BANK = [
           },
           {
             text: "Resubmit the sitemap and request indexing for every page",
-            m: { speed: -1, rootCause: -2 },
-            min: [20, 40],
+            m: {
+              speed: -1,
+              rootCause: -2
+            },
+            min: [
+              20,
+              40
+            ],
             t: "Google will recrawl and find the same noindex tag. The requests use up the URL Inspection quota without changing anything.",
             p: "Asking Google to look again doesn't help while the pages still say 'don't list me'.",
             next: "o:resubmitted"
@@ -2274,17 +3497,29 @@ window.SCENARIO_BANK = [
         prompt: "The setting is on in production. How do you fix it?",
         options: [
           {
-            text: "Turn the setting off on production, purge the page cache and CDN, then confirm the tag is gone from live HTML",
-            m: { speed: 1, rootCause: 2, stability: 1 },
-            min: [5, 15],
-            t: "Changing blog_public removes the tag at render time, but cached HTML can keep serving the old tag until it's purged.",
-            p: "Flip the switch, clear the stored copies, and check the live page.",
-            next: "s3"
+            text: "Turn the search engine visibility setting off on production",
+            next: "s2b",
+            min: [
+              2,
+              5
+            ],
+            m: {
+              speed: 1,
+              rootCause: 2
+            },
+            t: "The setting (blog_public) is what prints the noindex tag, so changing it on production removes the cause.",
+            p: "Flip the switch that's actually on."
           },
           {
             text: "Copy the staging database to production again, after fixing the setting on staging",
-            m: { stability: -2, speed: -1 },
-            min: [30, 60],
+            m: {
+              stability: -2,
+              speed: -1
+            },
+            min: [
+              30,
+              60
+            ],
             t: "Overwriting production discards three weeks of form entries, content edits and users, and it's a far bigger change than one option.",
             p: "That wipes out everything that happened on the live site since launch.",
             next: "o:overwrote-content"
@@ -2294,19 +3529,26 @@ window.SCENARIO_BANK = [
       s3: {
         type: "multi",
         prompt: "The tag is gone. What else do you do? Select all that apply.",
-        missPenalty: { rootCause: -1, communication: -1 },
+        missPenalty: {
+          rootCause: -1,
+          communication: -1
+        },
         options: [
           {
             text: "Request indexing for the most important pages and resubmit the sitemap",
             good: true,
-            m: { speed: 1 },
+            m: {
+              speed: 1
+            },
             t: "Google suggests URL Inspection for individual pages and a sitemap for many URLs. Recrawling still takes days to weeks.",
             p: "Now that the block is gone, ask Google to come back."
           },
           {
             text: "Check that no SEO plugin also sets noindex on page types or individual pages",
             good: true,
-            m: { rootCause: 1 },
+            m: {
+              rootCause: 1
+            },
             t: "A second noindex source would keep some pages excluded after the core setting is fixed.",
             p: "Make sure nothing else is still hiding pages."
           },
@@ -2314,26 +3556,66 @@ window.SCENARIO_BANK = [
             text: "Add 'search engine visibility on, noindex absent' to the launch checklist",
             good: true,
             critical: true,
-            m: { rootCause: 1, stability: 1 },
+            m: {
+              rootCause: 1,
+              stability: 1
+            },
             t: "The database copy will carry the setting again at the next launch unless a check catches it.",
             p: "Make sure the next launch can't repeat this."
           },
           {
             text: "Tell the client what happened and that recovery in search will take days to weeks",
             good: true,
-            m: { communication: 2 },
+            m: {
+              communication: 2
+            },
             t: "Recrawling and reindexing aren't instant or guaranteed, so set expectations.",
             p: "Be clear that traffic will come back gradually, not overnight."
           },
           {
             text: "Change the permalink structure to force Google to treat the pages as new",
             good: false,
-            m: { stability: -2 },
+            m: {
+              stability: -2
+            },
             t: "New URLs throw away existing signals and create a redirect project, with no benefit.",
             p: "That creates a new problem rather than fixing the old one."
           }
         ],
         next: "o:recovered"
+      },
+      s2b: {
+        type: "single",
+        prompt: "You saved the setting, but the live page source still shows the noindex tag. Why?",
+        options: [
+          {
+            text: "Cached HTML: purge the page cache and CDN, then check the live source again",
+            next: "s3",
+            min: [
+              5,
+              10
+            ],
+            m: {
+              stability: 1,
+              rootCause: 1
+            },
+            t: "Cached pages keep serving the old tag until they're purged.",
+            p: "The shop window still shows yesterday's sign."
+          },
+          {
+            text: "The setting didn't take, so copy staging's database over production again",
+            next: "o:overwrote-content",
+            min: [
+              20,
+              40
+            ],
+            m: {
+              stability: -2
+            },
+            t: "Copying the database again overwrites everything published since launch.",
+            p: "Repainting the house to change one sign."
+          }
+        ]
       }
     },
     outcomes: {
@@ -2367,7 +3649,12 @@ window.SCENARIO_BANK = [
       }
     },
     ideal: {
-      safest: ["s1:0", "s2:0", "s3:all"]
+      safest: [
+        "s1:0",
+        "s2:0",
+        "s2b:0",
+        "s3:all"
+      ]
     }
   },
   {
@@ -2756,34 +4043,64 @@ window.SCENARIO_BANK = [
         prompt: "The host's snapshot from last night restores the database. What now?",
         options: [
           {
-            text: "Tell the client about the lost hours, then schedule regular test restores of both files and database",
+            text: "Tell the client which hours of orders were lost and what you restored",
+            next: "s2b",
+            min: [
+              10,
+              20
+            ],
+            m: {
+              communication: 2
+            },
+            t: "The client needs to know which orders to check with customers.",
+            p: "Tell them what's missing before they find out."
+          },
+          {
+            text: "Say nothing, since the shop is working again",
+            next: "o:same-trap",
+            min: [
+              0,
+              0
+            ],
+            m: {
+              speed: 1,
+              communication: -2
+            },
+            t: "Orders from the lost hours are gone, and the client doesn't know to look for them.",
+            p: "Hoping nobody notices the gap."
+          }
+        ]
+      },
+      s2b: {
+        type: "single",
+        prompt: "The client knows. What about the backups?",
+        options: [
+          {
+            text: "Fix the backup plugin and schedule regular test restores of files and database",
             next: "o:good",
             min: [
               30,
               60
             ],
             m: {
-              speed: 0,
-              security: 0,
               stability: 2,
-              rootCause: 2,
-              communication: 2
+              rootCause: 2
             },
             t: "A backup you've never restored is a guess; regular test restores catch failures like this one.",
             p: "Practise the fire drill before the fire."
           },
           {
-            text: "Leave the backup plugin as it is, since the host's snapshots turned out to be enough",
+            text: "Rely on the host's snapshots from now on, since they worked this time",
             next: "o:same-trap",
-            min: 0,
+            min: [
+              0,
+              5
+            ],
             m: {
-              speed: 1,
-              security: 0,
               stability: -1,
-              rootCause: -1,
-              communication: -1
+              rootCause: -1
             },
-            t: "The broken plugin is still failing, and nobody is checking whether any backup can be restored.",
+            t: "One untested copy is still one untested copy; nobody is checking that any backup restores.",
             p: "Lucky this time, same trap next time."
           }
         ]
@@ -2822,7 +4139,8 @@ window.SCENARIO_BANK = [
     ideal: {
       fastestSafe: [
         "s1:0",
-        "s2:0"
+        "s2:0",
+        "s2b:0"
       ]
     }
   },
@@ -2854,21 +4172,18 @@ window.SCENARIO_BANK = [
         prompt: "What do you do first?",
         options: [
           {
-            text: "Note when it was created and what it did, back up, then remove it and reset every password and the salts",
-            next: "s2",
+            text: "Record when it was created, what it changed and its recent logins, then take a backup",
+            next: "s1b",
             min: [
-              30,
-              60
+              15,
+              30
             ],
             m: {
-              speed: 1,
-              security: 2,
-              stability: 1,
-              rootCause: 1,
-              communication: 0
+              security: 1,
+              rootCause: 1
             },
-            t: "Recording the details and taking a snapshot before cleaning keeps the evidence you need to find the entry point; new salts log out anyone still signed in.",
-            p: "Photograph the break-in before you tidy up, then change every lock."
+            t: "Writing down the account's details and taking a snapshot before you change anything keeps the evidence you need to find the way in.",
+            p: "Photograph the break-in before you tidy up."
           },
           {
             text: "Delete the account straight away and carry on, since the intruder has now lost access",
@@ -2903,6 +4218,53 @@ window.SCENARIO_BANK = [
             },
             t: "An unexplained administrator is a compromise until proven otherwise; ask the host, but lock things down now.",
             p: "Hoping the stranger in the house is the plumber."
+          }
+        ]
+      },
+      s1b: {
+        type: "single",
+        prompt: "The details are saved. What do you do now?",
+        options: [
+          {
+            text: "Delete the account, reset every password and change the salts",
+            next: "s2",
+            min: [
+              15,
+              30
+            ],
+            m: {
+              speed: 1,
+              security: 2
+            },
+            t: "New passwords and salts log out anyone still signed in, including through the intruder's account or stolen cookies.",
+            p: "Change every lock, not just the one they used."
+          },
+          {
+            text: "Delete the account and leave everyone's passwords and the salts as they are",
+            next: "o:back-again",
+            min: [
+              2,
+              5
+            ],
+            m: {
+              speed: 2,
+              security: -1
+            },
+            t: "Whoever created it may hold other credentials or session cookies, so they can get straight back in.",
+            p: "Locking one door and leaving the keys out."
+          },
+          {
+            text: "Demote the account to Subscriber so it stays around for later investigation",
+            next: "o:still-open",
+            min: [
+              2,
+              5
+            ],
+            m: {
+              security: -2
+            },
+            t: "A demoted account still logs in, and an intruder who made one admin can often make another.",
+            p: "Taking the burglar's crowbar but letting them stay."
           }
         ]
       },
@@ -2980,6 +4342,7 @@ window.SCENARIO_BANK = [
     ideal: {
       safest: [
         "s1:0",
+        "s1b:0",
         "s2:0"
       ]
     }
@@ -3011,21 +4374,19 @@ window.SCENARIO_BANK = [
         prompt: "How do you respond?",
         options: [
           {
-            text: "Thank them privately, reproduce it, and fix it with $wpdb->prepare()",
-            next: "s2",
+            text: "Thank them privately and reproduce the bug on a test site",
+            next: "s1b",
             min: [
-              60,
-              240
+              30,
+              90
             ],
             m: {
-              speed: 1,
-              security: 2,
-              stability: 1,
-              rootCause: 2,
+              security: 1,
+              rootCause: 1,
               communication: 1
             },
-            t: "Confirming the report and fixing the root cause with prepared statements closes the hole properly.",
-            p: "Thank the person who found the leak, then fix the pipe."
+            t: "Confirming the report privately keeps details out of attackers' hands while you work out the fix.",
+            p: "Thank the person who found the leak, then check it's real."
           },
           {
             text: "Post about it in the support forum so users know to deactivate the plugin until there's a fix",
@@ -3045,18 +4406,50 @@ window.SCENARIO_BANK = [
             p: "Shouting where the spare key is hidden."
           },
           {
-            text: "Add a filter that blocks the researcher's exact payload and release that as the fix",
+            text: "Ignore it until other users start reporting the same problem",
+            next: "o:silent-fix",
+            min: [
+              0,
+              0
+            ],
+            m: {
+              security: -2,
+              communication: -1
+            },
+            t: "A private report with a proof of concept is the early warning; waiting leaves every site exposed.",
+            p: "Waiting for the flood before fixing the leak."
+          }
+        ]
+      },
+      s1b: {
+        type: "single",
+        prompt: "You've reproduced it. How do you fix it?",
+        options: [
+          {
+            text: "Rewrite the query with $wpdb->prepare()",
+            next: "s2",
+            min: [
+              30,
+              120
+            ],
+            m: {
+              security: 2,
+              rootCause: 2
+            },
+            t: "Prepared statements fix the injection itself, whatever input an attacker sends.",
+            p: "Fix the lock, not the burglar."
+          },
+          {
+            text: "Add a filter that blocks the researcher's exact payload and release that",
             next: "o:patched-symptom",
             min: [
               20,
               40
             ],
             m: {
-              speed: 2,
+              speed: 1,
               security: -1,
-              stability: 0,
-              rootCause: -2,
-              communication: 0
+              rootCause: -2
             },
             t: "Blocking one payload leaves the injectable query in place; attackers simply vary the input.",
             p: "Blocking one burglar's face instead of fixing the lock."
@@ -3137,6 +4530,7 @@ window.SCENARIO_BANK = [
     ideal: {
       safest: [
         "s1:0",
+        "s1b:0",
         "s2:0"
       ]
     }

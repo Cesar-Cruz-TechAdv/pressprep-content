@@ -42,6 +42,7 @@ Every question has a stable `id` such as `q-0123`. The editor gives new question
 - [ ] Both explanations are accurate. The plain-English one makes sense to a non-developer.
 - [ ] Role level and stage fit the difficulty (Subscriber = junior … Administrator = expert).
 - [ ] Scenarios: at least one good outcome, at least one bad one, and ideal paths that make sense.
+- [ ] Scenarios: one action per option. If the best choice bundles several actions ("record it, then remove it, then reset passwords"), split it into separate steps so the player makes each decision.
 - [ ] Nothing copied from the official exam guide or other copyrighted material.
 - [ ] Researched: every fact checked against an official source, with at least one link in `refs` (https only).
 - [ ] Scenario times (`min`) are realistic rough ranges, researched where possible. The app labels all times as rough estimates.
